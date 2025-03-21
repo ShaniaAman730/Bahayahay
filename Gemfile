@@ -41,7 +41,7 @@ gem "devise"
 gem 'pg', '~> 1.1'
 gem 'bootstrap'
 gem 'sassc-rails' # For compiling SCSS
-gem 'sprockets', '< 4.0'
+gem 'sprockets', '< 5.0'
 gem 'sass-rails'
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
