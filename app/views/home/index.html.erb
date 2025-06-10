@@ -1,2 +1,11 @@
-<h1>Home#index</h1>
-<p>Find me in app/views/home/index.html.erb</p>
+<%= stylesheet_link_tag('style') %>
+
+<% if current_user&.admin? %>
+
+  <%= render partial: "/shared/admin_dashboard" %>
+
+  <% else %>
+  <%= render partial: "user_homepage" %>
+
+<% end %>
+

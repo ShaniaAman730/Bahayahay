@@ -1,0 +1,12 @@
+<% content_for :title, "Editing model house" %>
+
+<h1>Editing model house</h1>
+
+<%= render "form", model_house: @model_house %>
+
+<br>
+
+<div>
+  <%= link_to "Show this model house", @model_house %> |
+  <%= link_to "Back to model houses", model_houses_path %>
+</div>

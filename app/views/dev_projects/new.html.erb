@@ -1,0 +1,259 @@
+<div class="container">
+  <div class="mt-5"></div>
+  <div class="form-container">
+  <h2 class="text-center">Create New Development Project</h2>
+  <%= form_with(model: @dev_project, local: true, html: { multipart: true }) do |form| %>
+  <% if @dev_project.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(@dev_project.errors.count, "error") %> prohibited this dev_project from being saved:</h2>
+      <ul>
+        <% @dev_project.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- START OF FORM --> 
+
+  <div class="field p-2">
+    <%= form.label :title %><br />
+    <%= form.text_field :title, autofocus: true, autocomplete: "title", class: "form-control w-100", placeholder: "Title" %>
+  </div>
+
+  <div class="form-row p-2">
+    <div class="col col-md-6 mb-3">
+      <%= form.label :property_type, "Project type", class: "form-label"  %><br>
+      <%= form.select :property_type, options_for_select(DevProject.property_types.collect { |s| [s[0].humanize, s[0]] }, selected: DevProject.property_types[:corroborated]),{}, class: "form-select" %>
+    </div> 
+    <div class="col col-md-6 mb-3"> 
+
+    </div> 
+  </div> 
+
+  <div class="field p-2">
+    <%= form.label :project_photos, "Upload photos"  %><br>
+    <%= form.file_field :project_photos, multiple: true, direct_upload: true, class: "form-control w-100" %>
+  </div>
+
+  <div class="field p-2">
+    <%= form.label :description %><br />
+    <%= form.rich_text_area :description, id: "dev_project_description", class: "post-textarea" %>
+  </div>
+
+  <div class="form-row p-2">
+    <div class="col col-md-8 mb-3">
+      <%= form.label :address, "Address line"  %><br>
+      <%= form.text_field :address, class: "form-control w-100" %>
+    </div>
+    <div class="col col-md-4 mb-3">
+      <%= form.label :barangay, "Barangay", class: "form-label" %>
+      <%= form.select :barangay, options_for_select(DevProject.barangays.collect { |s| [s[0].humanize, s[0]] }, selected: DevProject.barangays[:corroborated]),{}, class: "form-select" %>
+    </div>
+  </div>
+
+  <div class="container mt-5 bg-light">  
+    <div class="p-5">  
+      <h5>Amenities</h5>
+      <p><small><em>Check which applies.</p></small></em>
+
+      <div class="row">   
+       <div class="col"> 
+
+        <div class="form-check d-flex">
+          <%= form.label :guardhouse,"Guardhouse", class: "form-check-label" %>
+          <%= form.checkbox :guardhouse, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :perimeterfence, "Perimeter fence", class: "form-check-label" %>
+          <%= form.checkbox :perimeterfence, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :clubhouse,"Clubhouse", class: "form-check-label" %>
+          <%= form.checkbox :clubhouse, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :pool, "Swimming Pool", class: "form-check-label" %>
+          <%= form.check_box :pool, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :coveredcourt, "Basketball Court", class: "form-check-label" %>
+          <%= form.check_box :coveredcourt, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :playground, "Playground", class: "form-check-label" %>
+          <%= form.check_box :playground, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :joggingpath, "Jogging Path", class: "form-check-label"  %>
+          <%= form.check_box :joggingpath, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :mphall, "Multi-purpose Hall", class: "form-check-label" %>
+          <%= form.check_box :mphall, class: "form-check-input" %>
+        </div>  
+
+        <div class="form-check d-flex">
+          <%= form.label :tenniscourt, "Tennis Court", class: "form-check-label" %>
+          <%= form.check_box :tenniscourt, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :retailstrip, "Retail Strip", class: "form-check-label" %>
+          <%= form.check_box :retailstrip, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :chapel, "Chapel", class: "form-check-label" %>
+          <%= form.check_box :chapel, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :petpark, "Pet Parks", class: "form-check-label" %>
+          <%= form.check_box :petpark, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :sewagefacility, "Sewage Treatment Facility", class: "form-check-label" %>
+          <%= form.check_box :sewagefacility, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :lobbyconcierge, "Lobby with Reception", class: "form-check-label" %>
+          <%= form.check_box :lobbyconcierge, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :cctv, "CCTV", class: "form-check-label" %>
+          <%= form.check_box :cctv, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :elevators, class: "form-check-label" %>
+          <%= form.check_box :elevators, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :gym, class: "form-check-label" %>
+          <%= form.check_box :gym, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :eventhall, "Event Hall", class: "form-check-label" %>
+          <%= form.check_box :eventhall, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :playarea, "Children’s Play Area", class: "form-check-label" %>
+          <%= form.check_box :playarea, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :roofdeck, "Roof Deck", class: "form-check-label" %>
+          <%= form.check_box :roofdeck, class: "form-check-input" %>
+        </div> 
+
+      </div>
+      <div class="col"> 
+
+        <div class="form-check d-flex">
+          <%= form.label :parking, "Parking Area", class: "form-check-label" %>
+          <%= form.check_box :parking, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :firealarm, "Fire Alarm", class: "form-check-label" %>
+          <%= form.check_box :firealarm, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :businesscenter, "Business Centers", class: "form-check-label" %>
+          <%= form.check_box :businesscenter, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">    
+          <%= form.label :loungearea, "Lounge area", class: "form-check-label" %>    
+          <%= form.check_box :loungearea, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :spa, "Spa", class: "form-check-label" %>
+          <%= form.check_box :spa, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :laundrystation, "Laundry station", class: "form-check-label" %>
+          <%= form.check_box :laundrystation, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :generator, "Backup Generator", class: "form-check-label" %>
+          <%= form.check_box :generator, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :fiberready, "Internet Ready", class: "form-check-label" %>
+          <%= form.check_box :fiberready, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :parcellockers, "Parcel Lockers", class: "form-check-label" %>
+          <%= form.check_box :parcellockers, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :restaurant, "Café or Restaurant", class: "form-check-label" %>
+          <%= form.check_box :restaurant, class: "form-check-input" %>
+        </div> 
+
+        <div>
+          <p><i>For township developments:</i></p>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :mall, "Malls/Supermarkets", class: "form-check-label" %>
+          <%= form.check_box :mall, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :transportterminal, "Transport Terminals", class: "form-check-label" %>
+          <%= form.check_box :transportterminal, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :bikingtrail, "Biking trails", class: "form-check-label" %>
+          <%= form.check_box :bikingtrail, class: "form-check-input" %>
+        </div>
+
+        <div class="form-check d-flex">
+          <%= form.label :itpark, "Business District or IT Park", class: "form-check-label"  %>
+          <%= form.check_box :itpark, class: "form-check-input" %>
+        </div> 
+
+        <div class="form-check d-flex">
+          <%= form.label :clinic, "Hospital or Clinic", class: "form-check-label" %>
+          <%= form.check_box :clinic, class: "form-check-input" %>
+        </div>
+
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <div>
+    <%= form.submit "Post Development Project", class: "btn btn-secondary float-right mt-3 mb-5" %>
+  </div>
+ <% end %>
+ <br>
+ </div>
+ <div class="mb-5"></div>
+ <div class="mb-5"></div>
+</div>
+

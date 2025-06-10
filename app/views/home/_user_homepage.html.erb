@@ -1,0 +1,32 @@
+<%= stylesheet_link_tag('style') %>
+
+<!-- Main Jumbotron -->
+<div class="jumbotron jumbotron-fluid jumbotron-main-img">
+  <div class="container pt-5 pl-5">
+    <h1 class="display-4">Find your next home here.</h1>
+    <br>
+    <div class="container-fluid">
+      <form class="form-inline my-2 my-lg-0" role="search">
+      <input class="form-control mr-sm-2 w-50" type="search" placeholder="Search..." aria-label="Search">       <button class="btn btn btn-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+  </p>
+</div>
+
+<!-- Explore Homes Cards -->
+<%= render partial: "explorehomes" %>
+
+<!-- Second Jumbotron -->
+<div class="jumbotron jumbotron-fluid jumbotron-second-img">
+  <div class="container pt-5 pl-5">
+    <h1 class="display-4 text-end realtor-text">Find licensed realtors near you.</h1>
+    <br>
+    <button type="button" class="btn btn-secondary float-right ">Agent Search</button>
+    <%= link_to "Register", 'realtor_signup/new', class:"btn btn-success float-right mr-1" %>
+  </div>
+  </p>
+</div>
+
+<!-- Guide Cards -->
+<%= render partial: "guides" %>

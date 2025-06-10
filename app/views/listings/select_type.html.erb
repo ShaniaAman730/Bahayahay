@@ -1,0 +1,36 @@
+<div class="container-sm">
+  <div class="mt-5"></div>
+  <div class="d-flex justify-content-md-center py-4">
+  <h1>Is this a project-based listing or an independent listing?</h1>
+  </div>
+
+  <%= form_with url: choose_type_listings_path, method: :post do %>
+
+  <div class="d-flex justify-content-center">
+    <div class="p-1">
+      <input type="radio" class="btn-check" name="listing_type" id="listing_type_project" value="project" autocomplete="off">
+      <label class="btn btn-outline-success" for="listing_type_project">
+        <%= image_tag("project-selling.png", class: "rounded-circle mt-2", size: "400x400") %> <br> <h4 class="mt-2">Project Selling</h4>
+        <p><small><em>Ex. Subdivision and Condominium Units</p></small></em>
+      </label>
+    </div>
+    <div class="p-1">
+      <input type="radio" class="btn-check" name="listing_type" id="listing_type_independent" value="independent" autocomplete="off">
+      <label class="btn btn-outline-success" for="listing_type_independent">
+        <%= image_tag("independent-listing.png", class: "rounded-circle mt-2", size: "400x400") %> <br> <h4 class="mt-2">Independent Listing</h4>
+        <p><small><em>Ex. Build-and-Sell Projects and Pre-owned Homes</p></small></em>
+      </label>
+    </div>
+  </div>
+
+ <div class="row justify-content-md-center">
+    <div class="col-sm-8 mt-4 mb-2"><%= submit_tag "Continue", class: "btn btn-light btn-lg btn-block" %></div>
+  </div>
+  
+  <% end %>
+</div>
+<div class="mb-5"></div>
+<div class="mb-5"></div>
+
+
+

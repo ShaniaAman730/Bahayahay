@@ -1,0 +1,7 @@
+<div class="container my-3">
+	<% if @user.persisted? && @user.profile_photo.attached? %>
+	 	<%= image_tag @user.profile_photo, class: "rounded-circle", size: "250x250" %>
+	<% else %>
+	  	<%= image_tag("no-profile.jpg", class: "rounded-circle", size: "250x250") %>
+	<% end %>
+</div>

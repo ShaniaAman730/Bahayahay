@@ -1,0 +1,91 @@
+<div class="container">
+  <div class="mt-5"></div>
+  <div class="form-container">
+
+    <h2>Realtor Sign-up</h2>
+
+    <%= form_with model: @user, url: realtor_signup_index_path, local: true, html: { multipart: true } do |form| %>
+
+    <div class="form-row p-2">
+      <div class="col col-md-6 mb-3">
+        <%= form.label :first_name %>
+        <%= form.text_field :first_name, class: "form-control w-100", placeholder: "First name" %>
+      </div>
+      <div class="col col-md-6 mb-3">
+        <%= form.label :last_name %>
+        <%= form.text_field :last_name, class: "form-control w-100", placeholder: "Last name" %>
+      </div>
+    </div>
+
+    <div class="form-row p-2">
+      <div class="col col-md-6 mb-3">
+        <%= form.label :email %>
+        <%= form.email_field :email, autofocus: true, autocomplete: "email", class: "form-control w-100", placeholder: "Email" %>
+      </div>
+      <div class="col col-md-6 mb-3">
+        <%= form.label :contact_no %>
+        <%= form.text_field :contact_no, class: "form-control w-100", placeholder: "Contact no." %>
+      </div>
+    </div>
+
+    <div class="form-row p-2">
+      <div class="col col-md-6 mb-3">
+        <%= form.label :company_name, "Realty/Company Name" %>
+        <%= form.text_field :company_name, class: "form-control w-100", placeholder: "Realty/Company Name" %>
+      </div>
+      <div class="col col-md-6 mb-3">
+        <%= form.label :address, "Realty/Company Address" %>
+        <%= form.text_field :address, class: "form-control w-100", placeholder: "Realty/Company Name" %>
+      </div>
+    </div>
+
+    <div class="form-row p-2">
+      <div class="col col-md-6 mb-3">
+        <%= form.label :prc_no, "PRC ID or Accreditation number" %>
+        <div class="mb-4"></div>
+        <%= form.text_field :prc_no, class: "form-control w-100", placeholder: "PRC ID or Accreditation number" %>
+      </div>
+      <div class="col col-md-6 mb-3">
+        <%= form.label :prc_id, "Upload a picture of your PRC ID/Accreditation or your official PRC receipt" %>
+        <%= form.file_field :prc_id, class: "form-control", class: "form-control w-100" %>
+      </div>
+    </div>
+
+    <div class="form-row p-2">
+      <div class="col col-md-6 mb-3">
+        <%= form.label :dhsud_no, "DHSUD Certificate number" %>
+        <%= form.text_field :dhsud_no, class: "form-control w-100", placeholder: "DHSUD Certificate number" %>
+      </div>
+      <div class="col col-md-6 mb-3">
+        <%= form.label :dhsud_cert, "Upload a picture of your DHSUD Certificate" %>
+        <%= form.file_field :dhsud_cert, class: "form-control", class: "form-control w-100" %>
+      </div>
+    </div>
+
+    <div class="field p-2 mb-3">
+     <%= form.label :gov_id, "To verify your identity, please upload a picture of your government I.D." %>
+     <%= form.file_field :gov_id, class: "form-control", class: "form-control w-100" %>
+    </div>
+
+    <div class="form-row p-2">
+      <div class="col col-md-6 mb-3">
+        <%= form.label :password %>
+        <% if @minimum_password_length %>
+          <em>(<%= @minimum_password_length %> characters minimum)</em>
+        <% end %><br />
+        <%= form.password_field :password, autocomplete: "new-password", class: "form-control w-100", placeholder: "Password" %>
+      </div>
+      <div class="col col-md-6 mb-3">
+        <%= form.label :password_confirmation %>
+        <%= form.password_field :password_confirmation, autocomplete: "new-password", class: "form-control w-100", placeholder: "Password" %>
+      </div>
+    </div>
+
+    <div class="actions">
+      <%= form.submit "Create Account", class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+  <br>
+ </div>
+ <div class="mb-5"></div>
+</div>

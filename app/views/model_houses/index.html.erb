@@ -1,0 +1,39 @@
+<p style="color: green"><%= notice %></p>
+<div class="container mt-5">
+  <div class="index-container">
+  <% content_for :title, "Model houses" %>
+
+  <h1>My Model Houses</h1>
+
+  <% @model_houses.each do |model_house| %>
+    <div class="row border border-secondary rounded p-3 my-2">
+      <div class="col-4">
+        <% if model_house.model_photos.attached? %>
+          <%= image_tag model_house.model_photos.first, class: "img-thumbnail", resize_to_fit: [100, 100] %>
+          <% end %>
+      </div>
+    <div class="col-8 p-2">
+        <h4><%= model_house.title %></h4>
+      <p>
+        <%= number_to_currency(model_house.price, unit: "₱", precision: 2, delimiter: ",") %><br>
+        <div class="d-flex">
+          <small class="fw-light border border-dark rounded-pill py-1 px-2 mt-1 ml-2"><%= model_house.beds %>  Beds</small>  
+          <small class="fw-light border border-dark rounded-pill py-1 px-2 mt-1 ml-2">  <%= model_house.baths %>  Baths</small>
+          <small class="fw-light border border-dark rounded-pill py-1 px-2 mt-1 ml-2">  <%= model_house.sqft %>  Sq. ft.</small>
+        </div>
+        <br>
+        <%= link_to "Show this model house", model_house %>
+      </p>
+  </div>
+  </div>
+  <% end %>
+
+  <%= paginate @model_houses, class: "pagination" %>
+
+  <%= link_to "New model house", new_model_house_path %>
+
+  </div>
+  <div class="mb-5"></div>
+  <div class="mb-5"></div>
+</div>
+

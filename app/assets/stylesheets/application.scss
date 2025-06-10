@@ -1,11 +1,179 @@
 @import 'bootstrap';
-/*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
- */
+
+
+.login-box {
+  width: 30%;
+  height: 10%;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 5px 7px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.jumbotron-main-img { 
+    background: url("naga2.jpg"); 
+    height: 400px;
+    width: 100%;
+}
+
+.card-with-image {
+    background-color: white;
+}
+
+.test {
+    font-family: "Lucida Console", "Courier New", monospace;
+    background-color: lightgrey;
+    color: black;
+}
+
+.homepage-search {
+      width: 60%; 
+    }
+
+.jumbotron-second-img { 
+    background: url("agents.jpg"); 
+    background-size: cover;
+    background-position: center; 
+    height: 400px;
+    width: 100%;
+}
+
+.realtor-text {
+    color: white;
+}
+
+.devise-box {
+    margin-left: 30px;
+}
+
+.manager-search-bar {
+  position: absolute;
+  right: 0px;
+  padding: 30px;
+}
+
+.post-textarea {
+  height: 300px;
+}
+
+.form-container {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.listing-container {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.index-container {
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.rating {
+  direction: rtl; 
+  unicode-bidi: normal;
+  display: inline-flex;
+}
+
+
+.rating input {
+  display: none;
+}
+
+.rating label {
+  font-size: 2rem;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.rating input:checked ~ label,
+.rating label:hover,
+.rating label:hover ~ label {
+  color: gold;
+}
+
+.star {
+  font-size: 1.5rem;
+  color: #ccc;
+}
+
+.star.filled {
+  color: gold;
+}
+
+.post-textarea trix-editor {
+  min-height: 300px;
+}
+
+trix-editor {
+  overflow-y: auto;   
+  border: 1px solid #ccc;
+  padding: 1rem;
+  background-color: #fff;
+}
+
+
+.modal {
+  background-color: rgba(0, 0, 0, 0.9);
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+
+#modalImage {
+  max-height: 90vh;
+  max-width: 90vw;
+  object-fit: contain;
+  background: none !important;
+  padding: 0 !important;
+  margin: 0 auto;
+  display: block;
+  box-shadow: none !important;
+}
+
+
+.modal-content {
+  max-height: 90%;
+  max-width: 90%;
+  height: auto;
+  width: auto;
+  object-fit: contain;
+  background: transparent; 
+  display: block;
+  margin: auto;
+  box-shadow: none; 
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  color: white;
+  font-size: 40px;
+  cursor: pointer;
+}
+
+.prev, .next {
+  position: absolute;
+  top: 50%;
+  color: white;
+  font-size: 40px;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.prev { left: 30px; }
+.next { right: 30px; }
+
+.image-gallery img {
+  margin-right: 0px;
+}

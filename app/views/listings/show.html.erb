@@ -1,0 +1,148 @@
+<div class="container mt-5">
+  <div class="listing-container container">
+
+    <% if @listing.listing_photos.attached? %>
+      <!-- First large image -->
+      <div class="p1 mb-2 image-gallery">
+        <%= image_tag @listing.listing_photos.first,
+            class: "img-thumbnail media",
+            style: "width: 1175px; height: auto; object-fit: cover; cursor: pointer;",
+            data: { index: 0 } %>
+      </div>
+
+      <!-- Thumbnails (rest of the gallery) -->
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        <div class="image-gallery d-flex flex-wrap gap-2">
+          <% @listing.listing_photos[1..7].each_with_index do |photo, index| %>
+            <div style="flex: 0 0 auto;">
+              <%= image_tag photo,
+                  class: "img-thumbnail media",
+                  style: "width: 120px; height: 120px; object-fit: cover; cursor: pointer;",
+                  data: { index: index + 1 } %> 
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Separate container, outside .image-gallery -->
+        <div style="flex: 0 0 auto;">
+          <%= link_to public_listing_path(@listing), class: "btn btn-outline-success d-flex flex-column align-items-center justify-content-center", style: "width: 120px; height: 120px;" do %>
+            <span class="text-center">Show<br>More<br>Photos</span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Modal -->
+    <div id="galleryModal" class="modal" style="display:none;">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <img class="modal-content" id="modalImage">
+      <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+      <a class="next" onclick="changeImage(1)">&#10095;</a>
+    </div>
+
+    <div class="row mt-4">
+      <!-- LEFT SIDE OF THE SCREEN -->
+      <div class="col-12 col-sm-6 col-md-8">
+        <h2 class="ml-2"><%= @listing.title %></h2>
+        <h6 class="fw-light ml-2"><i class="bi bi-geo-alt-fill"></i>  <%= @listing.address %>, <%= @listing.barangay %>, Naga City</h6>
+        
+        <div class="d-flex ml-2">
+          <h2><%= number_to_currency(@listing.price, unit: "₱", precision: 2, delimiter: ",") %></h2>
+          <div class="vr mx-3 my-1" style="height: 30px;"></div>
+          <p class="fw-light border border-dark rounded-pill py-1 px-2 mt-1 ml-2"><%= @listing.beds %>  Beds</p>
+          <p class="fw-light border border-dark rounded-pill py-1 px-2 mt-1 ml-2"><%= @listing.baths %>  Baths</p>
+          <p class="fw-light border border-dark rounded-pill py-1 px-2 mt-1 ml-2"><%= @listing.sqft %>  Sq. ft.</p>
+        </div>
+
+      <div class="row mt-2 mb-3 p-2">
+        <h2>About the Property</h2>
+        <p><%= @listing.description %></p>
+      </div>
+
+      <div class="container mt-2 mb-2 bg-light">  
+        <div class="p-3">  
+           <h5>Amenities</h5>
+            <% groups = amenities_listings(@listing).in_groups(5, false) %>
+            <div class="row">
+              <% groups.each do |group| %>
+                <div class="col-md-4">
+                  <% group.each do |amenities_html| %>
+                    <p><%= amenities_html.html_safe %></p>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+          
+        <div class="d-flex mt-2 mb-2 p-1"> 
+          <h6 class="fw-semibold mt-2">Available financing options:</h6>
+          <% financing_options(@listing).each_slice(3).with_index do |group, i| %>
+            <% group.each do |_, label| %>
+              <h6 class="fw-light text-success border border-success rounded-pill py-1 px-2 mt-1 ml-2"><%= label %></h6>
+            <% end %>
+          <% end %>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDE OF THE SCREEN -->
+      <div class="col-12 col-md-4 mt-4">
+        <div class="col-9 border border-secondary rounded p-3">
+          <div class="row d-flex">
+            <div class="col">
+                <% if @listing.realtor.persisted? && @listing.realtor.profile_photo.attached? %>
+                  <%= image_tag @listing.realtor.profile_photo, class: "rounded-circle", size: "90x90" %>
+                <% else %>
+                    <%= image_tag("no-profile.jpg", class: "rounded-circle", size: "90x90") %>
+                <% end %>
+            </div>
+            <div class="col mt-4">
+              <h6 class="fw-light">Listed by</h6>
+              <h6 class="fw-semibold"><%= @listing.realtor.first_name %>  <%= @listing.realtor.last_name %></h6>
+            </div>
+          </div>
+          <div class="row p-2 mt-2">
+            <a href="/users/<%= @listing.realtor.id %>" class="btn btn-outline-secondary btn-lg btn-block btn-sm" role="button">View Profile</a>
+            <a href="/" class="btn btn-outline-success btn-lg btn-block btn-sm" role="button">Contact Agent</a>
+          </div>
+        </div>
+      </div>
+    </div>   
+
+  <% if user_signed_in? && current_user.realtor? %>
+    <div>
+      <%= link_to "Edit this listing", edit_listing_path(@listing) %> |
+      <%= link_to "Back to listings", listings_path %>
+
+      <%= button_to "Destroy this listing", @listing, method: :delete %>
+    </div>
+  <% end %>
+
+  <% if current_user == @listing.realtor && !@listing.confirmed %>
+    <h3>Confirm Sale</h3>
+    <%= form_with url: confirm_listing_path(@listing), method: :post do |form| %>
+      <div class="form-group">
+        <%= label_tag :client_id, "Select Client" %>
+        <%= select_tag :client_id,
+            options_from_collection_for_select(@interested_clients, :id, :first_name),
+            prompt: "Select Client",
+            class: "form-control" %>
+      </div>
+      <%= form.submit "Confirm Sale", class: "btn btn-primary" %>
+    <% end %>
+  <% elsif current_user == @listing.realtor && @listing.confirmed == true %>
+    <br>
+    <h5>This property has been sold to: <%= @listing.client.first_name %>  <%= @listing.client.last_name %></h5>
+  <% end %>
+
+  <% if current_user == @listing.client && @listing.confirmed_transaction? && @listing.review.nil? %>
+    <%= link_to "Leave a Review", new_listing_review_path(@listing), class: "btn btn-success" %>
+  <% end %>
+
+  </div>
+  <div class="mb-5"></div>
+  <div class="mb-5"></div>
+  </div>
+</div>
+

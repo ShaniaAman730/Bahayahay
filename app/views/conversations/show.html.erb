@@ -1,0 +1,20 @@
+<h1>Chat with <%= current_user.client? ? @conversation.realtor.first_name : @conversation.client.first_name %></h1>
+
+<%= turbo_stream_from "conversation_#{@conversation.id}_messages" %>
+
+<div id="messages">
+  <%= render @conversation.messages, locals: { local_user: current_user } %>
+</div>
+
+
+
+<hr>
+
+<%= form_with(model: [@conversation, Message.new], data: { turbo_stream: true }, id: "new_message_form") do |form| %>
+  <div class="field">
+    <%= form.text_area :body, rows: 3, placeholder: "Type your message..." %>
+  </div>
+  <div class="actions">
+    <%= form.submit "Send" %>
+  </div>
+<% end %>

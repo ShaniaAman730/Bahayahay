@@ -1,0 +1,40 @@
+<p style="color: green"><%= notice %></p>
+<div class="container mt-5">
+  <div class="index-container">
+    <% content_for :title, "My Listings" %>
+
+    <h2>My Listings</h2>
+
+  
+      <% @listings.each do |listing| %>
+      <div class="row border border-secondary rounded p-3 my-2">
+        <div class="col-4">
+           <% if listing.listing_photos.attached? %>
+              <%= image_tag listing.listing_photos.first, class: "img-thumbnail", resize_to_fit: [100, 100] %>
+            <% end %>
+        </div>
+        <div class="col-8 p-2">
+          <h4><%= listing.title %></h4>
+          <p>
+            <%= number_to_currency(listing.price, unit: "₱", precision: 2, delimiter: ",") %><br>
+            <i class="bi bi-geo-alt-fill"></i>  <%= listing.address %>, <%= listing.barangay %>, Naga City
+            <div class="d-flex">
+              <small class="fw-light border border-dark rounded-pill py-1 px-2 mt-1 ml-2"><%= listing.beds %>  Beds</small>  
+              <small class="fw-light border border-dark rounded-pill py-1 px-2 mt-1 ml-2">  <%= listing.baths %>  Baths</small>
+              <small class="fw-light border border-dark rounded-pill py-1 px-2 mt-1 ml-2">  <%= listing.sqft %>  Sq. ft.</small>
+            </div>
+            <%= link_to "Show this listing", listing %>
+          </p>
+        </div>
+        </div>
+      <% end %>
+
+  <%= paginate @listings, class: "pagination" %>
+  
+
+    <%= link_to "New listing", new_listing_path %>
+
+  </div>
+  <div class="mb-5"></div>
+  <div class="mb-5"></div>
+</div>

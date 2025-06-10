@@ -1,0 +1,45 @@
+<div class="container mt-5">
+  <div class="index-container">
+    <h2>Listings Pending for Approval</h2>
+
+    <% @pending_listings.each do |listing| %>
+      
+        <div class="row border border-secondary rounded p-3 my-2">
+            <div class="col-4">
+              <% if listing.listing_photos.attached? %>
+                <%= image_tag url_for(listing.listing_photos.first), class: "img-thumbnail" %>
+              <% else %>
+                <p>No photo attached</p>
+              <% end %>
+            </div>
+            <div class="col-8 p-2">
+              <h4><%= listing.title %></h4>
+                <p><i class="bi bi-geo-alt-fill"></i>  <%= listing.address %>, <%= listing.barangay %>, Naga City</p>
+                <div class="d-flex">
+                  <%= link_to "Show this listing", listing_path(listing), class: "nav-link" %>
+                  <div class="vr mx-3 my-1" style="height: 10px;"></div>
+                  <%= link_to "Show Requirements", admin_listing_path(listing) %>
+                </div>
+
+            <div class="d-flex">
+              <%= form_with url: approve_admin_listing_path(listing), method: :patch do %>
+                <%= submit_tag "Approve", class: "btn btn-success me-2" %>
+              <% end %>
+
+              <%= form_with url: reject_admin_listing_path(listing), method: :patch do %>
+                <%= submit_tag "Reject", class: "btn btn-danger" %>
+              <% end %>
+            </div>
+
+
+            </div>
+          </div>
+      
+    <% end %>
+
+  <%= paginate @pending_listings, class: "pagination" %>
+    
+  </div>
+  <div class="mb-5"></div>
+  <div class="mb-5"></div>
+</div>

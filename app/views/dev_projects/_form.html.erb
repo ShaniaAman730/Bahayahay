@@ -1,0 +1,249 @@
+<br>
+<div class="container devise-box">
+
+<%= form_with model: dev_project, local: true, html: { multipart: true } do |form| %>
+
+  <% if dev_project.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(dev_project.errors.count, "error") %> prohibited this dev_project from being saved:</h2>
+
+      <ul>
+        <% dev_project.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+    <div class="field">
+      <%= form.label :title %><br />
+      <%= form.text_field :title, autofocus: true, autocomplete: "title", class: "form-control w-50", placeholder: "Title" %>
+    </div>
+
+    <div class="field">
+      <%= form.label :property_type, "Project type"  %><br>
+      <%= form.select :property_type, options_for_select(DevProject.property_types.collect { |s| [s[0].humanize, s[0]] }, selected: DevProject.property_types[:corroborated]), {class: "form-control w-50"} %>
+    </div>  
+
+    <div class="field">
+      <%= form.label :description %><br />
+      <%= form.text_area :description, data: { placeholder: "Write your description here..." }, class: "form-control w-50 post-textarea" %>
+    </div>
+
+    <div class="field">
+     <%= form.label :project_photos, "Upload photos"  %><br>
+     <%= form.file_field :project_photos,  multiple: true, class: "form-control w-25" %>
+   </div>
+
+    <div class="field">
+      <%= form.label :barangay, "Barangay"  %><br>
+      <%= form.select :barangay, options_for_select(DevProject.barangays.collect { |s| [s[0].humanize, s[0]] }, selected: DevProject.barangays[:corroborated]), {class: "form-control w-50"} %>
+    </div>  
+
+    <div class="field">
+     <%= form.label :address, "Address line"  %><br>
+     <%= form.text_field :address, class: "form-control w-50" %>
+   </div>
+
+   <p>Amenities</p>
+   <p><i>Check which applies.</i></p>
+
+   <div class="container">
+  <div class="row align-items-start">
+    <!-- 1st column -->
+    <div class="col">
+      <div>
+      <%= form.check_box :guardhouse %>
+      <%= form.label :guardhouse, "Gated Entrance with Guardhouse" %>
+      </div> 
+
+      <div>
+        <%= form.check_box :perimeterfence %>
+        <%= form.label :perimeterfence, "Perimeter fence" %>
+      </div> 
+    
+     <div>
+       <%= form.check_box :clubhouse %>
+       <%= form.label :clubhouse, "Clubhouse" %>
+     </div> 
+
+     <div>
+      <%= form.check_box :pool %>
+      <%= form.label :pool, "Swimming Pool" %>
+    </div> 
+
+    <div>
+      <%= form.check_box :coveredcourt %>
+      <%= form.label :coveredcourt, "Basketball Court / Covered Court" %>
+    </div> 
+
+    <div>
+      <%= form.check_box :playground %>
+      <%= form.label :playground, "Parks and Playgrounds" %>
+    </div> 
+
+    <div>
+      <%= form.check_box :joggingpath %>
+      <%= form.label :joggingpath, "Jogging Path / Walking Trails" %>
+    </div>
+
+    <div>
+      <%= form.check_box :mphall %>
+      <%= form.label :mphall, "Multi-purpose Hall or Function Rooms" %>
+    </div>  
+
+    <div>
+      <%= form.check_box :tenniscourt %>
+      <%= form.label :tenniscourt, "Tennis Court / Badminton Court" %>
+    </div>
+
+    <div>
+      <%= form.check_box :retailstrip %>
+      <%= form.label :retailstrip, "Commercial Area or Retail Strip" %>
+    </div> 
+
+    <div>
+      <%= form.check_box :chapel %>
+      <%= form.label :chapel, "Chapel or Prayer Room" %>
+    </div>
+
+    <div>
+      <%= form.check_box :petpark %>
+      <%= form.label :petpark, "Pet Parks or Pet-Friendly Zones" %>
+    </div> 
+
+    <div>
+      <%= form.check_box :sewagefacility %>
+      <%= form.label :sewagefacility, "Sewage Treatment Facility" %>
+    </div>
+  </div>
+
+  <!-- 2nd column -->
+    <div class="col">
+
+    <div>
+      <%= form.check_box :lobbyconcierge %>
+      <%= form.label :lobbyconcierge, "Lobby with Reception or Concierge" %>
+    </div> 
+
+    <div>
+      <%= form.check_box :cctv %>
+      <%= form.label :cctv, "24/7 Security and CCTV" %>
+    </div>
+
+    <div>
+      <%= form.check_box :elevators %>
+      <%= form.label :elevators %>
+    </div> 
+
+    <div>
+      <%= form.check_box :gym %>
+      <%= form.label :gym, "Gym / Fitness Center" %>
+    </div>
+
+    <div>
+      <%= form.check_box :eventhall %>
+      <%= form.label :eventhall, "Function Room or Event Hall" %>
+    </div> 
+
+    <div>
+      <%= form.check_box :playarea %>
+      <%= form.label :playarea, "Children’s Play Area" %>
+    </div>
+
+    <div>
+      <%= form.check_box :roofdeck %>
+      <%= form.label :roofdeck, "Sky Garden / Viewing Deck / Roof Deck" %>
+    </div> 
+
+    <div>
+      <%= form.check_box :parking %>
+      <%= form.label :parking, "Parking Area" %>
+    </div>
+
+    <div>
+      <%= form.check_box :firealarm %>
+      <%= form.label :firealarm, "Fire Alarm and Sprinkler System" %>
+    </div> 
+
+    <div>
+      <%= form.check_box :businesscenter %>
+      <%= form.label :businesscenter, "Co-working Spaces / Business Centers" %>
+    </div>
+
+    <div>
+      <%= form.check_box :loungearea %>
+      <%= form.label :loungearea, "Lounge area" %>
+    </div> 
+
+    <div>
+      <%= form.check_box :spa %>
+      <%= form.label :spa, "Spa, Sauna, or Massage Room" %>
+    </div>
+
+    <div>
+      <%= form.check_box :laundrystation %>
+      <%= form.label :laundrystation, "Laundry station" %>
+    </div> 
+
+  </div>
+
+    <!-- 3rd column -->
+    <div class="col">
+
+    <div>
+      <%= form.check_box :generator %>
+      <%= form.label :generator, "Backup Power for All Units" %>
+    </div>
+
+    <div>
+      <%= form.check_box :fiberready %>
+      <%= form.label :fiberready, "High-Speed Internet / Fiber Ready" %>
+    </div> 
+
+    <div>
+      <%= form.check_box :parcellockers %>
+      <%= form.label :parcellockers, "Parcel Lockers for Deliveries" %>
+    </div>
+
+    <div>
+      <%= form.check_box :restaurant %>
+      <%= form.label :restaurant, "Café or Restaurant within the Building" %>
+    </div> 
+
+    <div>
+      <p><i>For township developments:</i></p>
+    </div>
+
+    <div>
+      <%= form.check_box :mall %>
+      <%= form.label :mall, "Malls / Supermarkets" %>
+    </div>
+
+    <div>
+      <%= form.check_box :transportterminal %>
+      <%= form.label :transportterminal, "Dedicated Transport Terminals" %>
+    </div> 
+
+    <div>
+      <%= form.check_box :bikingtrail %>
+      <%= form.label :bikingtrail, "Biking trails" %>
+    </div>
+
+    <div>
+      <%= form.check_box :itpark %>
+      <%= form.label :itpark, "Business District or IT Park access" %>
+    </div> 
+
+    <div>
+      <%= form.check_box :clinic %>
+      <%= form.label :clinic, "Hospital or Clinic inside the township" %>
+    </div>
+  </div>  
+  <br>
+  <div>
+    <%= form.submit "Create Development Project", class: "btn btn-secondary mt-1" %>
+  </div>
+<% end %>
+</div>
+<br>

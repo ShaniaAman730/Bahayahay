@@ -1,0 +1,34 @@
+<div class="container mt-5">
+  <div class="listing-container">
+
+  	<div class="p1 mb-2 image-gallery">
+    <% @listing.listing_photos.each do |photo| %>
+        <%= image_tag photo,
+            class: "img-thumbnail media mb-2",
+            style: "width: 1000px; height: auto; object-fit: cover; cursor: pointer;",
+            data: { index: 0 } %>
+    <% end %>
+  </div>
+
+    <!-- Modal -->
+    <div id="galleryModal" class="modal" style="display:none;">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <img class="modal-content" id="modalImage">
+      <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+      <a class="next" onclick="changeImage(1)">&#10095;</a>
+    </div>
+
+    <br>
+    <%= link_to listing_path(@listing), class: "btn btn-outline-secondary d-inline-flex align-items-center" do %>
+      <i class="bi bi-arrow-bar-left me-2"></i>
+      Back to Listing
+    <% end %>
+
+    
+    <div class="mb-5"></div>
+    <div class="mb-5"></div>
+
+  </div>
+</div>
+
+

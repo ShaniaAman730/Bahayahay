@@ -1,0 +1,252 @@
+<%= form_with model: model_house, local: true, html: { multipart: true } do |form| %>
+  <% if model_house.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(model_house.errors.count, "error") %> prohibited this model_house from being saved:</h2>
+
+      <ul>
+        <% model_house.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, style: "display: block" %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :description, style: "display: block" %>
+    <%= form.textarea :description %>
+  </div>
+
+  <div>
+    <%= form.label :price, style: "display: block" %>
+    <%= form.text_field :price %>
+  </div>
+
+  <div class="field">
+    <%= form.label :furnish_type, "Furnish type"  %><br>
+    <%= form.select :furnish_type, options_for_select(ModelHouse.furnish_types.collect { |s| [s[0].humanize, s[0]] }, selected: ModelHouse.furnish_types[:corroborated]), {class: "form-control w-50"} %>
+  </div>  
+
+  <div class="field">
+     <%= form.label :model_photos, "Upload photos"  %><br>
+     <%= form.file_field :model_photos,  multiple: true, class: "form-control w-25" %>
+   </div>
+
+  <div>
+    <%= form.label :guardhouse, style: "display: block" %>
+    <%= form.checkbox :guardhouse %>
+  </div>
+
+  <div>
+    <%= form.label :perimeterfence, style: "display: block" %>
+    <%= form.checkbox :perimeterfence %>
+  </div>
+
+  <div>
+    <%= form.label :cctv, style: "display: block" %>
+    <%= form.checkbox :cctv %>
+  </div>
+
+  <div>
+    <%= form.label :clubhouse, style: "display: block" %>
+    <%= form.checkbox :clubhouse %>
+  </div>
+
+  <div>
+    <%= form.label :pool, style: "display: block" %>
+    <%= form.checkbox :pool %>
+  </div>
+
+  <div>
+    <%= form.label :coveredcourt, style: "display: block" %>
+    <%= form.checkbox :coveredcourt %>
+  </div>
+
+  <div>
+    <%= form.label :parks, style: "display: block" %>
+    <%= form.checkbox :parks %>
+  </div>
+
+  <div>
+    <%= form.label :playground, style: "display: block" %>
+    <%= form.checkbox :playground %>
+  </div>
+
+  <div>
+    <%= form.label :joggingpaths, style: "display: block" %>
+    <%= form.checkbox :joggingpaths %>
+  </div>
+
+  <div>
+    <%= form.label :conveniencestore, style: "display: block" %>
+    <%= form.checkbox :conveniencestore %>
+  </div>
+
+  <div>
+    <%= form.label :watersystem, style: "display: block" %>
+    <%= form.checkbox :watersystem %>
+  </div>
+
+  <div>
+    <%= form.label :drainagesystem, style: "display: block" %>
+    <%= form.checkbox :drainagesystem %>
+  </div>
+
+  <div>
+    <%= form.label :undergroundlines, style: "display: block" %>
+    <%= form.checkbox :undergroundlines %>
+  </div>
+
+  <div>
+    <%= form.label :wastemgmt, style: "display: block" %>
+    <%= form.checkbox :wastemgmt %>
+  </div>
+
+  <div>
+    <%= form.label :garden, style: "display: block" %>
+    <%= form.checkbox :garden %>
+  </div>
+
+  <div>
+    <%= form.label :carport, style: "display: block" %>
+    <%= form.checkbox :carport %>
+  </div>
+
+  <div>
+    <%= form.label :dirtykitchen, style: "display: block" %>
+    <%= form.checkbox :dirtykitchen %>
+  </div>
+
+  <div>
+    <%= form.label :gate, style: "display: block" %>
+    <%= form.checkbox :gate %>
+  </div>
+
+  <div>
+    <%= form.label :watertank, style: "display: block" %>
+    <%= form.checkbox :watertank %>
+  </div>
+
+  <div>
+    <%= form.label :homecctv, style: "display: block" %>
+    <%= form.checkbox :homecctv %>
+  </div>
+
+  <div>
+    <%= form.label :homepool, style: "display: block" %>
+    <%= form.checkbox :homepool %>
+  </div>
+
+  <div>
+    <%= form.label :lanai, style: "display: block" %>
+    <%= form.checkbox :lanai %>
+  </div>
+
+  <div>
+    <%= form.label :landscaping, style: "display: block" %>
+    <%= form.checkbox :landscaping %>
+  </div>
+
+  <div>
+    <%= form.label :aircon, style: "display: block" %>
+    <%= form.checkbox :aircon %>
+  </div>
+
+  <div>
+    <%= form.label :provaircon, style: "display: block" %>
+    <%= form.checkbox :provaircon %>
+  </div>
+
+  <div>
+    <%= form.label :wardrobes, style: "display: block" %>
+    <%= form.checkbox :wardrobes %>
+  </div>
+
+  <div>
+    <%= form.label :modkitchen, style: "display: block" %>
+    <%= form.checkbox :modkitchen %>
+  </div>
+
+  <div>
+    <%= form.label :crfixtures, style: "display: block" %>
+    <%= form.checkbox :crfixtures %>
+  </div>
+
+  <div>
+    <%= form.label :lightfixtures, style: "display: block" %>
+    <%= form.checkbox :lightfixtures %>
+  </div>
+
+  <div>
+    <%= form.label :firesystem, style: "display: block" %>
+    <%= form.checkbox :firesystem %>
+  </div>
+
+  <div>
+    <%= form.label :intercom, style: "display: block" %>
+    <%= form.checkbox :intercom %>
+  </div>
+
+  <div>
+    <%= form.label :internetprov, style: "display: block" %>
+    <%= form.checkbox :internetprov %>
+  </div>
+
+  <div>
+    <%= form.label :cableprov, style: "display: block" %>
+    <%= form.checkbox :cableprov %>
+  </div>
+
+  <div>
+    <%= form.label :meterperunit, style: "display: block" %>
+    <%= form.checkbox :meterperunit %>
+  </div>
+
+  <div>
+    <%= form.label :washingmachineprov, style: "display: block" %>
+    <%= form.checkbox :washingmachineprov %>
+  </div>
+
+  <div>
+    <%= form.label :waterheaterprov, style: "display: block" %>
+    <%= form.checkbox :waterheaterprov %>
+  </div>
+
+  <div>
+    <%= form.label :smarthomeready, style: "display: block" %>
+    <%= form.checkbox :smarthomeready %>
+  </div>
+
+  <div>
+    <%= form.label :balcony, style: "display: block" %>
+    <%= form.checkbox :balcony %>
+  </div>
+
+  <div>
+    <%= form.label :cityview, style: "display: block" %>
+    <%= form.checkbox :cityview %>
+  </div>
+
+  <div>
+    <%= form.label :mountainview, style: "display: block" %>
+    <%= form.checkbox :mountainview %>
+  </div>
+
+  <div>
+    <%= form.label :petfriendly, style: "display: block" %>
+    <%= form.checkbox :petfriendly %>
+  </div>
+
+  <div>
+    <%= form.label :facingeast, style: "display: block" %>
+    <%= form.checkbox :facingeast %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

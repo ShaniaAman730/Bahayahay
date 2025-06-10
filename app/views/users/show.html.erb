@@ -1,0 +1,129 @@
+<div class="container-fluid mt-5">
+  <div class="index-container container">
+	<div class="row">
+	  <!-- LEFT PART OF SCREEN -->		
+	  <div class="col-12 col-sm-6 col-md-8">
+	  	<div class="row ml-4 mt-4">
+	  		<div class="col col-sm-4 align-self-center">
+	  			<% if @user.persisted? && @user.profile_photo.attached? %>
+	 				<%= image_tag @user.profile_photo, class: "rounded-circle", size: "250x250" %>
+				<% else %>
+	  			<%= image_tag("no-profile.jpg", class: "rounded-circle", size: "250x250") %>
+				<% end %>
+	  		</div>
+	  		<div class="col col-sm-5 align-self-center ml-5">
+	  			<% if @user.realtor? %>
+		  			<h1><%= @user.first_name %> <%= @user.last_name %></h1>
+		  			<p><%= @user.company_name %></p>
+		  		<% elsif @user.developer? %>
+		  			<h1><%= @user.company_name %></h1>
+		  		<% end %>
+		  		<% if user_signed_in? && current_user.id == @user.id %>
+		  			<a href="/users/edit" class="btn btn-light btn-sm" role="button">Edit Profile</a>
+		  		<% end %>
+	  		</div>
+	  	</div>
+	  	<div class="row mt-4 ml-5 border border-secondary rounded p-4">
+	  		<% if @user.realtor? %>
+	  			<h2>About <%= @user.first_name %></h2>
+	  		<% elsif @user.developer? %>	
+	  			<h2>About <%= @user.company_name %></h2>	
+	  		<% end %>
+	  		<p><%= @user.about %></p>
+	  	</div>
+	  	<% if @user.realtor? %>
+		  	<div class="row my-2 ml-5 bg-light">
+		  		<div class="col-sm ml-2 p-2">
+		  			<h5>PRC:  <%= @user.prc_no %></h5>
+			    </div>
+			    <div class="col-sm ml-2 p-2">
+			    	<h5>DHSUD:  <%= @user.dhsud_no %></h5>
+			    </div>
+		  	</div>
+		  	<div class="d-flex flex-row ml-5">
+		  		<div class="p-2"><h5><i class="bi bi-info-circle"></i>    </h5></div>
+		  		<div class="p-2"><p>These identifications numbers are crucial in verifying the legitimacy of real estate practitioners as mandated by the government bodies, PRC and DHSUD, ensuring the protection of home buyers.</p></div>
+		  	</div>
+		  <% end %>
+	  	<% if @user.realtor? %>
+		  	<div class="row my-2 ml-5">
+		  		<h2>Active Listings</h2>
+					<%= render partial: "listings/listing", collection: @listings, as: :listing %>
+					<div class="pagination">
+					  <%= paginate @listings %>
+					</div>
+		  	</div>
+		  <% elsif @user.developer? %>
+		  	<div class="row my-2 ml-5">
+		  		<h2>Development Projects</h2>
+		  	</div>
+		  	<div class="row my-2 ml-5">
+		  		<h2>Model Houses</h2>
+		  	</div>
+		  <% end %>
+	  	<div class="row my-2 ml-5">
+	  		<h2>Reviews</h2>
+					<% @user.received_reviews.each do |review| %>
+					  <div class="review">
+					    <strong>Knowledge & Expertise:</strong>
+					    <%= '★' * review.knowledge_rating.to_i + '☆' * (5 - review.knowledge_rating.to_i) %><br>
+
+					    <strong>Responsiveness:</strong>
+					    <%= '★' * review.responsiveness_rating.to_i + '☆' * (5 - review.responsiveness_rating.to_i) %><br>
+
+					    <strong>Professionalism:</strong>
+					    <%= '★' * review.professionalism_rating.to_i + '☆' * (5 - review.professionalism_rating.to_i) %><br>
+
+					    <p><%= review.comment %></p>
+					  </div>
+					<% end %>
+	  	</div>
+	  </div>
+
+	  <!-- RIGHT PART OF SCREEN -->
+	  <div class="col-12 col-md-4 mt-4">
+	  	<div class="row">
+	  		<div class="col-9 bg-light ml-5 p-4 rounded">
+	  			<h5>Professional details</h5>
+	  			<div class="container">
+
+		  			<div class="row">
+		    			<div class="col-sm g-0">
+		     				 <p><small>Cellphone No.: </p></small>
+		     				 <p><small>Email: </p></small>
+		     				 <p><small>Website: </p></small>
+		     				 <% if @user.realtor? %>
+		     				 	<p><small>Brokerage address:</p></small>
+		     				<% elsif @user.developer? %>
+		     					<p><small>Brokerage address:</p></small>
+		     				<% end %>
+		    			</div>
+		    			<div class="col-sm g-0">
+		      				<p><small><%= @user.contact_no %></p></small>
+		      				<p><small><%= @user.email%></p></small>
+		      				<p><small><%= @user.website %></p></small>
+		      				<p><small><%= @user.address %></p></small>
+		    			</div>
+		    		</div>
+
+		    	</div>
+	  		</div>
+	  		<div class="w-100"></div>
+	  		<% if user_signed_in? && current_user.client? %>
+		  		<% if @user.realtor? %>
+			  		<div class="col-9 mt-3 ml-5">
+			  			<%= button_to "Message", conversations_path(realtor_id: @user.id), method: :post, class: "btn btn-success btn-lg btn-block" %>
+			  		</div>
+			  	<% end %>	
+			 <% end %>	
+	  	</div>
+	 </div>
+
+	</div>
+	<div class="mb-5"></div>
+  <div class="mb-5"></div>
+</div>
+</div>	
+
+
+

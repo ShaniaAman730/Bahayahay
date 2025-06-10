@@ -1,0 +1,12 @@
+<h1>All Realtor Listings</h1>
+
+<% @listings.each do |listing| %>
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5><%= link_to listing.title, listing_path(listing) %></h5>
+      <p><%= truncate(listing.description, length: 100) %></p>
+    </div>
+  </div>
+<% end %>
+
+<%= paginate @listings %>

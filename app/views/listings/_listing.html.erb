@@ -1,0 +1,20 @@
+<div class="card mb-3">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-4">
+        <% if listing.listing_photos.attached? %>
+          <%= image_tag url_for(listing.listing_photos.first), class: "img-thumbnail" %>
+        <% else %>
+          <p>No photo attached</p>
+        <% end %>
+      </div>
+      <div class="col-8 p-2">
+        <h4><%= listing.title %></h4>
+          <p><%= truncate(listing.description.to_plain_text, length: 100) %></p>
+          <p><i class="bi bi-geo-alt-fill"></i>  <%= listing.address %>, <%= listing.barangay %>, Naga City</p>
+          <%= link_to 'View Listing', listing_path(listing), class: "btn btn-sm btn-outline-primary" %>
+      </div>
+    </div>
+  </div>
+</div>
+

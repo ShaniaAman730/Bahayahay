@@ -3,5 +3,13 @@
 # Version of your assets, change this if you want to expire all your assets.
 Rails.application.config.assets.version = "1.0"
 
-# Add additional assets to the asset load path.
-# Rails.application.config.assets.paths << Emoji.images_path
+# Precompile custom stylesheets
+Rails.application.config.assets.precompile += %w( style.css )
+
+# You typically don't need to precompile JavaScript if using Importmap or Webpacker
+# Remove these unless you're using Sprockets to serve JS manually
+# If needed, you can re-add specific legacy scripts here
+
+Rails.application.config.assets.precompile += %w( @hotwired--turbo.js )
+Rails.application.config.assets.precompile += %w( @rails--actioncable--src.js )
+Rails.application.config.assets.precompile += %w( @hotwired--turbo-rails.js )

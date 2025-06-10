@@ -1,0 +1,95 @@
+<div class="container mt-5">
+  <div class="listing-container">
+    
+    <% if @model_house.model_photos.attached? %>
+      <!-- First large image -->
+      <div class="p1 mb-2 image-gallery">
+        <%= image_tag @model_house.model_photos.first,
+            class: "img-thumbnail media",
+            style: "width: 1175px; height: auto; object-fit: cover; cursor: pointer;",
+            data: { index: 0 } %>
+      </div>
+
+      <!-- Thumbnails (rest of the gallery) -->
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        <div class="image-gallery d-flex flex-wrap gap-2">
+          <% @model_house.model_photos[1..7].each_with_index do |photo, index| %>
+            <div style="flex: 0 0 auto;">
+              <%= image_tag photo,
+                  class: "img-thumbnail media",
+                  style: "width: 120px; height: 120px; object-fit: cover; cursor: pointer;",
+                  data: { index: index + 1 } %> 
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Modal -->
+    <div id="galleryModal" class="modal" style="display:none;">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <img class="modal-content" id="modalImage">
+      <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+      <a class="next" onclick="changeImage(1)">&#10095;</a>
+    </div>
+
+
+    <div class="row">
+      <!-- LEFT SIDE OF THE SCREEN -->
+      <div class="col-12 col-sm-6 col-md-8">
+        <h2 class="ml-2"><%= @model_house.title %></h2>
+        
+        <div class="d-flex ml-2">
+          <h2><%= number_to_currency(@model_house.price, unit: "₱", precision: 2, delimiter: ",") %></h2>
+          <div class="vr mx-3 my-1" style="height: 30px;"></div>
+          <p class="fw-light border border-dark rounded-pill py-1 px-2 mt-1 ml-2"><%= @model_house.beds %>  Beds</p>
+          <p class="fw-light border border-dark rounded-pill py-1 px-2 mt-1 ml-2"><%= @model_house.baths %>  Baths</p>
+          <p class="fw-light border border-dark rounded-pill py-1 px-2 mt-1 ml-2"><%= @model_house.sqft %>  Sq. ft.</p>
+        </div>
+
+      <div class="row mt-2 mb-3 p-2">
+        <h2>About the Model House</h2>
+        <p><%= @model_house.description %></p>
+      </div>
+
+      <div class="container mt-2 mb-2 bg-light">  
+        <div class="p-3">  
+           <h5>Amenities</h5>
+            <% groups = amenities_listings(@model_house).in_groups(5, false) %>
+            <div class="row">
+              <% groups.each do |group| %>
+                <div class="col-md-4">
+                  <% group.each do |amenities_html| %>
+                    <p><%= amenities_html.html_safe %></p>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+          
+        <div class="d-flex mt-2 mb-2 p-1"> 
+          <h6 class="fw-semibold mt-2">Available financing options:</h6>
+          <% financing_options(@model_house).each_slice(3).with_index do |group, i| %>
+            <% group.each do |_, label| %>
+              <h6 class="fw-light text-success border border-success rounded-pill py-1 px-2 mt-1 ml-2"><%= label %></h6>
+            <% end %>
+          <% end %>
+        </div>
+
+      </div>
+    </div>
+
+  <% if user_signed_in? && current_user.developer? %>
+    <div>
+      <%= link_to "Edit this Model House", edit_model_house_path(@model_house) %> |
+      <%= link_to "Back to Model Houses", model_houses_path %>
+      <%= button_to "Destroy this Model House", @model_house, method: :delete %>
+    </div>
+  <% end %>
+
+<div class="mb-5"></div>
+<div class="mb-5"></div>
+  </div>
+</div>
+

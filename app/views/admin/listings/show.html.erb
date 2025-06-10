@@ -1,0 +1,79 @@
+<div class="container mt-5">
+  <div class="listing-container">
+
+    <h2>Listing Details</h2>
+
+    <div class="mb-3">
+      <strong>Is the owner alive?</strong>: <%= @listing.owneralive ? "Yes" : "No" %>
+    </div>
+
+    <div class="mb-3">
+      <strong>Is the estate tax paid?</strong>: <%= @listing.estatetax ? "Yes" : "No" %>
+    </div>
+
+    <div class="mb-3">
+      <strong>Is extrajudicial settlement processed?</strong>: <%= @listing.ejsprocessed ? "Yes" : "No" %>
+    </div>
+
+    <div class="mb-3">
+      <strong>Is the owner a Filipino citizen?</strong>: <%= @listing.filipinocitizen ? "Yes" : "No" %>
+    </div>
+
+    <% unless @listing.filipinocitizen %>
+      <div class="mb-3">
+        <strong>Citizenship:</strong> <%= @listing.citizenship&.humanize %>
+      </div>
+
+      <% if @listing.valid_id.attached? %>
+        <div class="mb-3">
+          <strong>Valid ID:</strong>
+          <%= link_to "View", url_for(@listing.valid_id), target: "_blank" %>
+        </div>
+      <% end %>
+
+      <div class="mb-3">
+        <strong>TIN:</strong> <%= @listing.tin.presence || "N/A" %>
+      </div>
+
+      <% if @listing.birthcert.attached? %>
+        <div class="mb-3">
+          <strong>Birth Certificate:</strong>
+          <%= link_to "View", url_for(@listing.birthcert), target: "_blank" %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <div class="mb-3">
+      <strong>Is the owner abroad?</strong>: <%= @listing.ownerabroad ? "Yes" : "No" %>
+    </div>
+
+    <% if @listing.ownerabroad %>
+      <% if @listing.spa.attached? %>
+        <div class="mb-3">
+          <strong>SPA Document:</strong>
+          <%= link_to "View", url_for(@listing.spa), target: "_blank" %>
+        </div>
+      <% end %>
+
+      <div class="mb-3">
+        <strong>Attorney-in-fact:</strong> <%= @listing.aif.presence || "N/A" %>
+      </div>
+    <% end %>
+
+    <% if @listing.tct.attached? %>
+      <div class="mb-3">
+        <strong>Transfer Certificate of Title (TCT):</strong>
+        <ul>
+          <% @listing.tct.each do |file| %>
+            <li><%= link_to file.filename.to_s, url_for(file), target: "_blank" %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <a href="/admin/listings">Back to Listings Pending for Approval</a>
+
+  <div class="mb-5"></div>
+  <div class="mb-5"></div>
+  </div>
+</div>

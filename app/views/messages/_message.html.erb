@@ -1,0 +1,6 @@
+<% is_sent = defined?(local_user) && local_user && message.sender == local_user %>
+<div class="<%= is_sent ? 'sent' : 'received' %>">
+  <p><%= message.sender.first_name %></p>
+  <p><%= message.body %></p>
+  <small><%= message.created_at.strftime("%I:%M %p") %></small>
+</div>

@@ -1,0 +1,29 @@
+<p style="color: green"><%= notice %></p>
+<div class="container mt-5">
+  <div class="index-container">
+  <% content_for :title, "My Development Projects" %>
+
+  <h1>My Development Projects</h1>
+
+  <% @dev_projects.each do |dev_project| %>
+      <div class="row border border-secondary rounded p-3 my-2">
+        <div class="col-4">
+           <% if dev_project.project_photos.attached? %>
+              <%= image_tag dev_project.project_photos.first, class: "img-thumbnail", resize_to_fit: [100, 100] %>
+            <% end %>
+        </div>
+        <div class="col-8 p-2">
+          <h4><%= dev_project.title %></h4>
+            <%= link_to "Show this Development Project", dev_project %>
+        </div>
+        </div>
+      <% end %>
+
+  <%= paginate @dev_projects, class: "pagination" %>
+
+  <%= link_to "New dev project", new_dev_project_path %>
+
+  </div>
+  <div class="mb-5"></div>
+  <div class="mb-5"></div>
+</div>

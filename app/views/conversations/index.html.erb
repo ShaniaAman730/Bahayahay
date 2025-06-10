@@ -1,0 +1,9 @@
+<h1>Conversations</h1>
+
+<% @conversations.each do |conversation| %>
+  <% other_user = current_user.client? ? conversation.realtor : conversation.client %>
+
+  <div>
+    <strong><%= link_to other_user.first_name, conversation_path(conversation) %></strong>
+  </div>
+<% end %>
