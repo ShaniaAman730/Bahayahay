@@ -2,13 +2,19 @@ class Listing < ApplicationRecord
 
 	belongs_to :realtor, class_name: "User"
  	belongs_to :client, class_name: "User", optional: true
+
  	has_one :review
 
 	has_many_attached :listing_photos
+	validate :listing_photos_limit
+
 	has_one_attached :valid_id
 	has_one_attached :birthcert
+
 	has_many_attached :spa
 	has_many_attached :tct
+	validate :validate_spa_attachment_limit
+  	validate :validate_tct_attachment_limit
 
 	has_rich_text :description
 
@@ -71,6 +77,25 @@ class Listing < ApplicationRecord
 	def confirmed_transaction?
 	  confirmed && client.present?
 	end
+
+	def listing_photos_limit
+	  if listing_photos.attached? && listing_photos.count > 8
+	    errors.add(:listing_photos, "You can only upload up to 8 files.")
+	  end
+	end
+
+
+  def validate_spa_attachment_limit
+    if spa.attachments.size > 2
+      errors.add(:spa, "can have at most 2 files.")
+    end
+  end
+
+  def validate_tct_attachment_limit
+    if tct.attachments.size > 4
+      errors.add(:tct, "can have at most 4 files.")
+    end
+  end
 
   	
 end

@@ -43,7 +43,14 @@ class ModelHousesController < ApplicationController
   # PATCH/PUT /model_houses/1 or /model_houses/1.json
   def update
     respond_to do |format|
+      @model_house = ModelHouse.find(params[:id])
+
+      photo_params = params[:model_house].delete(:model_photos)
+
       if @model_house.update(model_house_params)
+
+        @model_house.model_photos.attach(photo_params) if photo_params.present?
+
         format.html { redirect_to @model_house, notice: "Model house was successfully updated." }
         format.json { render :show, status: :ok, location: @model_house }
       else
@@ -75,7 +82,7 @@ class ModelHousesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def model_house_params
-      params.expect(model_house: [ :title, :description, :price, :inherit_amenities, :furnish_type, :guardhouse, :perimeterfence, :cctv, :clubhouse, :pool, :coveredcourt, :parks, :playground, :joggingpaths, :conveniencestore, :watersystem, :drainagesystem, :undergroundlines, :wastemgmt, :garden, :carport, :dirtykitchen, :gate, :watertank, :homecctv, :homepool, :lanai, :landscaping, :aircon, :provaircon, :wardrobes, :modkitchen, :crfixtures, :lightfixtures, :firesystem, :intercom, :internetprov, :cableprov, :meterperunit, :washingmachineprov, :waterheaterprov, :smarthomeready, :balcony, :cityview, :mountainview, :petfriendly, :facingeast, model_photos: [] ])
+      params.expect(model_house: [ :title, :description, :price, :inherit_amenities, :furnish_type, :guardhouse, :perimeterfence, :cctv, :clubhouse, :pool, :coveredcourt, :parks, :playground, :joggingpaths, :conveniencestore, :watersystem, :drainagesystem, :undergroundlines, :wastemgmt, :garden, :carport, :dirtykitchen, :gate, :watertank, :homecctv, :homepool, :lanai, :landscaping, :aircon, :provaircon, :wardrobes, :modkitchen, :crfixtures, :lightfixtures, :firesystem, :intercom, :internetprov, :cableprov, :meterperunit, :washingmachineprov, :waterheaterprov, :smarthomeready, :balcony, :cityview, :mountainview, :petfriendly, :facingeast ])
     end
 end
 

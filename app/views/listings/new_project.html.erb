@@ -1,7 +1,7 @@
 <div class="container">
   <div class="mt-5"></div>
   <div class="form-container">
-    <h2 class="text-center">Create New Lisiting</h2>
+    <h2 class="text-center">New Project Listing</h2>
     <%= form_with(model: @listing, local: true, html: { multipart: true }) do |form| %>
         <% if @listing.listing_type == "project" %>
         <% if @listing.errors.any? %>
@@ -81,7 +81,7 @@
 
     <div class="field p-2">
      <%= form.label :listing_photos, "Upload photos"  %><br>
-     <%= form.file_field :listing_photos, multiple: true, direct_upload: true, class: "form-control w-100" %>
+     <%= form.file_field :listing_photos, multiple: true, direct_upload: true, class: "form-control w-100", id: "photos_input" %>
     </div>
 
     <div class="field p-2">

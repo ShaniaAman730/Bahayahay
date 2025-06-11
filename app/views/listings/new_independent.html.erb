@@ -1,6 +1,6 @@
 <div class="container mt-5">
   <div class="form-container">
-    <h2 class="text-center">Create New Lisiting</h2>
+    <h2 class="text-center">New Independent Lisiting</h2>
       <%= form_with(model: @listing, local: true, html: { multipart: true }) do |form| %>
       <% if @listing.listing_type == "independent" %>
       <% if @listing.errors.any? %>
@@ -80,7 +80,7 @@
 
     <div class="field p-2">
      <%= form.label :listing_photos, "Upload photos"  %><br>
-     <%= form.file_field :listing_photos,  multiple: true, class: "form-control w-100" %>
+     <%= form.file_field :listing_photos,  multiple: true, direct_upload: true, class: "form-control w-100", id: "photos_input" %>
    </div>
 
     <div class="field p-2">
@@ -429,9 +429,13 @@
     <div class="container border border-secondary p-4 mb-3">
       <h6>If yes, please provide the following:</h6>
 
+      <% if @listing.errors[:spa].present? %>
+        <div class="text-danger"><%= @listing.errors[:spa].join(', ') %></div>
+      <% end %>
+
       <div class="field">
         <%= form.label :spa, "Consularized Special Power of Attorney (SPA)" %><br>
-        <%= form.file_field :spa, class: "form-control w-100" %>
+        <%= form.file_field :spa, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 2 } %>
       </div>
 
       <div class="field">
@@ -440,9 +444,14 @@
       </div>
     </div>
 
+
+    <% if @listing.errors[:tct].present? %>
+      <div class="text-danger"><%= @listing.errors[:tct].join(', ') %></div>
+    <% end %>
+
     <div class="field">
      <%= form.label :tct, "Lastly, please upload at least 4 pages of the certified true copy of the Transfer Certificate of Title (TCT) recently acquired in the last 6 months:"  %><br>
-     <%= form.file_field :tct,  multiple: true, class: "form-control w-100" %>
+     <%= form.file_field :tct,  multiple: true, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 2 } %>
    </div>
 
   </div>  

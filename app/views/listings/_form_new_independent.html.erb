@@ -1,34 +1,33 @@
-<%= form_with(model: @model_house, local: true, html: { multipart: true }) do |form| %>
-        <% if @model_house.errors.any? %>
+<%= form_with(model: @listing, local: true, html: { multipart: true }) do |form| %>
+      <% if @listing.errors.any? %>
           <div style="color: red">
-            <h2><%= pluralize(@model_house.errors.count, "error") %> prohibited this model house from being saved:</h2>
+            <h2><%= pluralize(listing.errors.count, "error") %> prohibited this listing from being saved:</h2>                
             <ul>
-              <% @model_house.errors.each do |error| %>
+              <% listing.errors.each do |error| %>
                 <li><%= error.full_message %></li>
               <% end %>
             </ul>
           </div>
         <% end %>
 
-  <!-- START OF FORM --> 
-  <div class="field p-2">
-    <%= form.label :title %><br />
-    <%= form.text_field :title, autofocus: true, autocomplete: "title", class: "form-control w-100", placeholder: "Title" %>
-  </div>
+    <!-- START OF FORM -->              
+      <div class="field p-2">
+        <%= form.label :title %><br />
+        <%= form.text_field :title, autofocus: true, autocomplete: "title", class: "form-control w-100", placeholder: "Title" %>
+      </div>
 
-  <div class="form-row p-2">
-    <div class="col col-md-6 mb-3">
-      <%= form.label :furnish_type, "Furnish type", class: "form-label"  %><br>
-      <%= form.select :furnish_type, options_for_select(ModelHouse.furnish_types.collect { |s| [s[0].humanize, s[0]] }, selected: ModelHouse.furnish_types[:corroborated]),{}, class: "form-select" %>
-    </div> 
-    <div class="col col-md-6 mb-3"> 
+      <div class="form-row p-2">
+        <div class="col col-md-6 mb-3">
+            <%= form.label :project_type, "Project type", class: "form-label" %>
+            <%= form.select :project_type, options_for_select(Listing.project_types.collect { |s| [s[0].humanize, s[0]] }, selected: Listing.project_types[:corroborated]),{}, class: "form-select" %>
+        </div> 
+        <div class="col col-md-6 mb-3"> 
+            <%= form.label :furnish_type, "Furnish type", class: "form-label" %>
+            <%= form.select :furnish_type, options_for_select(Listing.furnish_types.collect { |s| [s[0].humanize, s[0]] }, selected: Listing.furnish_types[:corroborated]),{}, class: "form-select" %>
+        </div> 
+      </div> 
 
-
-
-    </div> 
-  </div> 
-
-    <div class="form-row p-2">
+      <div class="form-row p-2">
         <div class="col col-md-4 mb-3">
             <%= form.label :beds, "No. of Bedrooms"  %><br>
             <%= form.text_field :beds, class: "form-control w-100" %>
@@ -43,7 +42,7 @@
         </div>
       </div> 
 
-    <div class="form-row p-2">
+      <div class="form-row p-2">
         <div class="col col-md-5 mb-3">
           <%= form.label :price %>
           <div class="input-group">
@@ -55,7 +54,7 @@
       </div>
 
       <div class="col col-md-7 mb-3">
-        <div class="ml-2"> 
+        <div class="ml-2">
         <%= form.label :pagibig_financing, "Financing options available:" %>
         <div class="d-flex">
            <%= form.check_box :pagibig_financing, class: "btn-check", id: "pagibig_financing-check", autocomplete: "off" %>
@@ -71,23 +70,47 @@
       </div>
     </div>
 
-  <div class="field p-2">
-    <%= form.label :model_photos, "Upload photos"  %><br>
-    <%= form.file_field :model_photos, multiple: true, direct_upload: true, class: "form-control w-100",  id: "photos_input" %>
-  </div>
+    <% if @listing.listing_photos.attached? %>
+      <div class="mb-3">
+        <p>Previously uploaded photos:</p>
+        <div class="row">
+          <% @listing.listing_photos.each do |photo| %>
+            <div class="col-md-3">
+              <%= image_tag photo, class: "img-thumbnail media", style: "width: 300px; height: auto; object-fit: cover;" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
 
-  <div class="field p-2">
+    <div class="field p-2">
+     <%= form.label :listing_photos, "Upload photos"  %><br>
+     <%= form.file_field :listing_photos,  multiple: true, direct_upload: true, class: "form-control w-100", id: "photos_input" %>
+   </div>
+
+    <div class="field p-2">
       <%= form.label :description %><br />
-      <%= form.rich_text_area :description, id: "model_house_description", class: "post-textarea" %>
+      <%= form.rich_text_area :description, id: "listing_description", class: "post-textarea" %>
     </div>
 
-  <div class="container mt-5 bg-light">  
-    <div class="p-5">  
-      <h5>Amenities</h5>
-      <p><small><em>Check which applies.</p></small></em>
+    <div class="form-row p-2">
+      <div class="col col-md-8 mb-3">
+        <%= form.label :address, "Address line"  %><br>
+        <%= form.text_field :address, class: "form-control w-100" %>
+      </div>
+      <div class="col col-md-4 mb-3">
+         <%= form.label :barangay, "Barangay", class: "form-label" %>
+            <%= form.select :barangay, options_for_select(Listing.barangays.collect { |s| [s[0].humanize, s[0]] }, selected: Listing.barangays[:corroborated]),{}, class: "form-select" %>
+      </div>
+    </div>
+   
+    <div class="container mt-5 bg-light">  
+      <div class="p-5">  
+       <h5>Amenities</h5>
+       <p><small><em>Check which applies.</p></small></em>
 
       <div class="row">   
-       <div class="col">
+       <div class="col"> 
          <div class="form-check d-flex">
           <%= form.label :guardhouse,"Guardhouse", class: "form-check-label" %>
           <%= form.checkbox :guardhouse, class: "form-check-input" %>
@@ -109,7 +132,7 @@
         </div>
 
         <div class="form-check d-flex">
-          <%= form.label :pool, "Community Pool", class: "form-check-label" %>
+          <%= form.label :pool, "Swimming Pool", class: "form-check-label" %>
           <%= form.checkbox :pool, class: "form-check-input" %>
         </div>
 
@@ -299,13 +322,176 @@
           <%= form.label :facingeast,"Facing East", class: "form-check-label" %>
           <%= form.checkbox :facingeast, class: "form-check-input" %>
         </div>
-       </div>  
       </div> 
-    </div>
+    </div>     
+   </div>  
   </div>
 
+  <div class="container mt-5 border border-secondary">  
+   <div class="p-5">  
+    <h5>Extra Requirements for Independent Listings</h5>
+    <p><small><em>This is to safeguard all parties for future transactions.</p></small></em>
+
+    <div class="row">
+     <div class="col">
+      <div class="mb-3">
+      <%= form.label :owneralive, "Is the owner alive or not?", class: "form-label d-block" %>
+
+      <div class="form-check form-check-inline">
+        <%= form.radio_button :owneralive, true, id: 'owneralive_yes', class: "form-check-input" %>
+        <%= form.label :estatetax, "Yes", for: 'owneralive_yes', class: "form-check-label" %>
+      </div>
+
+      <div class="form-check form-check-inline">
+        <%= form.radio_button :owneralive, false, id: 'owneralive_no', class: "form-check-input" %>
+        <%= form.label :owneralive, "No", for: 'owneralive_no', class: "form-check-label" %>
+      </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="mb-3">
+      <%= form.label :estatetax, "Is the estate tax paid?", class: "form-label d-block" %>
+
+      <div class="form-check form-check-inline">
+        <%= form.radio_button :estatetax, true, id: 'estatetax_yes', class: "form-check-input" %>
+        <%= form.label :estatetax, "Yes", for: 'estatetax_yes', class: "form-check-label" %>
+      </div>
+
+      <div class="form-check form-check-inline">
+        <%= form.radio_button :estatetax, false, id: 'estatetax_no', class: "form-check-input" %>
+        <%= form.label :estatetax, "No", for: 'estatetax_no', class: "form-check-label" %>
+      </div>
+      </div>
+    </div>
+   </div>
+
+    <div class="mb-3">
+      <%= form.label :ejsprocessed, "If the owner is not alive, is the extrajudicial settlement processed?", class: "form-label d-block" %>
+
+      <div class="form-check form-check-inline">
+        <%= form.radio_button :ejsprocessed, true, id: 'ejsprocessed_yes', class: "form-check-input" %>
+        <%= form.label :ejsprocessed, "Yes", for: 'ejsprocessed_yes', class: "form-check-label" %>
+      </div>
+
+      <div class="form-check form-check-inline">
+        <%= form.radio_button :ejsprocessed, false, id: 'ejsprocessed_no', class: "form-check-input" %>
+        <%= form.label :ejsprocessed, "No", for: 'ejsprocessed_no', class: "form-check-label" %>
+      </div>
+    </div>
+
+     <div class="mb-3">
+      <%= form.label :filipinocitizen, "Is the owner a Filipino citizen?", class: "form-label d-block" %>
+
+      <div class="form-check form-check-inline">
+        <%= form.radio_button :filipinocitizen, true, id: 'filipinocitizen_yes', class: "form-check-input" %>
+        <%= form.label :filipinocitizen, "Yes", for: 'filipinocitizen_yes', class: "form-check-label" %>
+      </div>
+
+      <div class="form-check form-check-inline">
+        <%= form.radio_button :filipinocitizen, false, id: 'filipinocitizen_no', class: "form-check-input" %>
+        <%= form.label :filipinocitizen, "No", for: 'filipinocitizen_no', class: "form-check-label" %>
+      </div>
+    </div>
+
+    <div class="container border border-secondary p-4 mb-3">
+      <h6>If not, please provide the following:</h6>
+      <div class="field">
+        <%= form.label :citizenship, "Citizenship", class: "form-label" %>
+        <%= form.select :citizenship, options_for_select(Listing.citizenships.collect { |s| [s[0].humanize, s[0]] }, selected: Listing.citizenships[:corroborated]),{}, class: "form-select" %>
+      </div> 
+
+      <div class="field">
+        <%= form.label :valid_id, "Valid ID" %><br>
+        <%= form.file_field :valid_id, class: "form-control w-100" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :tin, "Taxpayer Identification Number (TIN)" %><br />
+        <%= form.text_field :tin, autofocus: true, autocomplete: "TIN", class: "form-control w-100", placeholder: "TIN" %>
+      </div>
+
+      <div class="field">
+        <%= form.label :birthcert, "If you don't have a TIN, please upload your birth certificate instead" %><br>
+        <%= form.file_field :birthcert, class: "form-control w-100" %>
+      </div>
+  </div>
+
+    <div class="mb-3">
+      <%= form.label :ownerabroad, "Is the owner abroad?", class: "form-label d-block" %>
+
+      <div class="form-check form-check-inline">
+        <%= form.radio_button :ownerabroad, true, id: 'ownerabroad_yes', class: "form-check-input" %>
+        <%= form.label :ownerabroad, "Yes", for: 'ownerabroad_yes', class: "form-check-label" %>
+      </div>
+
+      <div class="form-check form-check-inline">
+        <%= form.radio_button :ownerabroad, false, id: 'ownerabroad_no', class: "form-check-input" %>
+        <%= form.label :ownerabroad, "No", for: 'ownerabroad_no', class: "form-check-label" %>
+      </div>
+    </div>
+
+    <div class="container border border-secondary p-4 mb-3">
+      <h6>If yes, please provide the following:</h6>
+
+      <% if @listing.spa.attached? %>
+      <div class="mb-3">
+        <p>Previously uploaded Consularized Special Power of Attorney (SPA):</p>
+        <div class="row">
+          <% @listing.spa.each do |photo| %>
+            <div class="col-md-3">
+              <%= image_tag photo, class: "img-thumbnail media", style: "width: 300px; height: auto; object-fit: cover;" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+      <% if @listing.errors[:spa].present? %>
+        <div class="text-danger"><%= @listing.errors[:spa].join(', ') %></div>
+      <% end %>
+
+      <div class="field">
+        <%= form.label :spa, "Consularized Special Power of Attorney (SPA)" %><br>
+        <%= form.file_field :spa, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 2 } %>
+      </div>
+
+      <div class="field">
+        <%= form.label :aif, "Name of Attorney-in-fact" %><br />
+        <%= form.text_field :aif, autofocus: true, autocomplete: "Attorney-in-fact", class: "form-control w-100", placeholder: "Name of attorney-in-fact" %>
+      </div>
+    </div>
+
+    <% if @listing.tct.attached? %>
+      <div class="mb-3">
+        <p>Previously uploaded Transfer Certificate of Title (TCT):</p>
+        <div class="row">
+          <% @listing.tct.each do |photo| %>
+            <div class="col-md-3">
+              <%= image_tag photo, class: "img-thumbnail media", style: "width: 300px; height: auto; object-fit: cover;" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @listing.errors[:tct].present? %>
+      <div class="text-danger"><%= @listing.errors[:tct].join(', ') %></div>
+    <% end %>
+
+    <div class="field">
+     <%= form.label :tct, "Lastly, please upload at least 4 pages of the certified true copy of the Transfer Certificate of Title (TCT) recently acquired in the last 6 months:"  %><br>
+     <%= form.file_field :tct,  multiple: true, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 2 } %>
+   </div>
+
+  </div>  
+ </div>
+</div>
 
   <div>
-    <%= form.submit "Post Model House", class: "btn btn-secondary float-right mt-3 mb-5" %>
+    <%= form.submit "Update Listing", class: "btn btn-secondary float-right mt-3 mb-5" %>
   </div>
- <% end %>
+
+
+
+   <% end %>

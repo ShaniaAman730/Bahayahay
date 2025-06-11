@@ -42,8 +42,14 @@ class DevProjectsController < ApplicationController
 
   # PATCH/PUT /dev_projects/1 or /dev_projects/1.json
   def update
+    @dev_project = DevProject.find(params[:id])
+
+    photo_params = params[:dev_project].delete(:project_photos)
+
     respond_to do |format|
       if @dev_project.update(dev_project_params)
+        @dev_project.project_photos.attach(photo_params) if photo_params.present?
+
         format.html { redirect_to @dev_project, notice: "Dev project was successfully updated." }
         format.json { render :show, status: :ok, location: @dev_project }
       else
@@ -75,6 +81,6 @@ class DevProjectsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def dev_project_params
-      params.expect(dev_project: [ :title, :description, :barangay, :address, :inherit_amenities, :guardhouse, :perimeterfence, :clubhouse, :pool, :coveredcourt,:playground,:joggingpath, :mphall, :tenniscourt, :retailstrip, :chapel,:petpark, :sewagefacility, :lobbyconcierge, :cctv, :elevators, :gym, :eventhall, :playarea, :roofdeck, :parking, :firealarm, :businesscenter, :loungearea, :spa, :laundrystation, :generator, :fiberready, :parcellockers, :restaurant, :mall, :transportterminal, :bikingtrail, :itpark, :clinic, :property_type, project_photos: [] ])
+      params.expect(dev_project: [ :title, :description, :barangay, :address, :inherit_amenities, :guardhouse, :perimeterfence, :clubhouse, :pool, :coveredcourt,:playground,:joggingpath, :mphall, :tenniscourt, :retailstrip, :chapel,:petpark, :sewagefacility, :lobbyconcierge, :cctv, :elevators, :gym, :eventhall, :playarea, :roofdeck, :parking, :firealarm, :businesscenter, :loungearea, :spa, :laundrystation, :generator, :fiberready, :parcellockers, :restaurant, :mall, :transportterminal, :bikingtrail, :itpark, :clinic, :property_type ])
     end
 end

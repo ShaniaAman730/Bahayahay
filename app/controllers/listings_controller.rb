@@ -108,8 +108,19 @@ end
 
   # PATCH/PUT /listings/1 or /listings/1.json
   def update
+    @listing = Listing.find(params[:id])
+
+    # Extract the file attachment params and remove from strong params
+    photo_params = params[:listing].delete(:listing_photos)
+    spa_params   = params[:listing].delete(:spa)
+    tct_params   = params[:listing].delete(:tct)
+
     respond_to do |format|
       if @listing.update(listing_params)
+        @listing.listing_photos.attach(photo_params) if photo_params.present?
+        @listing.spa.attach(spa_params) if spa_params.present?
+        @listing.tct.attach(tct_params) if tct_params.present?
+
         format.html { redirect_to @listing, notice: "Listing was successfully updated." }
         format.json { render :show, status: :ok, location: @listing }
       else
@@ -118,6 +129,7 @@ end
       end
     end
   end
+
 
   # DELETE /listings/1 or /listings/1.json
   def destroy
@@ -158,7 +170,7 @@ end
       :balcony, :cityview, :mountainview, :petfriendly, :facingeast,
       :realtor, :client, :listing_type, :listing_type_num, 
       :beds, :baths, :sqft,
-      :valid_id, :birthcert, listing_photos: [], spa: [], tct: []
+      :valid_id, :birthcert
     )
   end
 

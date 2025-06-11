@@ -1,12 +1,33 @@
 <% content_for :title, "Editing model house" %>
+<div class="container">
+  <div class="mt-5"></div>
+  <div class="form-container">
+    <h2 class="text-center">Edit Model House</h2>
 
-<h1>Editing model house</h1>
+    <% if @model_house.model_photos.attached? %>
+      <div class="mb-3">
+        <p>Previously uploaded photos:</p>
+        <div class="row">
+          <% @model_house.model_photos.each do |photo| %>
+            <div class="col-md-3">
+              <%= image_tag photo, class: "img-thumbnail media", style: "width: 300px; height: auto; object-fit: cover;" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
 
-<%= render "form", model_house: @model_house %>
+     <%= render 'form', model_house: @model_house %>
 
-<br>
+     <br>
 
-<div>
-  <%= link_to "Show this model house", @model_house %> |
-  <%= link_to "Back to model houses", model_houses_path %>
+     <div>
+      <%= link_to "Show this model house", @model_house %> |
+      <%= link_to "Back to model houses", model_houses_path %>
+    </div>
+
+   </div>
+ <div class="mb-5"></div>
+ <div class="mb-5"></div>
 </div>
+

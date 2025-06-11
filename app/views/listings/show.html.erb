@@ -102,9 +102,14 @@
               <h6 class="fw-semibold"><%= @listing.realtor.first_name %>  <%= @listing.realtor.last_name %></h6>
             </div>
           </div>
-          <div class="row p-2 mt-2">
+          <div class="p-1 mt-3">
             <a href="/users/<%= @listing.realtor.id %>" class="btn btn-outline-secondary btn-lg btn-block btn-sm" role="button">View Profile</a>
-            <a href="/" class="btn btn-outline-success btn-lg btn-block btn-sm" role="button">Contact Agent</a>
+          </div>
+          <div class="p-1">
+              <% if user_signed_in? && current_user.client? %>
+                <%= button_to "Contact Agent", conversations_path(realtor_id: @listing.realtor.id), method: :post, class: "btn btn-outline-success btn-lg btn-block btn-sm" %>
+             <% end %>
+            </div>
           </div>
         </div>
       </div>

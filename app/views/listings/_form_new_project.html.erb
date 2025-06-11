@@ -1,34 +1,33 @@
-<%= form_with(model: @model_house, local: true, html: { multipart: true }) do |form| %>
-        <% if @model_house.errors.any? %>
+<%= form_with(model: @listing, local: true, html: { multipart: true }) do |form| %>
+        <% if @listing.errors.any? %>
           <div style="color: red">
-            <h2><%= pluralize(@model_house.errors.count, "error") %> prohibited this model house from being saved:</h2>
+            <h2><%= pluralize(@listing.errors.count, "error") %> prohibited this listing from being saved:</h2>                
             <ul>
-              <% @model_house.errors.each do |error| %>
+              <% @listing.errors.each do |error| %>
                 <li><%= error.full_message %></li>
               <% end %>
             </ul>
           </div>
         <% end %>
 
-  <!-- START OF FORM --> 
-  <div class="field p-2">
-    <%= form.label :title %><br />
-    <%= form.text_field :title, autofocus: true, autocomplete: "title", class: "form-control w-100", placeholder: "Title" %>
-  </div>
+    <!-- START OF FORM -->              
+      <div class="field p-2">
+        <%= form.label :title %><br />
+        <%= form.text_field :title, autofocus: true, autocomplete: "title", class: "form-control w-100", placeholder: "Title" %>
+      </div>
 
-  <div class="form-row p-2">
-    <div class="col col-md-6 mb-3">
-      <%= form.label :furnish_type, "Furnish type", class: "form-label"  %><br>
-      <%= form.select :furnish_type, options_for_select(ModelHouse.furnish_types.collect { |s| [s[0].humanize, s[0]] }, selected: ModelHouse.furnish_types[:corroborated]),{}, class: "form-select" %>
-    </div> 
-    <div class="col col-md-6 mb-3"> 
+      <div class="form-row p-2">
+        <div class="col col-md-6 mb-3">
+            <%= form.label :project_type, "Project type", class: "form-label" %>
+            <%= form.select :project_type, options_for_select(Listing.project_types.collect { |s| [s[0].humanize, s[0]] }, selected: Listing.project_types[:corroborated]),{}, class: "form-select" %>
+        </div> 
+        <div class="col col-md-6 mb-3"> 
+            <%= form.label :furnish_type, "Furnish type", class: "form-label" %>
+            <%= form.select :furnish_type, options_for_select(Listing.furnish_types.collect { |s| [s[0].humanize, s[0]] }, selected: Listing.furnish_types[:corroborated]),{}, class: "form-select" %>
+        </div> 
+      </div> 
 
-
-
-    </div> 
-  </div> 
-
-    <div class="form-row p-2">
+      <div class="form-row p-2">
         <div class="col col-md-4 mb-3">
             <%= form.label :beds, "No. of Bedrooms"  %><br>
             <%= form.text_field :beds, class: "form-control w-100" %>
@@ -41,9 +40,9 @@
           <%= form.label :sqft, "Floor area"  %><br>
           <%= form.text_field :sqft, class: "form-control w-100" %>
         </div>
-      </div> 
+      </div>  
 
-    <div class="form-row p-2">
+      <div class="form-row p-2">
         <div class="col col-md-5 mb-3">
           <%= form.label :price %>
           <div class="input-group">
@@ -55,7 +54,7 @@
       </div>
 
       <div class="col col-md-7 mb-3">
-        <div class="ml-2"> 
+        <div class="ml-2">
         <%= form.label :pagibig_financing, "Financing options available:" %>
         <div class="d-flex">
            <%= form.check_box :pagibig_financing, class: "btn-check", id: "pagibig_financing-check", autocomplete: "off" %>
@@ -71,23 +70,47 @@
       </div>
     </div>
 
-  <div class="field p-2">
-    <%= form.label :model_photos, "Upload photos"  %><br>
-    <%= form.file_field :model_photos, multiple: true, direct_upload: true, class: "form-control w-100",  id: "photos_input" %>
-  </div>
+    <% if @listing.listing_photos.attached? %>
+      <div class="mb-3">
+        <p>Previously uploaded photos:</p>
+        <div class="row">
+          <% @listing.listing_photos.each do |photo| %>
+            <div class="col-md-3">
+              <%= image_tag photo, class: "img-thumbnail media", style: "width: 300px; height: auto; object-fit: cover;" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
 
-  <div class="field p-2">
-      <%= form.label :description %><br />
-      <%= form.rich_text_area :description, id: "model_house_description", class: "post-textarea" %>
+    <div class="field p-2">
+     <%= form.label :listing_photos, "Upload photos"  %><br>
+     <%= form.file_field :listing_photos, multiple: true, direct_upload: true, class: "form-control w-100", id: "photos_input" %>
     </div>
 
-  <div class="container mt-5 bg-light">  
-    <div class="p-5">  
-      <h5>Amenities</h5>
-      <p><small><em>Check which applies.</p></small></em>
+    <div class="field p-2">
+      <%= form.label :description %><br />
+      <%= form.rich_text_area :description, id: "listing_description", class: "post-textarea" %>
+    </div>
+
+    <div class="form-row p-2">
+      <div class="col col-md-8 mb-3">
+        <%= form.label :address, "Address line"  %><br>
+        <%= form.text_field :address, class: "form-control w-100" %>
+      </div>
+      <div class="col col-md-4 mb-3">
+         <%= form.label :barangay, "Barangay", class: "form-label" %>
+            <%= form.select :barangay, options_for_select(Listing.barangays.collect { |s| [s[0].humanize, s[0]] }, selected: Listing.barangays[:corroborated]),{}, class: "form-select" %>
+      </div>
+    </div>
+   
+    <div class="container mt-5 bg-light">  
+      <div class="p-5">  
+       <h5>Amenities</h5>
+       <p><small><em>Check which applies.</p></small></em>
 
       <div class="row">   
-       <div class="col">
+       <div class="col"> 
          <div class="form-check d-flex">
           <%= form.label :guardhouse,"Guardhouse", class: "form-check-label" %>
           <%= form.checkbox :guardhouse, class: "form-check-input" %>
@@ -299,13 +322,13 @@
           <%= form.label :facingeast,"Facing East", class: "form-check-label" %>
           <%= form.checkbox :facingeast, class: "form-check-input" %>
         </div>
-       </div>  
       </div> 
-    </div>
-  </div>
-
+    </div>     
+   </div>  
+  </div>  
 
   <div>
-    <%= form.submit "Post Model House", class: "btn btn-secondary float-right mt-3 mb-5" %>
+    <%= form.submit "Update Listing", class: "btn btn-secondary float-right mt-3 mb-5" %>
   </div>
- <% end %>
+
+   <% end %>
