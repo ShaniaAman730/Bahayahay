@@ -3,7 +3,7 @@ class Listing < ApplicationRecord
 	belongs_to :realtor, class_name: "User"
  	belongs_to :client, class_name: "User", optional: true
 
- 	has_one :review
+ 	has_one :review, dependent: :destroy
 
 	has_many_attached :listing_photos
 	validate :listing_photos_limit
@@ -13,10 +13,19 @@ class Listing < ApplicationRecord
 
 	has_many_attached :spa
 	has_many_attached :tct
-	validate :validate_spa_attachment_limit
-  	validate :validate_tct_attachment_limit
 
 	has_rich_text :description
+	
+	validate :validate_spa_attachment_limit
+  validate :validate_tct_attachment_limit
+
+  validates :title, presence: true
+  validates :beds, :baths, :sqft, numericality: { only_integer: true, allow_nil: true }
+  validates :price, numericality: { allow_nil: true }
+  validates :address, presence: true
+  validates :owneralive, :estatetax, :ejsprocessed, :filipinocitizen, :ownerabroad,
+  					 inclusion: { in: [true, false], message: "must be selected" },
+  					 if: -> { listing_type_num == 1 }
 
 	paginates_per 10
 

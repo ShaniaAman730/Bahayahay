@@ -1,20 +1,27 @@
-<h1>Chat with <%= current_user.client? ? @conversation.realtor.first_name : @conversation.client.first_name %></h1>
+<div class="container mt-5">
+  <h2 class="mb-4 text-success">
+    Chat with
+    <% user = current_user.client? ? @conversation.realtor : @conversation.client %>
+    <%= link_to "#{user.first_name} #{user.last_name}", user_path(user), class: "text-decoration-none text-success" %>
+  </h2>
 
-<%= turbo_stream_from "conversation_#{@conversation.id}_messages" %>
 
-<div id="messages">
-  <%= render @conversation.messages, locals: { local_user: current_user } %>
+  <%= turbo_stream_from "conversation_#{@conversation.id}_messages" %>
+
+  <div id="messages" class="border rounded p-3 mb-4 bg-light overflow-auto" style="max-height: 400px;">
+    <%= render @conversation.messages, locals: { local_user: current_user } %>
+  </div>
+
+  <hr class="my-4">
+
+  <%= form_with(model: [@conversation, Message.new], data: { turbo_stream: true }, id: "new_message_form", class: "mb-3") do |form| %>
+    <div class="mb-3">
+      <%= form.text_area :body, rows: 3, class: "form-control", placeholder: "Type your message..." %>
+    </div>
+    <div>
+      <%= form.submit "Send", class: "btn btn-success" %>
+    </div>
+  <% end %>
 </div>
-
-
-
-<hr>
-
-<%= form_with(model: [@conversation, Message.new], data: { turbo_stream: true }, id: "new_message_form") do |form| %>
-  <div class="field">
-    <%= form.text_area :body, rows: 3, placeholder: "Type your message..." %>
-  </div>
-  <div class="actions">
-    <%= form.submit "Send" %>
-  </div>
-<% end %>
+<div class="mb-5"></div>
+<div class="mb-5"></div>

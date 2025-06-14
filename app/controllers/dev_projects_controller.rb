@@ -3,6 +3,20 @@ class DevProjectsController < ApplicationController
   before_action :authenticate_developer!
   before_action :ensure_developer!
 
+  def remove_attachment
+    @dev_project = DevProject.find(params[:id])
+    attachment = ActiveStorage::Attachment.find(params[:attachment_id])
+
+    if attachment.record == @dev_project && attachment.name == "project_photos"
+      attachment.purge
+      @dev_project.reload
+      redirect_to edit_dev_project_path(@dev_project), notice: "Photo was successfully removed."
+    else
+      redirect_to edit_dev_project_path(@dev_project), alert: "Invalid attachment."
+    end
+  end
+
+
   # GET /dev_projects or /dev_projects.json
   def index
     @dev_projects = DevProject.all

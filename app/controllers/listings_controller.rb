@@ -7,6 +7,21 @@ class ListingsController < ApplicationController
   skip_before_action :authenticate_realtor!, only: [:show, :index, :public_listings, :public]
   skip_before_action :ensure_realtor!, only: [:show, :index, :public_listings, :public]
 
+  def remove_attachment
+    @listing = Listing.find(params[:id])
+    attachment = ActiveStorage::Attachment.find(params[:attachment_id])
+
+    # Confirm the attachment is associated with listing_photos
+    if attachment.record == @listing && attachment.name == "listing_photos"
+      attachment.purge
+      @listing.reload
+      redirect_to edit_listing_path(@listing), notice: "Photo was successfully removed."
+    else
+      redirect_to edit_listing_path(@listing), alert: "Invalid attachment."
+    end
+  end
+
+
   def confirm
     @listing = Listing.find(params[:id])
 
@@ -25,7 +40,35 @@ class ListingsController < ApplicationController
   end
 
   def public_listings
-    @listings = Listing.public_listings.order(created_at: :desc).page(params[:page]).per(10)
+
+    @listings = Listing.public_listings
+
+    if params[:keyword].present?
+      keyword = params[:keyword].downcase
+      matching_project_types = Listing.project_types.keys.select { |pt| pt.downcase.include?(keyword) }
+      matching_furnish_types = Listing.furnish_types.keys.select { |ft| ft.downcase.include?(keyword) }
+
+      @listings = @listings.where(
+        "LOWER(title) LIKE :q OR project_type IN (:project_types) OR furnish_type IN (:furnish_types)",
+        q: "%#{keyword}%",
+        project_types: matching_project_types.map { |pt| Listing.project_types[pt] },
+        furnish_types: matching_furnish_types.map { |ft| Listing.furnish_types[ft] }
+      )
+    end
+
+    @listings = @listings.where("beds >= ?", params[:beds]) if params[:beds].present?
+    @listings = @listings.where("baths >= ?", params[:baths]) if params[:baths].present?
+    @listings = @listings.where("price >= ?", params[:min_price]) if params[:min_price].present?
+    @listings = @listings.where("price <= ?", params[:max_price]) if params[:max_price].present?
+
+    @listings = @listings.where(pagibig_financing: true) if params[:pagibig_financing].present?
+    @listings = @listings.where(bank_financing: true) if params[:bank_financing].present?
+    @listings = @listings.where(inhouse_financing: true) if params[:inhouse_financing].present?
+
+    @listings = @listings.where(project_type: params[:project_type]) if params[:project_type].present?
+    @listings = @listings.where(furnish_type: params[:furnish_type]) if params[:furnish_type].present?
+
+    @listings = @listings.page(params[:page]).per(10)
   end
 
   def select_type
@@ -87,23 +130,26 @@ end
     puts "Uploaded files:"
     puts params[:listing][:listing_photos].inspect if params[:listing][:listing_photos].present?
 
+    saved = @listing.save
+
     respond_to do |format|
-      if @listing.save && @listing.listing_type_num == 0 
+      if saved && @listing.listing_type_num == 0 
         format.html { redirect_to @listing, notice: "Listing was successfully created." }
         format.json { render :show, status: :created, location: @listing }
-      elsif @listing.save && @listing.listing_type_num == 1
+      elsif saved && @listing.listing_type_num == 1
         format.html { redirect_to @listing, notice: "Listing was successfully created and is now pending for admin approval" }
         format.json { render :show, status: :created, location: @listing }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        template = @listing.listing_type_num == 0 ? :new_independent : :new_project
+        format.html { render template, status: :unprocessable_entity }
         format.json { render json: @listing.errors, status: :unprocessable_entity }
       end
     end
 
-   puts params.inspect
-   puts listing_params.inspect
-
+    puts params.inspect
+    puts listing_params.inspect
   end
+
 
 
   # PATCH/PUT /listings/1 or /listings/1.json
@@ -170,7 +216,8 @@ end
       :balcony, :cityview, :mountainview, :petfriendly, :facingeast,
       :realtor, :client, :listing_type, :listing_type_num, 
       :beds, :baths, :sqft,
-      :valid_id, :birthcert
+      :valid_id, :birthcert, 
+      listing_photos: [], spa: [], tct: []
     )
   end
 

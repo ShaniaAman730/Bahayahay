@@ -1,132 +1,55 @@
 <section class="pt-5 pb-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-6">
-                <h3 class="mb-3">Explore Homes in Naga</h3>
-            </div>
-            <div class="col-6 text-right">
-                <a class="btn btn-success mb-3 mr-1" href="#carouselExampleIndicators2" role="button" data-slide="prev">
-                    <i class="bi bi-chevron-left"></i>
-                </a>
-                <a class="btn btn-success mb-3 " href="#carouselExampleIndicators2" role="button" data-slide="next">
-                    <i class="bi bi-chevron-right"></i>
-                </a>
-            </div>
-            <div class="col-12">
-                <div id="carouselExampleIndicators2" class="carousel slide" data-ride="carousel">
+  <div class="container">
+    <div class="row">
+      <div class="col-6">
+        <h3 class="mb-3">Explore Homes in Naga</h3>
+      </div>
+      <div class="col-6 text-end">
+        <a class="btn btn-success mb-3 me-1" href="#carouselExampleIndicators2" role="button" data-bs-slide="prev">
+          <i class="bi bi-chevron-left"></i>
+        </a>
+        <a class="btn btn-success mb-3" href="#carouselExampleIndicators2" role="button" data-bs-slide="next">
+          <i class="bi bi-chevron-right"></i>
+        </a>
+      </div>
 
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <div class="row">
+      <div class="col-12">
+        <div id="carouselExampleIndicators2" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <% @recent_listings.each_slice(3).with_index do |listing_group, index| %>
+              <div class="carousel-item <%= 'active' if index == 0 %>">
+                <div class="row">
+                  <% listing_group.each do |listing| %>
+                    <div class="col-md-4 mb-3">
+                      <div class="card h-100">
+                        <% if listing.listing_photos.attached? %>
+                          <%= image_tag url_for(listing.listing_photos.first), class: "card-img-top", style: "object-fit: cover; height: 300px;" %>
+                        <% else %>
+                          <div class="d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
+                            <span class="text-muted">No photo available</span>
+                          </div>
+                        <% end %>
 
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/house1.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">₱1,234,567.00</h4>
-                                            <p class="card-text">2 Beds, 1 Bath | 353 sq.ft.</p>
-                                            <p class="card-text">Pacol, Naga City</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/house1.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">₱1,234,567.00</h4>
-                                            <p class="card-text">2 Beds, 1 Bath | 353 sq.ft.</p>
-                                            <p class="card-text">Pacol, Naga City</p>
-                                        </div>
-                                    </div>
-                                </div>                                
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/house1.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">₱1,234,567.00</h4>
-                                            <p class="card-text">2 Beds, 1 Bath | 353 sq.ft.</p>
-                                            <p class="card-text">Pacol, Naga City</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
+                        <div class="card-body">
+                          <h4 class="card-title">
+                            <%= link_to number_to_currency(listing.price, unit: "₱", precision: 0, delimiter: ","), listing_path(listing), class: "text-success text-decoration-none" %>
+                          </h4>
+                          <p class="card-text">
+                            <%= listing.beds %> Beds, <%= listing.baths %> Bath | <%= listing.sqft %> sq.ft.
+                          </p>
+                          <p class="card-text">
+                            <%= listing.barangay %>, Naga City
+                          </p>
                         </div>
-                         <div class="carousel-item">
-                            <div class="row">
-
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/house1.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">₱1,234,567.00</h4>
-                                            <p class="card-text">2 Beds, 1 Bath | 353 sq.ft.</p>
-                                            <p class="card-text">Pacol, Naga City</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/house1.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">₱1,234,567.00</h4>
-                                            <p class="card-text">2 Beds, 1 Bath | 353 sq.ft.</p>
-                                            <p class="card-text">Pacol, Naga City</p>
-                                        </div>
-                                    </div>
-                                </div>                                
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/house1.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">₱1,234,567.00</h4>
-                                            <p class="card-text">2 Beds, 1 Bath | 353 sq.ft.</p>
-                                            <p class="card-text">Pacol, Naga City</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="row">
-
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/house1.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">₱1,234,567.00</h4>
-                                            <p class="card-text">2 Beds, 1 Bath | 353 sq.ft.</p>
-                                            <p class="card-text">Pacol, Naga City</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/house1.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">₱1,234,567.00</h4>
-                                            <p class="card-text">2 Beds, 1 Bath | 353 sq.ft.</p>
-                                            <p class="card-text">Pacol, Naga City</p>
-                                        </div>
-                                    </div>
-                                </div>                                
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/house1.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">₱1,234,567.00</h4>
-                                            <p class="card-text">2 Beds, 1 Bath | 353 sq.ft.</p>
-                                            <p class="card-text">Pacol, Naga City</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
+                      </div>
                     </div>
+                  <% end %>
                 </div>
-            </div>
+              </div>
+            <% end %>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </section>

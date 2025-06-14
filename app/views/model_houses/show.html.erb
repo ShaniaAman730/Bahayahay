@@ -1,4 +1,9 @@
 <div class="container mt-5">
+<div class="d-flex">
+  <%= link_to model_houses_path do %>
+    <h1><i class="bi bi-arrow-left-circle text-success"></i></h1>
+  <% end %>
+
   <div class="listing-container">
     
     <% if @model_house.model_photos.attached? %>
@@ -81,15 +86,16 @@
     </div>
 
   <% if user_signed_in? && current_user.developer? %>
-    <div>
-      <%= link_to "Edit this Model House", edit_model_house_path(@model_house) %> |
-      <%= link_to "Back to Model Houses", model_houses_path %>
-      <%= button_to "Destroy this Model House", @model_house, method: :delete %>
+    <hr class="hr p-2 mt-5" /> 
+    <div class="d-flex p-1">
+      <%= link_to "Edit", edit_model_house_path(@model_house), class: "btn btn-light" %> 
+      <%= button_to "Delete", @model_house, method: :delete, class: "btn btn-danger ml-1" %>
     </div>
   <% end %>
 
-<div class="mb-5"></div>
-<div class="mb-5"></div>
+  <div class="mb-5"></div>
+  <div class="mb-5"></div>
   </div>
+ </div>
 </div>
 

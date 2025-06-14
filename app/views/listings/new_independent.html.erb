@@ -21,7 +21,7 @@
 
       <div class="field p-2">
         <%= form.label :title %><br />
-        <%= form.text_field :title, autofocus: true, autocomplete: "title", class: "form-control w-100", placeholder: "Title" %>
+        <%= form.text_field :title, required: true, class: "form-control w-100", placeholder: "Title" %>
       </div>
 
       <div class="form-row p-2">
@@ -38,15 +38,15 @@
       <div class="form-row p-2">
         <div class="col col-md-4 mb-3">
             <%= form.label :beds, "No. of Bedrooms"  %><br>
-            <%= form.text_field :beds, class: "form-control w-100" %>
+            <%= form.number_field :beds, min: 0, step: 1, class: "form-control w-100" %>
         </div>
         <div class="col col-md-4 mb-3">
           <%= form.label :baths, "No. of Toilets & Baths"  %><br>
-          <%= form.text_field :baths, class: "form-control w-100" %>
+          <%= form.number_field :baths, min: 0, step: 1, class: "form-control w-100" %>
         </div>
         <div class="col col-md-4 mb-3">
           <%= form.label :sqft, "Floor area"  %><br>
-          <%= form.text_field :sqft, class: "form-control w-100" %>
+          <%= form.number_field :sqft, min: 0, step: 1, class: "form-control w-100" %>
         </div>
       </div> 
 
@@ -57,7 +57,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="inputGroupPrepend2">₱</span>
             </div>
-           <%= form.text_field :price, class: "form-control" %>
+           <%= form.number_field :price, min: 0, step: 0.01, class: "form-control" %>
         </div> 
       </div>
 
@@ -333,7 +333,7 @@
       <%= form.label :owneralive, "Is the owner alive or not?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
-        <%= form.radio_button :owneralive, true, id: 'owneralive_yes', class: "form-check-input" %>
+        <%= form.radio_button :owneralive, true, id: 'owneralive_yes', class: "form-check-input", required: true %>
         <%= form.label :estatetax, "Yes", for: 'owneralive_yes', class: "form-check-label" %>
       </div>
 
@@ -349,7 +349,7 @@
       <%= form.label :estatetax, "Is the estate tax paid?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
-        <%= form.radio_button :estatetax, true, id: 'estatetax_yes', class: "form-check-input" %>
+        <%= form.radio_button :estatetax, true, id: 'estatetax_yes', class: "form-check-input", required: true %>
         <%= form.label :estatetax, "Yes", for: 'estatetax_yes', class: "form-check-label" %>
       </div>
 
@@ -365,7 +365,7 @@
       <%= form.label :ejsprocessed, "If the owner is not alive, is the extrajudicial settlement processed?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
-        <%= form.radio_button :ejsprocessed, true, id: 'ejsprocessed_yes', class: "form-check-input" %>
+        <%= form.radio_button :ejsprocessed, true, id: 'ejsprocessed_yes', class: "form-check-input", required: true %>
         <%= form.label :ejsprocessed, "Yes", for: 'ejsprocessed_yes', class: "form-check-label" %>
       </div>
 
@@ -379,7 +379,7 @@
       <%= form.label :filipinocitizen, "Is the owner a Filipino citizen?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
-        <%= form.radio_button :filipinocitizen, true, id: 'filipinocitizen_yes', class: "form-check-input" %>
+        <%= form.radio_button :filipinocitizen, true, id: 'filipinocitizen_yes', class: "form-check-input", required: true %>
         <%= form.label :filipinocitizen, "Yes", for: 'filipinocitizen_yes', class: "form-check-label" %>
       </div>
 
@@ -416,7 +416,7 @@
       <%= form.label :ownerabroad, "Is the owner abroad?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
-        <%= form.radio_button :ownerabroad, true, id: 'ownerabroad_yes', class: "form-check-input" %>
+        <%= form.radio_button :ownerabroad, true, id: 'ownerabroad_yes', class: "form-check-input", required: true %>
         <%= form.label :ownerabroad, "Yes", for: 'ownerabroad_yes', class: "form-check-label" %>
       </div>
 
@@ -467,8 +467,6 @@
    <% end %>
   <% end %>
  </div>
- <div class="mb-5"></div>
- <div class="mb-5"></div>
 </div>
 
 <br>

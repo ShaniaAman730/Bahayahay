@@ -1,4 +1,10 @@
 <div class="container mt-5">
+  <div class="d-flex">
+    <% if user_signed_in? && current_user.realtor? %>
+      <%= link_to listings_path do %>
+        <h1><i class="bi bi-arrow-left-circle text-success"></i></h1>
+      <% end %>
+    <% end %>  
   <div class="listing-container container">
 
     <% if @listing.listing_photos.attached? %>
@@ -113,17 +119,15 @@
           </div>
         </div>
       </div>
-    </div>   
 
   <% if user_signed_in? && current_user.realtor? %>
-    <div>
-      <%= link_to "Edit this listing", edit_listing_path(@listing) %> |
-      <%= link_to "Back to listings", listings_path %>
-
-      <%= button_to "Destroy this listing", @listing, method: :delete %>
+    <hr class="hr p-2 mt-5" /> 
+    <div class="d-flex p-1">
+      <%= link_to "Edit", edit_listing_path(@listing), class: "btn btn-light" %>
+      <%= button_to "Delete", @listing, method: :delete, class: "btn btn-danger ml-1" %>
     </div>
   <% end %>
-
+  <br>
   <% if current_user == @listing.realtor && !@listing.confirmed %>
     <h3>Confirm Sale</h3>
     <%= form_with url: confirm_listing_path(@listing), method: :post do |form| %>
@@ -132,7 +136,7 @@
         <%= select_tag :client_id,
             options_from_collection_for_select(@interested_clients, :id, :first_name),
             prompt: "Select Client",
-            class: "form-control" %>
+            class: "form-control w-50" %>
       </div>
       <%= form.submit "Confirm Sale", class: "btn btn-primary" %>
     <% end %>
@@ -144,10 +148,9 @@
   <% if current_user == @listing.client && @listing.confirmed_transaction? && @listing.review.nil? %>
     <%= link_to "Leave a Review", new_listing_review_path(@listing), class: "btn btn-success" %>
   <% end %>
-
   </div>
-  <div class="mb-5"></div>
-  <div class="mb-5"></div>
-  </div>
+ </div>
+</div>
+</div>
 </div>
 

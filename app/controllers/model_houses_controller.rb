@@ -3,6 +3,19 @@ class ModelHousesController < ApplicationController
   before_action :authenticate_developer!
   before_action :ensure_developer!
 
+  def remove_attachment
+    @model_house = ModelHouse.find(params[:id])
+    attachment = ActiveStorage::Attachment.find(params[:attachment_id])
+
+    if attachment.record == @model_house && attachment.name == "model_photos"
+      attachment.purge
+      @model_house.reload
+      redirect_to edit_model_house_path(@model_house), notice: "Photo was successfully removed."
+    else
+      redirect_to edit_model_house_path(@model_house), alert: "Invalid attachment."
+    end
+  end
+
 
   # GET /model_houses or /model_houses.json
   def index

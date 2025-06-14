@@ -12,11 +12,18 @@ Rails.application.routes.draw do
   resources :user_management, only: [:index, :show, :new, :create, :edit, :update, :destroy] # Generates RESTful routes for users
   get'/managerealtors' => 'user_management#managerealtors'
 
-  resources :dev_projects, only: [:index, :show, :new, :create, :edit, :update, :destroy] 
   resources :dev_projects do
     get '/page/:page', action: :index, on: :collection
+    member do
+      delete :remove_attachment
+    end
   end
-  resources :model_houses
+
+  resources :model_houses do 
+    member do
+      delete :remove_attachment
+    end
+  end
 
   resources :realtor_signup, only: [:index, :new, :create]
   get 'thank_you_realtor', to: 'realtor_signup#thank_you_realtor'
@@ -27,6 +34,7 @@ Rails.application.routes.draw do
     member do
       post :confirm
       get 'public'
+      delete :remove_attachment
     end
   end
   get  '/select_type', to: 'listings#select_type'

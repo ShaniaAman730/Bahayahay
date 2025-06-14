@@ -13,7 +13,7 @@
     <!-- START OF FORM -->              
       <div class="field p-2">
         <%= form.label :title %><br />
-        <%= form.text_field :title, autofocus: true, autocomplete: "title", class: "form-control w-100", placeholder: "Title" %>
+        <%= form.text_field :title, required: true, class: "form-control w-100", placeholder: "Title" %>
       </div>
 
       <div class="form-row p-2">
@@ -30,15 +30,15 @@
       <div class="form-row p-2">
         <div class="col col-md-4 mb-3">
             <%= form.label :beds, "No. of Bedrooms"  %><br>
-            <%= form.text_field :beds, class: "form-control w-100" %>
+            <%= form.number_field :beds, min: 0, step: 1, class: "form-control w-100" %>
         </div>
         <div class="col col-md-4 mb-3">
           <%= form.label :baths, "No. of Toilets & Baths"  %><br>
-          <%= form.text_field :baths, class: "form-control w-100" %>
+          <%= form.number_field :baths, min: 0, step: 1, class: "form-control w-100" %>
         </div>
         <div class="col col-md-4 mb-3">
           <%= form.label :sqft, "Floor area"  %><br>
-          <%= form.text_field :sqft, class: "form-control w-100" %>
+          <%= form.number_field :sqft, min: 0, step: 1, class: "form-control w-100" %>
         </div>
       </div> 
 
@@ -49,7 +49,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="inputGroupPrepend2">₱</span>
             </div>
-           <%= form.text_field :price, class: "form-control" %>
+           <%= form.number_field :price, min: 0, step: 0.01, class: "form-control" %>
         </div> 
       </div>
 
@@ -70,19 +70,6 @@
       </div>
     </div>
 
-    <% if @listing.listing_photos.attached? %>
-      <div class="mb-3">
-        <p>Previously uploaded photos:</p>
-        <div class="row">
-          <% @listing.listing_photos.each do |photo| %>
-            <div class="col-md-3">
-              <%= image_tag photo, class: "img-thumbnail media", style: "width: 300px; height: auto; object-fit: cover;" %>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-
     <div class="field p-2">
      <%= form.label :listing_photos, "Upload photos"  %><br>
      <%= form.file_field :listing_photos,  multiple: true, direct_upload: true, class: "form-control w-100", id: "photos_input" %>
@@ -96,7 +83,7 @@
     <div class="form-row p-2">
       <div class="col col-md-8 mb-3">
         <%= form.label :address, "Address line"  %><br>
-        <%= form.text_field :address, class: "form-control w-100" %>
+        <%= form.text_field :address, required: true, class: "form-control w-100" %>
       </div>
       <div class="col col-md-4 mb-3">
          <%= form.label :barangay, "Barangay", class: "form-label" %>
@@ -338,7 +325,7 @@
       <%= form.label :owneralive, "Is the owner alive or not?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
-        <%= form.radio_button :owneralive, true, id: 'owneralive_yes', class: "form-check-input" %>
+        <%= form.radio_button :owneralive, true, id: 'owneralive_yes', class: "form-check-input", required: true %>
         <%= form.label :estatetax, "Yes", for: 'owneralive_yes', class: "form-check-label" %>
       </div>
 
@@ -354,7 +341,7 @@
       <%= form.label :estatetax, "Is the estate tax paid?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
-        <%= form.radio_button :estatetax, true, id: 'estatetax_yes', class: "form-check-input" %>
+        <%= form.radio_button :estatetax, true, id: 'estatetax_yes', class: "form-check-input", required: true %>
         <%= form.label :estatetax, "Yes", for: 'estatetax_yes', class: "form-check-label" %>
       </div>
 
@@ -370,7 +357,7 @@
       <%= form.label :ejsprocessed, "If the owner is not alive, is the extrajudicial settlement processed?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
-        <%= form.radio_button :ejsprocessed, true, id: 'ejsprocessed_yes', class: "form-check-input" %>
+        <%= form.radio_button :ejsprocessed, true, id: 'ejsprocessed_yes', class: "form-check-input", required: true %>
         <%= form.label :ejsprocessed, "Yes", for: 'ejsprocessed_yes', class: "form-check-label" %>
       </div>
 
@@ -384,7 +371,7 @@
       <%= form.label :filipinocitizen, "Is the owner a Filipino citizen?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
-        <%= form.radio_button :filipinocitizen, true, id: 'filipinocitizen_yes', class: "form-check-input" %>
+        <%= form.radio_button :filipinocitizen, true, id: 'filipinocitizen_yes', class: "form-check-input", required: true %>
         <%= form.label :filipinocitizen, "Yes", for: 'filipinocitizen_yes', class: "form-check-label" %>
       </div>
 
@@ -421,7 +408,7 @@
       <%= form.label :ownerabroad, "Is the owner abroad?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
-        <%= form.radio_button :ownerabroad, true, id: 'ownerabroad_yes', class: "form-check-input" %>
+        <%= form.radio_button :ownerabroad, true, id: 'ownerabroad_yes', class: "form-check-input", required: true %>
         <%= form.label :ownerabroad, "Yes", for: 'ownerabroad_yes', class: "form-check-label" %>
       </div>
 
@@ -433,19 +420,6 @@
 
     <div class="container border border-secondary p-4 mb-3">
       <h6>If yes, please provide the following:</h6>
-
-      <% if @listing.spa.attached? %>
-      <div class="mb-3">
-        <p>Previously uploaded Consularized Special Power of Attorney (SPA):</p>
-        <div class="row">
-          <% @listing.spa.each do |photo| %>
-            <div class="col-md-3">
-              <%= image_tag photo, class: "img-thumbnail media", style: "width: 300px; height: auto; object-fit: cover;" %>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
 
       <% if @listing.errors[:spa].present? %>
         <div class="text-danger"><%= @listing.errors[:spa].join(', ') %></div>
@@ -462,36 +436,92 @@
       </div>
     </div>
 
-    <% if @listing.tct.attached? %>
-      <div class="mb-3">
-        <p>Previously uploaded Transfer Certificate of Title (TCT):</p>
-        <div class="row">
-          <% @listing.tct.each do |photo| %>
-            <div class="col-md-3">
-              <%= image_tag photo, class: "img-thumbnail media", style: "width: 300px; height: auto; object-fit: cover;" %>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
 
     <% if @listing.errors[:tct].present? %>
       <div class="text-danger"><%= @listing.errors[:tct].join(', ') %></div>
     <% end %>
 
+
     <div class="field">
      <%= form.label :tct, "Lastly, please upload at least 4 pages of the certified true copy of the Transfer Certificate of Title (TCT) recently acquired in the last 6 months:"  %><br>
-     <%= form.file_field :tct,  multiple: true, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 2 } %>
+     <%= form.file_field :tct,  multiple: true, class: "form-control w-100", multiple: true, direct_upload: true, required: true, data: { max_files: 4 } %>
    </div>
 
   </div>  
  </div>
 </div>
 
+<br>
+<br>
+
   <div>
     <%= form.submit "Update Listing", class: "btn btn-secondary float-right mt-3 mb-5" %>
   </div>
 
+ <% end %>
+
+<br>
+<br>
+<br>
+
+<div class="form-container">
+
+<h3>Your Attachments</h3>
+
+<% if @listing.listing_photos.attached? %>
+  <div class="mb-3">
+    <p>Previously uploaded photos:</p>
+    <div class="row">
+      <% @listing.listing_photos.each do |photo| %>
+        <div class="col-md-3">
+          <%= image_tag photo, class: "img-thumbnail media", style: "width: 300px;" %>
+
+          <%= form_with url: remove_attachment_listing_path(@listing, attachment_id: photo.id), method: :delete, local: true do %>
+            <%= submit_tag "Remove", class: "btn btn-danger btn-sm mt-2", data: { confirm: "Are you sure you want to delete this photo?" } %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<% if @listing.spa.attached? %>
+  <div class="mb-3">
+    <p>Previously uploaded Special Power of Attorney (SPA):</p>
+    <div class="row">
+      <% @listing.spa.each do |photo| %>
+        <div class="col-md-3">
+          <%= image_tag photo, class: "img-thumbnail media", style: "width: 300px;" %>
+
+          <%= form_with url: remove_attachment_listing_path(@listing, attachment_id: photo.id), method: :delete, local: true do %>
+            <%= submit_tag "Remove", class: "btn btn-danger btn-sm mt-2", data: { confirm: "Are you sure you want to delete this photo?" } %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<% if @listing.tct.attached? %>
+  <div class="mb-3">
+    <p>Previously uploaded Transfer Certificate of Title (TCT):</p>
+    <div class="row">
+      <% @listing.tct.each do |photo| %>
+        <div class="col-md-3">
+          <%= image_tag photo, class: "img-thumbnail media", style: "width: 300px;" %>
+
+          <%= form_with url: remove_attachment_listing_path(@listing, attachment_id: photo.id), method: :delete, local: true do %>
+            <%= submit_tag "Remove", class: "btn btn-danger btn-sm mt-2", data: { confirm: "Are you sure you want to delete this photo?" } %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
 
 
-   <% end %>
+
+</div>
+
+
+  

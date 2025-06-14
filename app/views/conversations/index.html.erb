@@ -1,9 +1,43 @@
-<h1>Conversations</h1>
+<div class="container mt-5">
+  <h1 class="mb-4 text-success">Conversations</h1>
 
-<% @conversations.each do |conversation| %>
-  <% other_user = current_user.client? ? conversation.realtor : conversation.client %>
+  <div class="row row-cols-1 g-3">
+    <% @conversations.each do |conversation| %>
+      <% other_user = current_user.client? ? conversation.realtor : conversation.client %>
+      <% last_message = conversation.messages.last %>
 
-  <div>
-    <strong><%= link_to other_user.first_name, conversation_path(conversation) %></strong>
+      <div class="col">
+        <div class="card shadow-sm border-success">
+          <div class="card-body d-flex align-items-center">
+            
+            <!-- Profile picture -->
+            <div class="me-3">
+              <% if other_user.profile_photo.attached? %>
+                <%= image_tag other_user.profile_photo.variant(resize_to_fill: [60, 60]), class: "rounded-circle", alt: "#{other_user.first_name}'s photo" %>
+              <% else %>
+                <%= image_tag "no-profile.jpg", class: "rounded-circle", size: "60x60", alt: "No profile photo" %>
+              <% end %>
+            </div>
+
+            <!-- Text content -->
+            <div class="flex-grow-1">
+              <h5 class="card-title mb-1">
+                <%= link_to other_user.first_name, conversation_path(conversation), class: "text-decoration-none text-success" %>
+              </h5>
+              <p class="card-text text-muted mb-0">
+                <%= truncate(last_message&.body || "No messages yet", length: 80) %>
+              </p>
+            </div>
+
+            <!-- Timestamp -->
+            <% if last_message %>
+              <small class="text-muted ms-3 text-nowrap"><%= last_message.created_at.strftime("%b %d, %l:%M %p") %></small>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>
+<div class="mb-5"></div>
+<div class="mb-5"></div>

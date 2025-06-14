@@ -13,6 +13,7 @@
   <%= stylesheet_link_tag "style", media: "all" %>
   <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
 
+
   <!-- Bootstrap and icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" ... >
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -22,35 +23,37 @@
 
   <!-- Rich text via Trix -->
   <link rel="stylesheet" href="https://unpkg.com/trix@2.0.0/dist/trix.css">
-  <script src="https://unpkg.com/trix@2.0.0/dist/trix.umd.min.js"></script>
-  <script src="https://unpkg.com/@rails/actiontext@latest/dist/actiontext.umd.js"></script>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  
 
-  <!-- Dropzone CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" integrity="sha512-iU8HV3PbK6mD3MyhzOj0ln6ZhKCMW+2RhULVdlC+9A47LfZGDGNxEz46D7ocFWyQ9n4cHjs9l9u0PvAbF+UKvA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 </head>
 
   <body>
-    <%= render partial: "shared/navbar" %>
+    <body class="d-flex flex-column min-vh-100">
+      <div class="wrapper flex-grow-1">
+        <%= render partial: "shared/navbar" %>
+       
+        <% if notice %>
+          <%= render 'layouts/alerts' %>
+        <% end %>
 
-    <% if notice %>
-      <%= render 'layouts/alerts' %>
-    <% end %>
+        <% if alert %>
+          <p class="alert"><%= alert %></p>
+        <% end %>
 
-    <% if alert %>
-      <p class="alert"><%= alert %></p>
-    <% end %>
-      
-    <%= yield %>
-    <%= render partial: "shared/footer" %>
+        <%= yield %>
+
+       </div>
+
+       <div class="mb-5"></div>
+       <div class="mb-5"></div>
+
+      <%= render partial: "shared/footer" %>
+       
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-    <!-- Dropzone JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js" integrity="sha512-+T1MrBtM+UurDCG0qY9ByAzD6k4RcMWEqhr2Qn4iExUxuNv5zLEOeNc7ZHoXWz04ZBAu9GJJLZKChj5NZsM4Ng==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
     <!-- Gallery -->
@@ -85,7 +88,7 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const input = document.getElementById("photos_input");
-        const maxFiles = 8;
+        const maxFiles = 12;
 
         input.addEventListener("change", (e) => {
           if (input.files.length > maxFiles) {
@@ -95,6 +98,19 @@
         });
       });
     </script>
+
+    <script>
+      window.Trix = window.Trix || {};
+      window.Trix.config = { useShadowDOM: false };
+
+      document.addEventListener("trix-file-accept", function(event) {
+        event.preventDefault();
+      });
+    </script>
+
+    <script src="https://unpkg.com/trix@2.0.0/dist/trix.umd.min.js"></script>
+    <script src="https://unpkg.com/@rails/actiontext@latest/dist/actiontext.umd.js"></script>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
 
   </body>
 </html>
