@@ -27,6 +27,8 @@ class ModelHousesController < ApplicationController
 
   # GET /model_houses/1 or /model_houses/1.json
   def show
+    @model_house = ModelHouse.find(params[:id])
+    @dev_project = @model_house.dev_project
   end
 
   # GET /model_houses/new
@@ -40,7 +42,10 @@ class ModelHousesController < ApplicationController
 
   # POST /model_houses or /model_houses.json
   def create
-    @model_house = ModelHouse.new(model_house_params)
+    @model_house = current_user.model_houses.new(model_house_params)
+
+    # Prevent assigning a dev_project the user doesn't own
+    validate_dev_project_owner!
 
     respond_to do |format|
       if @model_house.save
@@ -56,7 +61,8 @@ class ModelHousesController < ApplicationController
   # PATCH/PUT /model_houses/1 or /model_houses/1.json
   def update
     respond_to do |format|
-      @model_house = ModelHouse.find(params[:id])
+      # Re-check if user is trying to assign someone else's project
+      validate_dev_project_owner!
 
       photo_params = params[:model_house].delete(:model_photos)
 
@@ -86,16 +92,42 @@ class ModelHousesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_model_house
-      @model_house = ModelHouse.find(params.expect(:id))
+      @model_house = ModelHouse.find(params[:id])
     end
 
     def ensure_developer!
      redirect_to root_path unless current_user.developer?
     end
 
+
+  def validate_dev_project_owner!
+    dev_project_id = params[:model_house][:dev_project_id]
+
+    return if dev_project_id.blank? # allow optional
+
+    unless current_user.dev_projects.exists?(id: dev_project_id)
+      flash[:alert] = "You're not authorized to assign that Dev Project."
+      redirect_back fallback_location: root_path
+    end
+  end
+
     # Only allow a list of trusted parameters through.
     def model_house_params
-      params.expect(model_house: [ :title, :description, :price, :inherit_amenities, :furnish_type, :guardhouse, :perimeterfence, :cctv, :clubhouse, :pool, :coveredcourt, :parks, :playground, :joggingpaths, :conveniencestore, :watersystem, :drainagesystem, :undergroundlines, :wastemgmt, :garden, :carport, :dirtykitchen, :gate, :watertank, :homecctv, :homepool, :lanai, :landscaping, :aircon, :provaircon, :wardrobes, :modkitchen, :crfixtures, :lightfixtures, :firesystem, :intercom, :internetprov, :cableprov, :meterperunit, :washingmachineprov, :waterheaterprov, :smarthomeready, :balcony, :cityview, :mountainview, :petfriendly, :facingeast ])
+      params.require(:model_house).permit(
+        :title, :description, :price, :inherit_amenities, :furnish_type,
+        :guardhouse, :perimeterfence, :cctv, :clubhouse, :pool, :coveredcourt,
+        :parks, :playground, :joggingpaths, :conveniencestore, :watersystem,
+        :drainagesystem, :undergroundlines, :wastemgmt, :garden, :carport,
+        :dirtykitchen, :gate, :watertank, :homecctv, :homepool, :lanai,
+        :landscaping, :aircon, :provaircon, :wardrobes, :modkitchen, :crfixtures,
+        :lightfixtures, :firesystem, :intercom, :internetprov, :cableprov,
+        :meterperunit, :washingmachineprov, :waterheaterprov, :smarthomeready,
+        :balcony, :cityview, :mountainview, :petfriendly, :facingeast,
+        :beds, :baths, :sqft,
+        :bank_financing, :inhouse_financing, :pagibig_financing,
+        :dev_project_id, model_photos: []
+      )
     end
+
 end
 

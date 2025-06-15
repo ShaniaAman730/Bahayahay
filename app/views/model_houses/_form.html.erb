@@ -13,7 +13,7 @@
   <!-- START OF FORM --> 
   <div class="field p-2">
     <%= form.label :title %><br />
-    <%= form.text_field :title, autofocus: true, autocomplete: "title", class: "form-control w-100", placeholder: "Title" %>
+    <%= form.text_field :title, required: true, autofocus: true, autocomplete: "title", class: "form-control w-100", placeholder: "Title" %>
   </div>
 
   <div class="form-row p-2">
@@ -31,15 +31,15 @@
     <div class="form-row p-2">
         <div class="col col-md-4 mb-3">
             <%= form.label :beds, "No. of Bedrooms"  %><br>
-            <%= form.text_field :beds, class: "form-control w-100" %>
+            <%= form.text_field :beds, required: true, class: "form-control w-100" %>
         </div>
         <div class="col col-md-4 mb-3">
           <%= form.label :baths, "No. of Toilets & Baths"  %><br>
-          <%= form.text_field :baths, class: "form-control w-100" %>
+          <%= form.text_field :baths, required: true, class: "form-control w-100" %>
         </div>
         <div class="col col-md-4 mb-3">
           <%= form.label :sqft, "Floor area"  %><br>
-          <%= form.text_field :sqft, class: "form-control w-100" %>
+          <%= form.text_field :sqft, required: true, class: "form-control w-100" %>
         </div>
       </div> 
 
@@ -50,7 +50,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text" id="inputGroupPrepend2">₱</span>
             </div>
-           <%= form.text_field :price, class: "form-control" %>
+           <%= form.text_field :price, required: true, class: "form-control" %>
         </div> 
       </div>
 
@@ -304,8 +304,20 @@
     </div>
   </div>
 
+  <% if current_user.developer? %>
+    <div class="my-3">
+      <%= form.label :dev_project_id, "Development Porject", class: "form-label fw-semibold" %>
+      <%= form.collection_select :dev_project_id, current_user.dev_projects, :id, :title, 
+          { prompt: "Select Development Porject" },
+          { class: "form-select rounded shadow-sm" } %>
+    </div>
+  <% end %>
 
   <div>
     <%= form.submit "Post Model House", class: "btn btn-secondary float-right mt-3 mb-5" %>
   </div>
  <% end %>
+
+
+
+

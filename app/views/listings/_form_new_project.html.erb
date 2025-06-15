@@ -314,6 +314,13 @@
    </div>  
   </div>  
 
+  <div class="my-3">
+    <%= form.label :developer_id, "Developer", class: "form-label fw-semibold" %>
+    <%= form.collection_select :developer_id, User.developer, :id, :company_name,
+          { prompt: "Select Developer" },
+          { class: "form-select rounded shadow-sm" } %>
+  </div>
+
   <div>
     <%= form.submit "Update Listing", class: "btn btn-secondary float-right mt-3 mb-5" %>
   </div>

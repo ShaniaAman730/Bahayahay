@@ -1,0 +1,39 @@
+<div class="container mt-5">
+  <h2 class="mb-4">Find an Agent</h2>
+
+  <%= form_with url: agents_path, method: :get, local: true, class: "mb-4" do |f| %>
+    <div class="input-group">
+      <%= f.text_field :query, value: params[:query], class: "form-control", placeholder: "Search agents..." %>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  <% end %>
+
+  <% if @agents.any? %>
+    <% @agents.each do |agent| %>
+      <div class="card mb-3 p-3 d-flex flex-row align-items-center" style="min-height: 150px;">
+        <div class="me-4">
+          <% if agent.profile_photo.attached? %>
+            <%= image_tag url_for(agent.profile_photo), class: "rounded-circle img-thumbnail", size: "100x100" %>
+          <% else %>
+            <%= image_tag "no-profile.jpg", class: "rounded-circle img-thumbnail", size: "100x100" %>
+          <% end %>
+        </div>
+        <div class="flex-grow-1">
+          <h5><%= agent.first_name %> <%= agent.last_name %></h5>
+          <p class="text-muted mb-1"><%= agent.company_name %></p>
+          <p class="mb-1"><strong>Contact:</strong> <%= agent.contact_no %></p>
+          <p class="small text-muted"><%= truncate(agent.about, length: 120) %></p>
+          <div class="d-flex mt-2">
+            <%= link_to "View Profile", user_path(agent), class: "btn btn-outline-primary btn-sm me-2" %>
+            <% if user_signed_in? && current_user.client? %>
+              <%= button_to "Message", conversations_path(realtor_id: agent.id), method: :post, class: "btn btn-outline-success btn-sm" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <%= paginate @agents %>
+  <% else %>
+    <p>No agents found.</p>
+  <% end %>
+</div>

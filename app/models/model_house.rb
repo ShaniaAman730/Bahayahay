@@ -1,15 +1,18 @@
 class ModelHouse < ApplicationRecord
 
-	has_and_belongs_to_many :dev_projects
+	belongs_to :dev_project, optional: true
 
 	has_rich_text :description
+	has_many_attached :model_photos
+	
+	validate :model_photos_limit
+	validates :title, presence: true
+  	validates :beds, :baths, :sqft, numericality: { only_integer: true, allow_nil: true }
+  	validates :price, numericality: { allow_nil: true }
 
 	paginates_per 10
 
 	enum :furnish_type, { "Fully furnished": 1, "Semi-furnished": 2, "Bare unit": 3 }
-
-	has_many_attached :model_photos
-	validate :model_photos_limit
 
 	def model_photos_limit
 	  if model_photos.attached? && model_photos.count > 8

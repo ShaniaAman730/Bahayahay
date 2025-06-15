@@ -1,0 +1,26 @@
+<div class="container mt-5">
+  <h2 class="mb-3"><%= @user.first_name %>'s Reviews</h2>
+
+  <% if @reviews.any? %>
+    <% @reviews.each do |review| %>
+      <div class="card mb-3">
+        <div class="card-body">
+          <% knowledge = review.knowledge_rating.to_i %>
+          <p><strong>Knowledge & Expertise:</strong> <%= '★' * knowledge + '☆' * (5 - knowledge) %></p>
+
+          <% responsiveness = review.responsiveness_rating.to_i %>
+          <p><strong>Responsiveness:</strong> <%= '★' * responsiveness + '☆' * (5 - responsiveness) %></p>
+
+          <% professionalism = review.professionalism_rating.to_i %>
+          <p><strong>Professionalism:</strong> <%= '★' * professionalism + '☆' * (5 - professionalism) %></p>
+
+          <p><%= review.comment %></p>
+          <p class="text-muted">From <%= review.client.first_name rescue "Anonymous" %> on <%= review.created_at.strftime("%B %d, %Y") %></p>
+        </div>
+      </div>
+    <% end %>
+    <%= paginate @reviews %>
+  <% else %>
+    <p>This user has not received any reviews yet.</p>
+  <% end %>
+</div>

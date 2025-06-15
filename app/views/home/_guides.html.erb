@@ -1,122 +1,52 @@
 <section class="pt-5 pb-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-6">
-                <h3 class="mb-3">Guides</h3>
-            </div>
-            <div class="col-6 text-right">
-                <a class="btn btn-success mb-3 mr-1" href="#carouselExampleIndicators2" role="button" data-slide="prev">
-                    <i class="bi bi-chevron-left"></i>
-                </a>
-                <a class="btn btn-success mb-3 " href="#carouselExampleIndicators2" role="button" data-slide="next">
-                    <i class="bi bi-chevron-right"></i>
-                </a>
-            </div>
-            <div class="col-12">
-                <div id="carouselExampleIndicators2" class="carousel slide" data-ride="carousel">
+  <div class="container">
+    <div class="row">
+      <!-- Header -->
+      <div class="col-6">
+        <%= link_to "Guides", guides_path, class: "h3 text-decoration-none" %>
+      </div>
+      <div class="col-6 text-right">
+        <a class="btn btn-success mb-3 mr-1" href="#carouselExampleIndicators2" role="button" data-bs-slide="prev">
+          <i class="bi bi-chevron-left"></i>
+        </a>
+        <a class="btn btn-success mb-3" href="#carouselExampleIndicators2" role="button" data-bs-slide="next">
+          <i class="bi bi-chevron-right"></i>
+        </a>
+      </div>
 
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <div class="row">
-
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/guides.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Lorem Ipsum</h4>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis iaculis felis. Curabitur quis nisl aliquam, rutrum nulla non, pharetra turpis...</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/guides.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Lorem Ipsum</h4>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis iaculis felis. Curabitur quis nisl aliquam, rutrum nulla non, pharetra turpis...</p>
-                                        </div>
-                                    </div>
-                                </div>                                
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/guides.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Lorem Ipsum</h4>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis iaculis felis. Curabitur quis nisl aliquam, rutrum nulla non, pharetra turpis...</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
+      <!-- Carousel -->
+      <div class="col-12">
+        <div id="carouselExampleIndicators2" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <% @recent_guides = Guide.order(created_at: :desc).limit(9).each_slice(3).to_a %>
+            <% @recent_guides.each_with_index do |group, index| %>
+              <div class="carousel-item <%= 'active' if index == 0 %>">
+                <div class="row">
+                  <% group.each do |guide| %>
+                    <div class="col-md-4 mb-3">
+                      <div class="card h-100">
+                        <% if guide.guide_photo.attached? %>
+                            <%= image_tag url_for(guide.guide_photo), class: "card-img-top", style: "object-fit: cover; height: 300px;" %>
+                            <% else %>
+                              <div class="d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
+                                <span class="text-muted">No photo available</span>
+                              </div>
+                        <% end %> 
+                        
+                        <div class="card-body">
+                          <h5 class="card-title"><%= truncate(guide.title, length: 50) %></h5>
+                          <p class="card-text"><%= truncate(guide.body.to_plain_text, length: 100) %></p>
+                          <%= link_to "Read more", guide_path(guide), class: "btn btn-outline-success btn-sm mt-2" %>
                         </div>
-                         <div class="carousel-item">
-                            <div class="row">
-
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/guides.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Lorem Ipsum</h4>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis iaculis felis. Curabitur quis nisl aliquam, rutrum nulla non, pharetra turpis...</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/guides.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Lorem Ipsum</h4>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis iaculis felis. Curabitur quis nisl aliquam, rutrum nulla non, pharetra turpis...</p>
-                                        </div>
-                                    </div>
-                                </div>                                
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/guides.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Lorem Ipsum</h4>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis iaculis felis. Curabitur quis nisl aliquam, rutrum nulla non, pharetra turpis...</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <div class="row">
-
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/guides.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Lorem Ipsum</h4>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis iaculis felis. Curabitur quis nisl aliquam, rutrum nulla non, pharetra turpis...</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/guides.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Lorem Ipsum</h4>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis iaculis felis. Curabitur quis nisl aliquam, rutrum nulla non, pharetra turpis...</p>
-                                        </div>
-                                    </div>
-                                </div>                                
-                                <div class="col-md-4 mb-3">
-                                    <div class="card">
-                                        <img class="card-img-top" src="assets/guides.jpg" alt="Card image">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Lorem Ipsum</h4>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec quis iaculis felis. Curabitur quis nisl aliquam, rutrum nulla non, pharetra turpis...</p>
-                                        </div>
-                                </div>
-
-                            </div>
-                        </div>
+                      </div>
                     </div>
+                  <% end %>
                 </div>
-            </div>
+              </div>
+            <% end %>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </section>

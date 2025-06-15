@@ -2,8 +2,12 @@ class Listing < ApplicationRecord
 
 	belongs_to :realtor, class_name: "User"
  	belongs_to :client, class_name: "User", optional: true
+ 	belongs_to :developer, class_name: "User", optional: true
 
  	has_one :review, dependent: :destroy
+ 	has_many :saved_listings, dependent: :destroy
+	has_many :users_who_saved, through: :saved_listings, source: :user
+
 
 	has_many_attached :listing_photos
 	validate :listing_photos_limit
@@ -26,6 +30,7 @@ class Listing < ApplicationRecord
   validates :owneralive, :estatetax, :ejsprocessed, :filipinocitizen, :ownerabroad,
   					 inclusion: { in: [true, false], message: "must be selected" },
   					 if: -> { listing_type_num == 1 }
+  validates :developer_id, presence: true, if: -> { listing_type_num == 0 }
 
 	paginates_per 10
 
@@ -106,5 +111,14 @@ class Listing < ApplicationRecord
     end
   end
 
-  	
+  def days_since_posted
+	  (Date.today - created_at.to_date).to_i
+	end
+
+	after_initialize :set_defaults, unless: :persisted?
+
+	def set_defaults
+	  self.contact_clicks ||= 0
+	end
+	
 end

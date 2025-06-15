@@ -4,8 +4,22 @@ class ListingsController < ApplicationController
   before_action :authenticate_realtor!
   before_action :ensure_realtor!
 
-  skip_before_action :authenticate_realtor!, only: [:show, :index, :public_listings, :public]
-  skip_before_action :ensure_realtor!, only: [:show, :index, :public_listings, :public]
+  skip_before_action :authenticate_realtor!, only: [:show, :public_listings, :public, :contact_agent]
+  skip_before_action :ensure_realtor!, only: [:show, :public_listings, :public, :contact_agent]
+
+  def contact_agent
+    @listing = Listing.find(params[:id])
+    @realtor = @listing.realtor
+
+    # increment contact count
+    @listing.increment!(:contact_clicks)
+
+    # find or create conversation
+    conversation = Conversation.find_or_create_by(client: current_user, realtor: @realtor)
+
+    redirect_to conversation_path(conversation)
+  end
+
 
   def remove_attachment
     @listing = Listing.find(params[:id])
@@ -43,32 +57,32 @@ class ListingsController < ApplicationController
 
     @listings = Listing.public_listings
 
-    if params[:keyword].present?
-      keyword = params[:keyword].downcase
-      matching_project_types = Listing.project_types.keys.select { |pt| pt.downcase.include?(keyword) }
-      matching_furnish_types = Listing.furnish_types.keys.select { |ft| ft.downcase.include?(keyword) }
+      if params[:keyword].present?
+        keyword = params[:keyword].downcase
+        matching_project_types = Listing.project_types.keys.select { |pt| pt.downcase.include?(keyword) }
+        matching_furnish_types = Listing.furnish_types.keys.select { |ft| ft.downcase.include?(keyword) }
 
-      @listings = @listings.where(
-        "LOWER(title) LIKE :q OR project_type IN (:project_types) OR furnish_type IN (:furnish_types)",
-        q: "%#{keyword}%",
-        project_types: matching_project_types.map { |pt| Listing.project_types[pt] },
-        furnish_types: matching_furnish_types.map { |ft| Listing.furnish_types[ft] }
-      )
-    end
+        @listings = @listings.where(
+          "LOWER(title) LIKE :q OR project_type IN (:project_types) OR furnish_type IN (:furnish_types)",
+          q: "%#{keyword}%",
+          project_types: matching_project_types.map { |pt| Listing.project_types[pt] },
+          furnish_types: matching_furnish_types.map { |ft| Listing.furnish_types[ft] }
+        )
+      end
 
-    @listings = @listings.where("beds >= ?", params[:beds]) if params[:beds].present?
-    @listings = @listings.where("baths >= ?", params[:baths]) if params[:baths].present?
-    @listings = @listings.where("price >= ?", params[:min_price]) if params[:min_price].present?
-    @listings = @listings.where("price <= ?", params[:max_price]) if params[:max_price].present?
+      @listings = @listings.where("beds >= ?", params[:beds]) if params[:beds].present?
+      @listings = @listings.where("baths >= ?", params[:baths]) if params[:baths].present?
+      @listings = @listings.where("price >= ?", params[:min_price]) if params[:min_price].present?
+      @listings = @listings.where("price <= ?", params[:max_price]) if params[:max_price].present?
 
-    @listings = @listings.where(pagibig_financing: true) if params[:pagibig_financing].present?
-    @listings = @listings.where(bank_financing: true) if params[:bank_financing].present?
-    @listings = @listings.where(inhouse_financing: true) if params[:inhouse_financing].present?
+      @listings = @listings.where(pagibig_financing: true) if params[:pagibig_financing].present?
+      @listings = @listings.where(bank_financing: true) if params[:bank_financing].present?
+      @listings = @listings.where(inhouse_financing: true) if params[:inhouse_financing].present?
 
-    @listings = @listings.where(project_type: params[:project_type]) if params[:project_type].present?
-    @listings = @listings.where(furnish_type: params[:furnish_type]) if params[:furnish_type].present?
+      @listings = @listings.where(project_type: params[:project_type]) if params[:project_type].present?
+      @listings = @listings.where(furnish_type: params[:furnish_type]) if params[:furnish_type].present?
 
-    @listings = @listings.page(params[:page]).per(10)
+      @listings = @listings.page(params[:page]).per(10)
   end
 
   def select_type
@@ -92,11 +106,11 @@ class ListingsController < ApplicationController
 
   def index
   if current_user.realtor?
-    @listings = current_user.listings_posted.order(:created_at).page(params[:page]).per(10)
+      @listings = current_user.listings_posted.order(:created_at).page(params[:page]).per(10)
   else
-    @listings = Listing.approved_listings.order(:created_at).page(params[:page]).per(10)
+      @listings = Listing.approved_listings.order(:created_at).page(params[:page]).per(10)
+    end
   end
-end
 
   # GET /listings/1 or /listings/1.json
   def show
@@ -127,6 +141,13 @@ end
     @listing = Listing.new(listing_params)
     @listing.realtor = current_user
 
+    # Set developer_id only for project listings (listing_type_num == 0)
+    if @listing.listing_type_num == 0
+      @listing.developer_id = params[:listing][:developer_id]
+    else
+      @listing.developer_id = nil
+    end
+
     puts "Uploaded files:"
     puts params[:listing][:listing_photos].inspect if params[:listing][:listing_photos].present?
 
@@ -152,9 +173,17 @@ end
 
 
 
+
   # PATCH/PUT /listings/1 or /listings/1.json
   def update
     @listing = Listing.find(params[:id])
+
+    # Set developer_id only for project listings (listing_type_num == 0)
+    if @listing.listing_type_num == 0
+      @listing.developer_id = params[:listing][:developer_id]
+    else
+      @listing.developer_id = nil
+    end
 
     # Extract the file attachment params and remove from strong params
     photo_params = params[:listing].delete(:listing_photos)
@@ -216,10 +245,11 @@ end
       :balcony, :cityview, :mountainview, :petfriendly, :facingeast,
       :realtor, :client, :listing_type, :listing_type_num, 
       :beds, :baths, :sqft,
-      :valid_id, :birthcert, 
+      :valid_id, :birthcert, :developer_id,
       listing_photos: [], spa: [], tct: []
     )
   end
 
 
 end
+

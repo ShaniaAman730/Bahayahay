@@ -1,0 +1,23 @@
+<div class="container mt-5">
+  <h1>New Guide</h1>
+
+  <%= form_with model: @guide, local: true do |form| %>
+
+    <div class="field p-2">
+      <%= form.label :title %><br />
+      <%= form.text_field :title, required: true, class: "form-control w-100", placeholder: "Title" %>
+    </div>
+
+    <div class="field p-2">
+      <%= form.label :guide_photo, "Upload a photo" %>
+      <%= form.file_field :guide_photo, direct_upload: true, class: "form-control w-100" %>
+    </div>
+
+    <div class="field p-2">
+      <%= form.label :body %><br />
+      <%= form.rich_text_area :body, id: "guide_body", class: "post-textarea" %>
+    </div>
+    <br>
+    <%= form.submit "Create Guide", class: "btn btn-primary text-end" %>
+  <% end %>
+</div>

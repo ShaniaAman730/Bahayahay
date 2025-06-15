@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "agents/index"
 
   get "realtor_signup/new"
 
@@ -7,7 +8,12 @@ Rails.application.routes.draw do
   
 
   devise_for :users, controllers: {registrations: 'users/registrations' }
-  resources :users, only: [:show]
+  resources :users, only: [:show] do
+  member do
+      get :reviews
+    end
+  end
+  get "agents", to: "agents#index", as: :agents
 
   resources :user_management, only: [:index, :show, :new, :create, :edit, :update, :destroy] # Generates RESTful routes for users
   get'/managerealtors' => 'user_management#managerealtors'
@@ -31,6 +37,8 @@ Rails.application.routes.draw do
   resources :listings do
     resources :reviews, only: [:new, :create]
     get '/page/:page', action: :index, on: :collection
+    post 'contact_agent', on: :member
+
     member do
       post :confirm
       get 'public'
@@ -49,13 +57,20 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-  resources :listings, only: [:index, :show] do
-    member do
-      patch :approve
-      patch :reject
+    resources :listings, only: [:index, :show] do
+      member do
+        patch :approve
+        patch :reject
+      end
     end
   end
-end
+
+  resources :guides do
+    resources :comments, only: [:create]
+  end
+
+  resources :saved_listings, only: [:index, :create, :destroy]
+  
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

@@ -13,7 +13,7 @@
             <!-- Profile picture -->
             <div class="me-3">
               <% if other_user.profile_photo.attached? %>
-                <%= image_tag other_user.profile_photo.variant(resize_to_fill: [60, 60]), class: "rounded-circle", alt: "#{other_user.first_name}'s photo" %>
+                <%= image_tag url_for(other_user.profile_photo), class: "rounded-circle", size: "60x60", alt: "#{other_user.first_name}'s photo" %>
               <% else %>
                 <%= image_tag "no-profile.jpg", class: "rounded-circle", size: "60x60", alt: "No profile photo" %>
               <% end %>

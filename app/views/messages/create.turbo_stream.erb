@@ -1,7 +1,3 @@
-<%= turbo_stream.append "messages" do %>
-  <%= render partial: "messages/message", locals: { message: @message, local_user: current_user } %>
-<% end %>
-
 <%= turbo_stream.replace "new_message_form" do %>
   <%= form_with(model: [@conversation, Message.new], data: { turbo_stream: true }, id: "new_message_form", class: "mb-3") do |form| %>
     <div class="mb-3">

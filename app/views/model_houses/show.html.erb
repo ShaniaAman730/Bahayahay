@@ -83,6 +83,30 @@
         </div>
 
       </div>
+
+      <% if @dev_project.present? %>
+        <div class="card mb-4">
+          <div class="row g-0">
+            <% if @dev_project.project_photos.attached? %>
+              <div class="col-md-4">
+                <%= image_tag @dev_project.project_photos.first, class: "img-fluid rounded-start", resize_to_fit: [400, 300] %>
+              </div>
+            <% end %>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">About the Project: <%= @dev_project.title %></h5>
+                <p class="card-text">
+                  <i class="bi bi-geo-alt-fill"></i>
+                  <%= @dev_project.barangay %>, Naga City
+                </p>
+                <p><%= truncate(@dev_project.description.to_plain_text, length: 150) %></p>
+                <%= link_to "View Development Project", dev_project_path(@dev_project), class: "btn btn-outline-primary btn-sm" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
     </div>
 
   <% if user_signed_in? && current_user.developer? %>
@@ -93,8 +117,6 @@
     </div>
   <% end %>
 
-  <div class="mb-5"></div>
-  <div class="mb-5"></div>
   </div>
  </div>
 </div>

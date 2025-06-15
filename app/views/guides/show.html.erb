@@ -1,0 +1,76 @@
+<div class="container mt-5">
+  <div class="row">
+    <!-- Guide Content -->
+    <div class="col-md-8">
+      <h1><%= @guide.title %></h1>
+      <% if @guide.guide_photo.attached? %>
+        <%= image_tag @guide.guide_photo, class: "img-fluid rounded mb-4" %>
+      <% end %>
+      <p><%= simple_format(@guide.body) %></p>
+
+      <hr>
+      <h4>Comments</h4>
+      <% if user_signed_in? %>
+        <%= form_with model: [@guide, @comment], local: true do |f| %>
+          <div class="mb-3">
+            <%= f.label :body, "Leave a comment" %>
+            <%= f.text_area :body, rows: 3, class: "form-control" %>
+          </div>
+          <%= f.submit "Post Comment", class: "btn btn-success" %>
+        <% end %>
+      <% else %>
+        <p>Please <%= link_to "log in", new_user_session_path %> to comment.</p>
+      <% end %>
+      <br>
+      <% @comments.each do |comment| %>
+      <div class="card mb-3">
+        <div class="card-body d-flex align-items-start">
+          <!-- Profile Image -->
+            <% if comment.user.profile_photo.attached? %>
+              <%= image_tag url_for(comment.user.profile_photo), 
+                            class: "rounded-circle me-3", alt: "User profile", size: "50x50" %>
+            <% else %>
+              <%= image_tag "no-profile.jpg", class: "rounded-circle me-3", size: "50x50", alt: "Default profile" %>
+            <% end %>
+
+          <!-- Comment Content -->
+          <div>
+            <strong>
+              <%= link_to comment.user.full_name, user_path(comment.user), class: "text-decoration-none" %>
+            </strong>
+            <p class="mb-1"><%= comment.body %></p>
+            <small class="text-muted"><%= time_ago_in_words(comment.created_at) %> ago</small>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+
+    <%= paginate @comments %>
+
+    </div>
+
+    <!-- Author Card -->
+    <div class="col-md-3 mt-5">
+      <br>
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="mb-3"><em>Written by:</em></h5>
+          <% if @guide.user.profile_photo.attached? %>
+            <%= image_tag @guide.user.profile_photo, class: "rounded-circle mb-2", size: "100x100" %>
+          <% else %>
+            <%= image_tag("no-profile.jpg", class: "rounded-circle mb-2", size: "100x100") %>
+          <% end %>
+          <% if @guide.user.realtor? %>
+            <p class="fw-bold"><%= @guide.user.first_name %> <%= @guide.user.last_name %></p>
+          <% else %>
+            <p class="fw-bold"><%= @guide.user.company_name %></p>
+          <% end %>
+
+          <p class="fw-light"><small><%= truncate(@guide.user.about, length: 100) %></small></p>
+          <%= link_to "View Profile", user_path(@guide.user), class: "btn btn-outline-primary btn-sm" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

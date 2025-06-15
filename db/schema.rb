@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_07_113451) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_15_084110) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_113451) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.text "body"
+    t.bigint "user_id", null: false
+    t.string "commentable_type", null: false
+    t.bigint "commentable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
+    t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "conversations", force: :cascade do |t|
@@ -114,6 +125,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_113451) do
     t.bigint "model_house_id", null: false
     t.index ["dev_project_id"], name: "index_dev_projects_model_houses_on_dev_project_id"
     t.index ["model_house_id"], name: "index_dev_projects_model_houses_on_model_house_id"
+  end
+
+  create_table "guides", force: :cascade do |t|
+    t.string "title"
+    t.text "body"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_guides_on_user_id"
   end
 
   create_table "listings", force: :cascade do |t|
@@ -188,6 +208,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_113451) do
     t.integer "sqft"
     t.boolean "approved", default: false
     t.boolean "confirmed"
+    t.integer "developer_id"
+    t.integer "contact_clicks"
     t.index ["client_id"], name: "index_listings_on_client_id"
     t.index ["realtor_id"], name: "index_listings_on_realtor_id"
   end
@@ -258,6 +280,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_113451) do
     t.boolean "bank_financing", default: false, null: false
     t.boolean "inhouse_financing", default: false, null: false
     t.boolean "pagibig_financing", default: false, null: false
+    t.bigint "dev_project_id"
+    t.index ["dev_project_id"], name: "index_model_houses_on_dev_project_id"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -273,6 +297,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_113451) do
     t.index ["client_id"], name: "index_reviews_on_client_id"
     t.index ["listing_id"], name: "index_reviews_on_listing_id"
     t.index ["realtor_id"], name: "index_reviews_on_realtor_id"
+  end
+
+  create_table "saved_listings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "listing_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["listing_id"], name: "index_saved_listings_on_listing_id"
+    t.index ["user_id"], name: "index_saved_listings_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -300,14 +333,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_07_113451) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "comments", "users"
   add_foreign_key "conversations", "users", column: "client_id"
   add_foreign_key "conversations", "users", column: "realtor_id"
   add_foreign_key "dev_projects", "users"
+  add_foreign_key "guides", "users"
   add_foreign_key "listings", "users", column: "client_id"
   add_foreign_key "listings", "users", column: "realtor_id"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "model_houses", "dev_projects"
   add_foreign_key "reviews", "listings"
   add_foreign_key "reviews", "users", column: "client_id"
   add_foreign_key "reviews", "users", column: "realtor_id"
+  add_foreign_key "saved_listings", "listings"
+  add_foreign_key "saved_listings", "users"
 end

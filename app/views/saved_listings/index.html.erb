@@ -1,0 +1,40 @@
+<p class="text-success"><%= notice %></p>
+
+<div class="container mt-5">
+  <div class="index-container">
+
+  <h2>Saved Listings</h2>
+
+    <% @saved_listings.each do |saved_listing| %>
+    <% listing = saved_listing.listing %>
+
+    <div class="card mb-4">
+      <div class="row g-0">
+        <% if listing.listing_photos.attached? %>
+          <div class="col-md-4">
+            <%= image_tag listing.listing_photos.first, class: "img-fluid rounded-start", resize_to_fit: [400, 300] %>
+          </div>
+        <% end %>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title"><%= listing.title %></h5>
+            <p class="card-text mb-1">
+              <strong><%= number_to_currency(listing.price, unit: "₱", precision: 2, delimiter: ",") %></strong><br>
+              <i class="bi bi-geo-alt-fill"></i> <%= listing.address %>, <%= listing.barangay %>, Naga City
+            </p>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <span class="badge bg-secondary"><%= listing.beds %> Beds</span>
+              <span class="badge bg-secondary"><%= listing.baths %> Baths</span>
+              <span class="badge bg-secondary"><%= listing.sqft %> Sq. ft.</span>
+            </div>
+            <%= link_to "Show this listing", listing_path(listing), class: "btn btn-outline-primary btn-sm" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <%= paginate @saved_listings, class: "pagination justify-content-center" %>
+
+  </div>
+</div>

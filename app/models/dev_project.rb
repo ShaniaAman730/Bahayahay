@@ -1,10 +1,13 @@
 class DevProject < ApplicationRecord
 	belongs_to :user
-	
+	has_many :model_houses, dependent: :nullify
 	has_many_attached :project_photos
-	validate :project_photos_limit
 
 	has_rich_text :description
+
+	validate :project_photos_limit
+	validates :title, presence: true
+	validates :address, presence: true
 
 	paginates_per 10
 
@@ -19,6 +22,7 @@ class DevProject < ApplicationRecord
 	end
 
 end
+
 
 
 

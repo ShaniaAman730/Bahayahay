@@ -14,7 +14,7 @@
 
   <div class="field p-2">
     <%= form.label :title %><br />
-    <%= form.text_field :title, autofocus: true, autocomplete: "title", class: "form-control w-100", placeholder: "Title" %>
+    <%= form.text_field :title, required: true, autofocus: true, autocomplete: "title", class: "form-control w-100", placeholder: "Title" %>
   </div>
 
   <div class="form-row p-2">
@@ -40,7 +40,7 @@
   <div class="form-row p-2">
     <div class="col col-md-8 mb-3">
       <%= form.label :address, "Address line"  %><br>
-      <%= form.text_field :address, class: "form-control w-100" %>
+      <%= form.text_field :address, required: true, class: "form-control w-100" %>
     </div>
     <div class="col col-md-4 mb-3">
       <%= form.label :barangay, "Barangay", class: "form-label" %>

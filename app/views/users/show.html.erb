@@ -60,7 +60,7 @@
             <h4>Active Listings</h4>
             <%= render partial: "listings/listing", collection: @listings, as: :listing %>
             <div class="pagination">
-              <%= paginate @listings %>
+              <%= paginate @listings, param_name: :listings_page %>
             </div>
           </div>
         <% elsif @user.developer? %>
@@ -76,7 +76,7 @@
         <% if @user.realtor? && @user.received_reviews.any? %>
           <div class="mt-5">
             <h4>Reviews</h4>
-            <% @user.received_reviews.page(params[:page]).per(3).each do |review| %>
+            <% @reviews.each do |review| %>
               <div class="card mb-3">
                 <div class="card-body">
                   <% knowledge = review.knowledge_rating.to_i %>
@@ -92,7 +92,7 @@
                 </div>
               </div>
             <% end %>
-            <%= paginate @user.received_reviews.page(params[:page]).per(3) %>
+            <%= paginate @reviews, param_name: :reviews_page %>
           </div>
         <% end %>
       </div>

@@ -95,6 +95,6 @@ class DevProjectsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def dev_project_params
-      params.expect(dev_project: [ :title, :description, :barangay, :address, :inherit_amenities, :guardhouse, :perimeterfence, :clubhouse, :pool, :coveredcourt,:playground,:joggingpath, :mphall, :tenniscourt, :retailstrip, :chapel,:petpark, :sewagefacility, :lobbyconcierge, :cctv, :elevators, :gym, :eventhall, :playarea, :roofdeck, :parking, :firealarm, :businesscenter, :loungearea, :spa, :laundrystation, :generator, :fiberready, :parcellockers, :restaurant, :mall, :transportterminal, :bikingtrail, :itpark, :clinic, :property_type ])
+      params.expect(dev_project: [ :title, :description, :barangay, :address, :inherit_amenities, :guardhouse, :perimeterfence, :clubhouse, :pool, :coveredcourt,:playground,:joggingpath, :mphall, :tenniscourt, :retailstrip, :chapel,:petpark, :sewagefacility, :lobbyconcierge, :cctv, :elevators, :gym, :eventhall, :playarea, :roofdeck, :parking, :firealarm, :businesscenter, :loungearea, :spa, :laundrystation, :generator, :fiberready, :parcellockers, :restaurant, :mall, :transportterminal, :bikingtrail, :itpark, :clinic, :property_type, project_photos: [] ])
     end
 end
