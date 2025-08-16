@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_15_084110) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_12_081307) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -210,6 +210,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_15_084110) do
     t.boolean "confirmed"
     t.integer "developer_id"
     t.integer "contact_clicks"
+    t.boolean "active", default: true
+    t.boolean "for_edit", default: false
+    t.string "rejection_reason"
+    t.string "custom_reason"
+    t.integer "approval_requests_count", default: 0, null: false
     t.index ["client_id"], name: "index_listings_on_client_id"
     t.index ["realtor_id"], name: "index_listings_on_realtor_id"
   end

@@ -4,7 +4,7 @@
   <%= form_with url: agents_path, method: :get, local: true, class: "mb-4" do |f| %>
     <div class="input-group">
       <%= f.text_field :query, value: params[:query], class: "form-control", placeholder: "Search agents..." %>
-      <button type="submit" class="btn btn-primary">Search</button>
+      <button type="submit" class="btn btn-success">Search</button>
     </div>
   <% end %>
 

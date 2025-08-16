@@ -1,11 +1,21 @@
 <%= stylesheet_link_tag('style') %>
 
 <% if current_user&.admin? %>
-
   <%= render partial: "/shared/admin_dashboard" %>
 
-  <% else %>
+<% elsif current_user&.client? %>
+  <%= render partial: "client_homepage" %>
+
+<% elsif current_user&.developer? %>
+  <%= render partial: "developer_homepage" %>
+
+<% elsif current_user&.realtor? %>
+  <%= render partial: "realtor_homepage" %>
+
+<% else %>
   <%= render partial: "user_homepage" %>
 
 <% end %>
+
+
 

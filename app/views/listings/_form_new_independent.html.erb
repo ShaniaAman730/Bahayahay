@@ -341,7 +341,7 @@
       <%= form.label :estatetax, "Is the estate tax paid?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
-        <%= form.radio_button :estatetax, true, id: 'estatetax_yes', class: "form-check-input", required: true %>
+        <%= form.radio_button :estatetax, true, id: 'estatetax_yes', class: "form-check-input" %>
         <%= form.label :estatetax, "Yes", for: 'estatetax_yes', class: "form-check-label" %>
       </div>
 
@@ -444,7 +444,7 @@
 
     <div class="field">
      <%= form.label :tct, "Lastly, please upload at least 4 pages of the certified true copy of the Transfer Certificate of Title (TCT) recently acquired in the last 6 months:"  %><br>
-     <%= form.file_field :tct,  multiple: true, class: "form-control w-100", multiple: true, direct_upload: true, required: true, data: { max_files: 4 } %>
+     <%= form.file_field :tct,  multiple: true, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 4 } %>
    </div>
 
   </div>  

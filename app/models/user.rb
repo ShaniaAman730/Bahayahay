@@ -20,6 +20,11 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  validates :first_name, presence: true
+  validates :last_name, presence: true
+  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :contact_no, presence: true
+
   has_one_attached :profile_photo
   has_one_attached :prc_id
   has_one_attached :dhsud_cert
@@ -47,6 +52,5 @@ class User < ApplicationRecord
       approved_realtors
     end
 end
-
 
 end

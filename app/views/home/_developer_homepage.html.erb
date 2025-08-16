@@ -1,0 +1,46 @@
+  <!-- Jumbotron with Overlay -->
+<div class="jumbotron jumbotron-fluid position-relative text-white" style="background-image: url(<%= asset_path('subdivision.jpeg') %>); background-size: cover; background-position: center center; height: 400px;">
+  <!-- Black overlay -->
+  <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.5); z-index: 1;"></div>
+    <div class="container h-100 d-flex flex-column justify-content-center position-relative" style="z-index: 2;">
+        <h1 class="display-4">Hello <%= current_user.first_name %>!</h1>
+        <h1 class="display-4 mb-4">Showcase Your Development to the Right Buyers.</h1>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid m-5">
+  <div class="index-container container">
+  <div class="mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4>Create New Development Project</h4>
+      <%= link_to "Create New", new_dev_project_path, class: "btn btn-outline-success" %>
+    </div>
+    <%= render partial: "dev_projects/dev_project_home", collection: @dev_projects, as: :dev_project %>
+    <div class="pagination">
+      <%= paginate @dev_projects, param_name: :dev_projects_page %>
+    </div>
+  </div>
+</div>
+</div>
+
+  <!-- Jumbotron with Overlay -->
+<div class="jumbotron jumbotron-fluid position-relative text-white" style="background-image: url(<%= asset_path('documents.jpg') %>); background-size: cover; background-position: center center; height: 400px;">
+  <!-- Black overlay -->
+  <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.6); z-index: 1;"></div>
+    <div class="container h-100 d-flex flex-column justify-content-center position-relative" style="z-index: 2;">
+        <h1 class="display-4 mb-4">Help Educate Future Homebuyers with Guides.</h1>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid m-5">
+  <div class="index-container container">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4>Create Your Own Guide</h4>
+      <%= link_to "Create New", new_guide_path, class: "btn btn-outline-success" %>
+    </div>
+    <%= render partial: "guides" %>
+</div>
+</div>
+

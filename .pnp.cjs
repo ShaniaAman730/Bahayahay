@@ -28,6 +28,9 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@hotwired/stimulus", "npm:3.2.2"],\
+          ["@hotwired/turbo-rails", "npm:8.0.16"],\
+          ["@rails/ujs", "npm:7.1.3-4"],\
           ["esbuild", "npm:0.25.5"],\
           ["jquery", "npm:3.7.1"],\
           ["root-workspace-0b6124", "workspace:."]\
@@ -260,6 +263,53 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["@hotwired/stimulus", [\
+      ["npm:3.2.2", {\
+        "packageLocation": "../../.yarn/berry/cache/@hotwired-stimulus-npm-3.2.2-e1e064f1fe-10c0.zip/node_modules/@hotwired/stimulus/",\
+        "packageDependencies": [\
+          ["@hotwired/stimulus", "npm:3.2.2"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@hotwired/turbo", [\
+      ["npm:8.0.13", {\
+        "packageLocation": "../../.yarn/berry/cache/@hotwired-turbo-npm-8.0.13-db837ce7e0-10c0.zip/node_modules/@hotwired/turbo/",\
+        "packageDependencies": [\
+          ["@hotwired/turbo", "npm:8.0.13"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@hotwired/turbo-rails", [\
+      ["npm:8.0.16", {\
+        "packageLocation": "../../.yarn/berry/cache/@hotwired-turbo-rails-npm-8.0.16-ce2025e187-10c0.zip/node_modules/@hotwired/turbo-rails/",\
+        "packageDependencies": [\
+          ["@hotwired/turbo", "npm:8.0.13"],\
+          ["@hotwired/turbo-rails", "npm:8.0.16"],\
+          ["@rails/actioncable", "npm:8.0.200"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@rails/actioncable", [\
+      ["npm:8.0.200", {\
+        "packageLocation": "../../.yarn/berry/cache/@rails-actioncable-npm-8.0.200-c43f2ac86d-10c0.zip/node_modules/@rails/actioncable/",\
+        "packageDependencies": [\
+          ["@rails/actioncable", "npm:8.0.200"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@rails/ujs", [\
+      ["npm:7.1.3-4", {\
+        "packageLocation": "../../.yarn/berry/cache/@rails-ujs-npm-7.1.3-4-25966b1d30-10c0.zip/node_modules/@rails/ujs/",\
+        "packageDependencies": [\
+          ["@rails/ujs", "npm:7.1.3-4"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["esbuild", [\
       ["npm:0.25.5", {\
         "packageLocation": "./.yarn/unplugged/esbuild-npm-0.25.5-0c57c3e219/node_modules/esbuild/",\
@@ -307,6 +357,9 @@ const RAW_RUNTIME_STATE =
       ["workspace:.", {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@hotwired/stimulus", "npm:3.2.2"],\
+          ["@hotwired/turbo-rails", "npm:8.0.16"],\
+          ["@rails/ujs", "npm:7.1.3-4"],\
           ["esbuild", "npm:0.25.5"],\
           ["jquery", "npm:3.7.1"],\
           ["root-workspace-0b6124", "workspace:."]\

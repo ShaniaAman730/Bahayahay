@@ -3,8 +3,7 @@ class Listing < ApplicationRecord
 	belongs_to :realtor, class_name: "User"
  	belongs_to :client, class_name: "User", optional: true
  	belongs_to :developer, class_name: "User", optional: true
-
- 	has_one :review, dependent: :destroy
+ 	has_one :review
  	has_many :saved_listings, dependent: :destroy
 	has_many :users_who_saved, through: :saved_listings, source: :user
 
@@ -27,10 +26,9 @@ class Listing < ApplicationRecord
   validates :beds, :baths, :sqft, numericality: { only_integer: true, allow_nil: true }
   validates :price, numericality: { allow_nil: true }
   validates :address, presence: true
-  validates :owneralive, :estatetax, :ejsprocessed, :filipinocitizen, :ownerabroad,
+  validates :owneralive, :filipinocitizen, :ownerabroad,
   					 inclusion: { in: [true, false], message: "must be selected" },
   					 if: -> { listing_type_num == 1 }
-  validates :developer_id, presence: true, if: -> { listing_type_num == 0 }
 
 	paginates_per 10
 
@@ -85,7 +83,7 @@ class Listing < ApplicationRecord
   	scope :pending_approval, -> { independent.where(approved: false) }
   	scope :approved_listings, -> { where(approved: true) }
   	scope :public_listings, -> {
-	  where("(listing_type_num = ? AND approved = ?) OR listing_type_num = ?", 1, true, 0)
+	  where(active: true).where("(listing_type_num = ? AND approved = ?) OR listing_type_num = ?", 1, true, 0)
 	}
 
 	def confirmed_transaction?
@@ -119,6 +117,13 @@ class Listing < ApplicationRecord
 
 	def set_defaults
 	  self.contact_clicks ||= 0
+	end
+
+	def public_listing?
+	  active? && (
+	    (listing_type_num == 1 && approved?) ||
+	    listing_type_num == 0
+	  )
 	end
 	
 end

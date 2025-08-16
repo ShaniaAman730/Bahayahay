@@ -1,7 +1,14 @@
 <div class="container mt-5">
   <div class="listing-container">
 
-    <h2>Listing Details</h2>
+    <h2>Independent Listing Requirements</h2>
+
+    <div class="alert alert-warning">
+      <strong>Previous reason for rejection (if applicable):</strong> 
+      <%= "#{@listing.rejection_reason}" if @listing.rejection_reason.present? %>
+      <br>
+      <em><small>Note: This is left blank if the listing was not previously rejected and was simply updated by the realtor.</small></em>
+    </div>
 
     <div class="mb-3">
       <strong>Is the owner alive?</strong>: <%= @listing.owneralive ? "Yes" : "No" %>
@@ -70,6 +77,40 @@
         </ul>
       </div>
     <% end %>
+
+    <%= form_with model: [:admin, @listing], url: reject_admin_listing_path(@listing), method: :patch, local: true do |f| %>
+      <div class="mb-3">
+        <label><strong>Reason for rejection:</strong></label><br>
+        <div class="d-flex">
+          <%= f.radio_button :rejection_reason, "Missing requirements",
+                class: "btn-check",
+                id: "reason-missing",
+                autocomplete: "off" %>
+          <%= f.label :rejection_reason, "Missing requirements",
+                class: "btn btn-outline-secondary me-2",
+                for: "reason-missing" %>
+
+          <%= f.radio_button :rejection_reason, "Contradicting answers",
+                class: "btn-check",
+                id: "reason-contradicting",
+                autocomplete: "off" %>
+          <%= f.label :rejection_reason, "Contradicting answers",
+                class: "btn btn-outline-secondary me-2",
+                for: "reason-contradicting" %>
+        </div>
+
+
+        <div class="mt-2">
+          <%= f.label :custom_reason, "Custom reason (optional)" %>
+          <%= f.text_area :custom_reason, rows: 3, class: "form-control" %>
+        </div>
+      </div>
+      <%= f.submit "Reject", class: "btn btn-danger" %>
+    <% end %>
+
+    <%= button_to "Approve", approve_admin_listing_path(@listing), method: :patch, class: "btn btn-success mt-2" %>
+
+    <br>
 
     <a href="/admin/listings">Back to Listings Pending for Approval</a>
 

@@ -1,6 +1,9 @@
 <!-- Navbar -->
-<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light p-2">
-  <a class="navbar-brand ml-1" href="/">Bahayahay</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-2">
+   <%= link_to root_path, class: "navbar-brand" do %>
+        <%= image_tag "favicon-96x96", alt: "Bahayahay Logo", class: "d-inline-block align-top", size: "30x30" %>
+        Bahayahay
+      <% end %>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -76,7 +79,7 @@
             <a class="nav-link" href="/agents">Find an Angent<span class="sr-only"></span></a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="realtor_signup/new">Sign-up as a Realtor<span class="sr-only"></span></a>
+            <%= link_to "Sign-up as a Realtor", new_realtor_signup_path, class:"nav-link" %>
           </li>
         </ul>
 

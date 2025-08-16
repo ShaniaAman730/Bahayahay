@@ -14,9 +14,9 @@ class GuidesController < ApplicationController
   end
 
   def show
-	@guide = Guide.find(params[:id])
-	@comment = Comment.new
-	@comments = @guide.comments.order(created_at: :desc).page(params[:page]).per(5)
+  	@guide = Guide.find(params[:id])
+  	@comment = Comment.new
+  	@comments = @guide.comments.order(created_at: :desc).page(params[:page]).per(5)
   end
 
 

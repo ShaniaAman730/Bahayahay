@@ -1,5 +1,6 @@
 class RealtorSignupController < ApplicationController
-  
+  before_action :redirect_if_authenticated
+
   def index
     @users = User.all
   end
@@ -25,6 +26,12 @@ def thank_you_realtor
 end
 
 private 
+
+    def redirect_if_authenticated
+      if current_user
+        redirect_to root_path, alert: "Please log-out first if you want to set up a Realtor account."
+      end
+    end
 
     def user_params
       params.require(:user).permit(:email, :password, :password_confirmation, :first_name, :last_name, :contact_no, :address, :company_name, :prc_no, :dhsud_no, :prc_id, :dhsud_cert, :gov_id) # Add other fields as needed

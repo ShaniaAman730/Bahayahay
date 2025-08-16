@@ -38,7 +38,7 @@
       </div>
     <% end %>
 
-    <!-- Modal -->
+    <!-- Gallery Modal -->
     <div id="galleryModal" class="modal" style="display:none;">
       <span class="close" onclick="closeModal()">&times;</span>
       <img class="modal-content" id="modalImage">
@@ -50,6 +50,13 @@
       <!-- LEFT SIDE OF THE SCREEN -->
       <div class="col-12 col-sm-6 col-md-8">
         <h2 class="ml-2"><%= @listing.title %></h2>
+        <!-- notification for_edit -->
+        <% if current_user == @listing.realtor && @listing.for_edit? %>
+          <div class="alert alert-warning">
+            <strong>Notice:</strong> This listing has been rejected and is subject for edit. 
+            <%= "(Reason: #{@listing.rejection_reason})" if @listing.rejection_reason.present? %>
+          </div>
+        <% end %>
         <h6 class="fw-light ml-2"><i class="bi bi-geo-alt-fill"></i>  <%= @listing.address %>, <%= @listing.barangay %>, Naga City</h6>
         
         <div class="d-flex ml-2">
@@ -174,7 +181,7 @@
     </div>
   <% end %>
   <br>
-  <% if current_user == @listing.realtor && !@listing.confirmed %>
+  <% if current_user == @listing.realtor && !@listing.confirmed && @listing.public_listing? %>
     <h3>Confirm Sale</h3>
     <%= form_with url: confirm_listing_path(@listing), method: :post do |form| %>
       <div class="form-group">

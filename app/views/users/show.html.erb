@@ -66,9 +66,10 @@
         <% elsif @user.developer? %>
           <div class="mt-4">
             <h4>Development Projects</h4>
-            <p>(You can populate this section with project listings)</p>
-            <h4>Model Houses</h4>
-            <p>(You can populate this section with model house listings)</p>
+            <%= render partial: "dev_projects/dev_project_home", collection: @dev_projects, as: :dev_project %>
+            <div class="pagination">
+              <%= paginate @dev_projects, param_name: :dev_projects_page %>
+            </div>
           </div>
         <% end %>
 

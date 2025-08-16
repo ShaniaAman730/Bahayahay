@@ -3,6 +3,9 @@ class ModelHousesController < ApplicationController
   before_action :authenticate_developer!
   before_action :ensure_developer!
 
+  skip_before_action :authenticate_developer!, only: [:show]
+  skip_before_action :ensure_developer!, only: [:show]
+
   def remove_attachment
     @model_house = ModelHouse.find(params[:id])
     attachment = ActiveStorage::Attachment.find(params[:attachment_id])

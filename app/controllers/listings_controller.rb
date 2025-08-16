@@ -1,6 +1,5 @@
 class ListingsController < ApplicationController
   before_action :set_listing, only: %i[ show edit update destroy ]
-
   before_action :authenticate_realtor!
   before_action :ensure_realtor!
 
@@ -46,7 +45,7 @@ class ListingsController < ApplicationController
 
     @client = User.find(params[:client_id])
 
-    if @listing.update(client: @client, confirmed: true)
+    if @listing.update(client: @client, confirmed: true, active: false)
       redirect_to @listing, notice: "Sale confirmed with #{@client.first_name}."
     else
       redirect_to @listing, alert: "Could not confirm the transaction."
@@ -114,6 +113,12 @@ class ListingsController < ApplicationController
 
   # GET /listings/1 or /listings/1.json
   def show
+    if @listing.listing_type_num == 1 && !@listing.approved? &&
+       !(current_user&.admin? || current_user == @listing.realtor)
+      redirect_to public_listings_path, alert: "This listing is not available for public viewing."
+      return
+    end
+
     @interested_clients = Conversation
       .where(realtor: @listing.realtor)
       .pluck(:client_id)
@@ -192,12 +197,30 @@ class ListingsController < ApplicationController
 
     respond_to do |format|
       if @listing.update(listing_params)
+
+        # Independent listings will revert for approval after updating
+        if @listing.listing_type_num == 1
+        @listing.update(
+            approved: false,
+            for_edit: false,
+            approval_requests_count: @listing.approval_requests_count + 1
+          )
+        end
+
         @listing.listing_photos.attach(photo_params) if photo_params.present?
         @listing.spa.attach(spa_params) if spa_params.present?
         @listing.tct.attach(tct_params) if tct_params.present?
 
-        format.html { redirect_to @listing, notice: "Listing was successfully updated." }
-        format.json { render :show, status: :ok, location: @listing }
+        if @listing.listing_type_num == 0
+          format.html { redirect_to @listing, notice: "Listing was successfully updated." }
+          format.json { render :show, status: :ok, location: @listing }
+        end
+
+        if @listing.listing_type_num == 1
+          format.html { redirect_to @listing, notice: "Listing was successfully updated and is now pending for admin approval" }
+          format.json { render :show, status: :ok, location: @listing }
+        end
+
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @listing.errors, status: :unprocessable_entity }
@@ -244,8 +267,8 @@ class ListingsController < ApplicationController
       :meterperunit, :washingmachineprov, :waterheaterprov, :smarthomeready,
       :balcony, :cityview, :mountainview, :petfriendly, :facingeast,
       :realtor, :client, :listing_type, :listing_type_num, 
-      :beds, :baths, :sqft,
-      :valid_id, :birthcert, :developer_id,
+      :beds, :baths, :sqft, :contact_clicks, :confirmed, :approved, :active,
+      :valid_id, :birthcert, :developer_id, :for_edit, :approval_requests_count,
       listing_photos: [], spa: [], tct: []
     )
   end

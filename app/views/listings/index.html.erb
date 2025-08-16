@@ -15,10 +15,18 @@
             <div class="col-md-4">
               <%= image_tag listing.listing_photos.first, class: "img-fluid rounded-start", resize_to_fit: [400, 300] %>
             </div>
+          <% else %>
+            <div class="col-md-4 d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
+                <span class="text-muted">No photo available</span>
+            </div>
           <% end %>
           <div class="col-md-8">
             <div class="card-body">
               <h5 class="card-title"><%= listing.title %></h5>
+              <!-- for_edit notification -->
+              <% if current_user == listing.realtor && listing.for_edit? %>
+                <span class="badge text-bg-warning">Subject for edit</span>
+              <% end %>
               <p class="card-text mb-1">
                 <strong><%= number_to_currency(listing.price, unit: "₱", precision: 2, delimiter: ",") %></strong><br>
                 <i class="bi bi-geo-alt-fill"></i> <%= listing.address %>, <%= listing.barangay %>, Naga City
@@ -28,7 +36,10 @@
                 <span class="badge bg-secondary"><%= listing.baths %> Baths</span>
                 <span class="badge bg-secondary"><%= listing.sqft %> Sq. ft.</span>
               </div>
-              <%= link_to "Show this listing", listing, class: "btn btn-outline-primary btn-sm" %>
+              <div class="d-flex">
+                <%= link_to "Show this listing", listing, class: "btn btn-outline-primary btn-sm" %>
+                <%= button_to "Delete", listing_path(listing), method: :delete, class: "btn btn-danger btn-sm ml-1", data: { confirm: "Are you sure?"} %>
+              </div>
             </div>
           </div>
         </div>

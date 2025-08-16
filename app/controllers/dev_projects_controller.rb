@@ -3,6 +3,9 @@ class DevProjectsController < ApplicationController
   before_action :authenticate_developer!
   before_action :ensure_developer!
 
+  skip_before_action :authenticate_developer!, only: [:show]
+  skip_before_action :ensure_developer!, only: [:show]
+
   def remove_attachment
     @dev_project = DevProject.find(params[:id])
     attachment = ActiveStorage::Attachment.find(params[:attachment_id])
@@ -19,14 +22,13 @@ class DevProjectsController < ApplicationController
 
   # GET /dev_projects or /dev_projects.json
   def index
-    @dev_projects = DevProject.all
-                              .order(:title)
-                              .page(params[:page])
-                              .per(10)
+    @dev_projects = DevProject.all.order(:title).page(params[:page]).per(10)
   end
 
   # GET /dev_projects/1 or /dev_projects/1.json
   def show
+    @dev_project = DevProject.find(params[:id])
+    @model_houses = @dev_project.model_houses
   end
 
   # GET /dev_projects/new

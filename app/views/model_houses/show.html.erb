@@ -1,9 +1,10 @@
 <div class="container mt-5">
 <div class="d-flex">
-  <%= link_to model_houses_path do %>
-    <h1><i class="bi bi-arrow-left-circle text-success"></i></h1>
+  <% if user_signed_in? && current_user.developer? %>
+    <%= link_to model_houses_path do %>
+      <h1><i class="bi bi-arrow-left-circle text-success"></i></h1>
+    <% end %>
   <% end %>
-
   <div class="listing-container">
     
     <% if @model_house.model_photos.attached? %>
@@ -84,8 +85,11 @@
 
       </div>
 
+      <hr class="mt-5 mb-4">
+      <h3 class="mb-4">Development Project</h3>
+
       <% if @dev_project.present? %>
-        <div class="card mb-4">
+        <div class="card mb-4 p-3">
           <div class="row g-0">
             <% if @dev_project.project_photos.attached? %>
               <div class="col-md-4">

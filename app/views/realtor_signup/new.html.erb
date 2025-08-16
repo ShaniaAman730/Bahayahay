@@ -1,3 +1,4 @@
+<br>
 <div class="container">
   <div class="mt-5"></div>
   <div class="form-container">
@@ -6,36 +7,49 @@
 
     <%= form_with model: @user, url: realtor_signup_index_path, local: true, html: { multipart: true } do |form| %>
 
+    <div>
+      <% if @user.errors.any? %>
+        <div style="color: red">
+          <h2><%= pluralize(user.errors.count, "error") %> prohibited this account from being saved:</h2>                
+          <ul>
+            <% user.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+             <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+
     <div class="form-row p-2">
       <div class="col col-md-6 mb-3">
         <%= form.label :first_name %>
-        <%= form.text_field :first_name, class: "form-control w-100", placeholder: "First name" %>
+        <%= form.text_field :first_name, required: true, class: "form-control w-100", placeholder: "First name" %>
       </div>
       <div class="col col-md-6 mb-3">
         <%= form.label :last_name %>
-        <%= form.text_field :last_name, class: "form-control w-100", placeholder: "Last name" %>
+        <%= form.text_field :last_name, required: true, class: "form-control w-100", placeholder: "Last name" %>
       </div>
     </div>
 
     <div class="form-row p-2">
       <div class="col col-md-6 mb-3">
         <%= form.label :email %>
-        <%= form.email_field :email, autofocus: true, autocomplete: "email", class: "form-control w-100", placeholder: "Email" %>
+        <%= form.email_field :email, required: true, autofocus: true, autocomplete: "email", class: "form-control w-100", placeholder: "Email" %>
       </div>
       <div class="col col-md-6 mb-3">
         <%= form.label :contact_no %>
-        <%= form.text_field :contact_no, class: "form-control w-100", placeholder: "Contact no." %>
+        <%= form.text_field :contact_no, required: true, class: "form-control w-100", placeholder: "Contact no." %>
       </div>
     </div>
 
     <div class="form-row p-2">
       <div class="col col-md-6 mb-3">
         <%= form.label :company_name, "Realty/Company Name" %>
-        <%= form.text_field :company_name, class: "form-control w-100", placeholder: "Realty/Company Name" %>
+        <%= form.text_field :company_name, required: true, class: "form-control w-100", placeholder: "Realty/Company Name" %>
       </div>
       <div class="col col-md-6 mb-3">
         <%= form.label :address, "Realty/Company Address" %>
-        <%= form.text_field :address, class: "form-control w-100", placeholder: "Realty/Company Name" %>
+        <%= form.text_field :address, required: true, class: "form-control w-100", placeholder: "Realty/Company Name" %>
       </div>
     </div>
 
@@ -43,7 +57,7 @@
       <div class="col col-md-6 mb-3">
         <%= form.label :prc_no, "PRC ID or Accreditation number" %>
         <div class="mb-4"></div>
-        <%= form.text_field :prc_no, class: "form-control w-100", placeholder: "PRC ID or Accreditation number" %>
+        <%= form.text_field :prc_no, required: true, class: "form-control w-100", placeholder: "PRC ID or Accreditation number" %>
       </div>
       <div class="col col-md-6 mb-3">
         <%= form.label :prc_id, "Upload a picture of your PRC ID/Accreditation or your official PRC receipt" %>
@@ -54,7 +68,7 @@
     <div class="form-row p-2">
       <div class="col col-md-6 mb-3">
         <%= form.label :dhsud_no, "DHSUD Certificate number" %>
-        <%= form.text_field :dhsud_no, class: "form-control w-100", placeholder: "DHSUD Certificate number" %>
+        <%= form.text_field :dhsud_no, required: true, class: "form-control w-100", placeholder: "DHSUD Certificate number" %>
       </div>
       <div class="col col-md-6 mb-3">
         <%= form.label :dhsud_cert, "Upload a picture of your DHSUD Certificate" %>
@@ -73,11 +87,11 @@
         <% if @minimum_password_length %>
           <em>(<%= @minimum_password_length %> characters minimum)</em>
         <% end %><br />
-        <%= form.password_field :password, autocomplete: "new-password", class: "form-control w-100", placeholder: "Password" %>
+        <%= form.password_field :password, required: true, autocomplete: "new-password", class: "form-control w-100", placeholder: "Password" %>
       </div>
       <div class="col col-md-6 mb-3">
         <%= form.label :password_confirmation %>
-        <%= form.password_field :password_confirmation, autocomplete: "new-password", class: "form-control w-100", placeholder: "Password" %>
+        <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", class: "form-control w-100", placeholder: "Password" %>
       </div>
     </div>
 
@@ -87,5 +101,4 @@
   <% end %>
   <br>
  </div>
- <div class="mb-5"></div>
 </div>

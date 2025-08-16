@@ -3,27 +3,29 @@
   <div class="form-container">
     <h2>Sign up</h2>
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-    <%= render "devise/shared/error_messages", resource: resource %>
+    <div>
+      <%= render "devise/shared/error_messages", resource: resource %>
+    </div>
 
     <div class="form-row p-2">
       <div class="col col-md-6 mb-3">
         <%= f.label :first_name %>
-        <%= f.text_field :first_name, class: "form-control w-100", placeholder: "First name" %>
+        <%= f.text_field :first_name, required: true, class: "form-control w-100", placeholder: "First name" %>
       </div>
       <div class="col col-md-6 mb-3">
         <%= f.label :last_name %>
-        <%= f.text_field :last_name, class: "form-control w-100", placeholder: "Last name" %>
+        <%= f.text_field :last_name, required: true, class: "form-control w-100", placeholder: "Last name" %>
       </div>
     </div>
 
     <div class="form-row p-2">
       <div class="col col-md-6 mb-3">
         <%= f.label :email %>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control w-100", placeholder: "Email" %>
+        <%= f.email_field :email, required: true, autofocus: true, autocomplete: "email", class: "form-control w-100", placeholder: "Email" %>
       </div>
       <div class="col col-md-6 mb-3">
         <%= f.label :contact_no %>
-        <%= f.text_field :contact_no, class: "form-control w-100", placeholder: "Contact no." %>
+        <%= f.text_field :contact_no, required: true, class: "form-control w-100", placeholder: "Contact no." %>
       </div>
     </div>
 
@@ -53,4 +55,5 @@
  </div>
  <div class="mt-5"></div>
 </div>
+
 

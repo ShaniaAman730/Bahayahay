@@ -47,6 +47,8 @@ gem 'mini_magick'
 gem 'kaminari'
 gem 'kaminari-bootstrap'
 gem 'actiontext'
+gem "importmap-rails"
+
 
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]

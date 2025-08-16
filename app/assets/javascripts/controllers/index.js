@@ -10,3 +10,4 @@ const application = Application.start()
 application.register("hello", HelloController)
 
 export { application }
+

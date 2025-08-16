@@ -1,7 +1,7 @@
 <div class="container mt-5">
   <div class="index-container">
     <h2>Listings Pending for Approval</h2>
-
+    
     <% @pending_listings.each do |listing| %>
       
         <div class="row border border-secondary rounded p-3 my-2">
@@ -16,22 +16,14 @@
               <h4><%= listing.title %></h4>
                 <p><i class="bi bi-geo-alt-fill"></i>  <%= listing.address %>, <%= listing.barangay %>, Naga City</p>
                 <div class="d-flex">
-                  <%= link_to "Show this listing", listing_path(listing), class: "nav-link" %>
-                  <div class="vr mx-3 my-1" style="height: 10px;"></div>
-                  <%= link_to "Show Requirements", admin_listing_path(listing) %>
+                  <%= link_to "Show", listing_path(listing), class: "btn btn-outline-success btn-sm mr-1" %>
+                  <%= link_to "View Requirements", admin_listing_path(listing), class: "btn btn-outline-secondary btn-sm" %>
                 </div>
-
-            <div class="d-flex">
-              <%= form_with url: approve_admin_listing_path(listing), method: :patch do %>
-                <%= submit_tag "Approve", class: "btn btn-success me-2" %>
-              <% end %>
-
-              <%= form_with url: reject_admin_listing_path(listing), method: :patch do %>
-                <%= submit_tag "Reject", class: "btn btn-danger" %>
-              <% end %>
-            </div>
-
-
+                <hr width="100%" />
+                <div class="d-flex mt-2">
+                  <p class="m-1"><small>No. of times this listing been sent for approval: <%= listing.approval_requests_count %></p></small>
+                  <%= button_to "Delete", admin_listing_path(listing), method: :delete, data: { confirm: "Are you sure you want to delete this listing?" }, class: "btn btn-danger btn-sm ml-3" %>
+                </div>
             </div>
           </div>
       
@@ -40,6 +32,5 @@
   <%= paginate @pending_listings, class: "pagination" %>
     
   </div>
-  <div class="mb-5"></div>
-  <div class="mb-5"></div>
 </div>
+

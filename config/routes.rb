@@ -1,8 +1,6 @@
 Rails.application.routes.draw do
   get "agents/index"
 
-  get "realtor_signup/new"
-
   root "home#index"
   get '/home' => 'home#default_homepage'
   
@@ -57,7 +55,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    resources :listings, only: [:index, :show] do
+    resources :listings, only: [:index, :show, :destroy] do
       member do
         patch :approve
         patch :reject
