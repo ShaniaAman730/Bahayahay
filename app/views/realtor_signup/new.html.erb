@@ -10,9 +10,9 @@
     <div>
       <% if @user.errors.any? %>
         <div style="color: red">
-          <h2><%= pluralize(user.errors.count, "error") %> prohibited this account from being saved:</h2>                
+          <h2><%= pluralize(@user.errors.count, "error") %> prohibited this account from being saved:</h2>                
           <ul>
-            <% user.errors.each do |error| %>
+            <% @user.errors.each do |error| %>
               <li><%= error.full_message %></li>
              <% end %>
           </ul>
@@ -73,6 +73,26 @@
       <div class="col col-md-6 mb-3">
         <%= form.label :dhsud_cert, "Upload a picture of your DHSUD Certificate" %>
         <%= form.file_field :dhsud_cert, class: "form-control", class: "form-control w-100" %>
+      </div>
+    </div>
+
+    <div class="form-row p-2">
+      <div class="col col-md-6 mb-3">
+        <%= form.label :is_broker, "Are you a Licensed Real Estate Broker?" %><br>
+        <%= form.check_box :is_broker, {}, true, false %> Yes
+      </div>
+    </div>
+
+    <div id="broker-fields" style="display:none;">
+      <div class="form-row p-2">
+        <div class="col col-md-6 mb-3">
+          <%= form.label :broker_name, "Broker's Name" %>
+          <%= form.text_field :broker_name, class: "form-control w-100", placeholder: "Broker's Name" %>
+        </div>
+        <div class="col col-md-6 mb-3">
+          <%= form.label :broker_prc_no, "Broker's PRC ID No." %>
+          <%= form.text_field :broker_prc_no, class: "form-control w-100", placeholder: "Broker's PRC ID No." %>
+        </div>
       </div>
     </div>
 

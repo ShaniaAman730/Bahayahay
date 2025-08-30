@@ -13,9 +13,9 @@
       <div class="card mb-3 p-3 d-flex flex-row align-items-center" style="min-height: 150px;">
         <div class="me-4">
           <% if agent.profile_photo.attached? %>
-            <%= image_tag url_for(agent.profile_photo), class: "rounded-circle img-thumbnail", size: "100x100" %>
+            <%= image_tag url_for(agent.profile_photo), class: "rounded-circle img-thumbnail", class: "rounded-circle", size: "100x100" %>
           <% else %>
-            <%= image_tag "no-profile.jpg", class: "rounded-circle img-thumbnail", size: "100x100" %>
+            <%= image_tag "no-profile.jpg", class: "rounded-circle img-thumbnail", class: "rounded-circle", size: "100x100" %>
           <% end %>
         </div>
         <div class="flex-grow-1">

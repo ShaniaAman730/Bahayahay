@@ -90,6 +90,7 @@
       <div class="col-6">
         <h3 class="mb-3">Your Recently Saved Listings</h3>
       </div>
+      <% if @recent_saved_listings.present? %>
       <div class="col-6 text-end">
         <a class="btn btn-success mb-3 me-1" href="#savedListingsCarousel" role="button" data-bs-slide="prev">
           <i class="bi bi-chevron-left"></i>
@@ -132,6 +133,9 @@
                   <% end %>
                 </div>
               </div>
+            <% end %>
+            <% else %>
+              <p class="text-muted">No saved listings yet.</p>
             <% end %>
           </div>
         </div>

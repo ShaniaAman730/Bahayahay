@@ -32,6 +32,13 @@ class User < ApplicationRecord
 
   enum :user_type, { admin: 0, developer: 1, realtor: 2, client: 3 }
 
+  # Validation for broker details if not a broker
+  with_options if: -> { user_type == 2 && is_broker == false } do
+      validates :broker_name, presence: true
+      validates :broker_prc_no, presence: true
+  end
+  
+
   paginates_per 10
 
   def full_name

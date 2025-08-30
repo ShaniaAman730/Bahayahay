@@ -8,7 +8,7 @@
         <div class="row g-4 align-items-center">
           <div class="col-auto">
             <% if @user.persisted? && @user.profile_photo.attached? %>
-              <%= image_tag @user.profile_photo, class: "rounded-circle img-thumbnail", size: "200x200" %>
+              <%= image_tag @user.profile_photo, class: "rounded-circle img-thumbnail", class: "rounded-circle", size: "200x200" %>
             <% else %>
               <%= image_tag("no-profile.jpg", class: "rounded-circle img-thumbnail", size: "200x200") %>
             <% end %>
@@ -19,6 +19,8 @@
               <p class="text-muted mb-2"><%= @user.company_name %></p>
             <% elsif @user.developer? %>
               <h2 class="fw-bold mb-1"><%= @user.company_name %></h2>
+            <% elsif @user.client? %>
+              <h2 class="fw-bold mb-1"><%= @user.first_name %> <%= @user.last_name %></h2>
             <% end %>
             <% if user_signed_in? && current_user.id == @user.id %>
               <a href="/users/edit" class="btn btn-outline-secondary btn-sm">Edit Profile</a>
@@ -58,18 +60,26 @@
         <% if @user.realtor? %>
           <div class="mt-4">
             <h4>Active Listings</h4>
-            <%= render partial: "listings/listing", collection: @listings, as: :listing %>
-            <div class="pagination">
-              <%= paginate @listings, param_name: :listings_page %>
-            </div>
+            <% if @listings.present? %>
+              <%= render partial: "listings/listing", collection: @listings, as: :listing %>
+              <div class="pagination">
+                <%= paginate @listings, param_name: :listings_page %>
+              </div>
+            <% else %>
+              <p class="text-muted">No listings available.</p>
+            <% end %>  
           </div>
         <% elsif @user.developer? %>
           <div class="mt-4">
             <h4>Development Projects</h4>
-            <%= render partial: "dev_projects/dev_project_home", collection: @dev_projects, as: :dev_project %>
-            <div class="pagination">
-              <%= paginate @dev_projects, param_name: :dev_projects_page %>
-            </div>
+            <% if @dev_projects.present? %>
+              <%= render partial: "dev_projects/dev_project_home", collection: @dev_projects, as: :dev_project %>
+              <div class="pagination">
+                <%= paginate @dev_projects, param_name: :dev_projects_page %>
+              </div>
+            <% else %>
+              <p class="text-muted">No development projects available.</p>
+            <% end %>
           </div>
         <% end %>
 
@@ -107,14 +117,14 @@
               <div class="col-sm-5 small text-muted">
                 <p>Cellphone No.:</p>
                 <p>Email:</p>
-                <p>Website:</p>
                 <p>Address:</p>
+                <p>Website:</p>
               </div>
               <div class="col-sm-7 small">
                 <p><%= @user.contact_no %></p>
                 <p><%= @user.email %></p>
-                <p><%= @user.website %></p>
                 <p><%= @user.address %></p>
+                <p><%= @user.website %></p>
               </div>
             </div>
           </div>

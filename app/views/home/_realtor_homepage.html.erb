@@ -16,10 +16,14 @@
       <h4>Create New a New Listing</h4>
       <%= link_to "Create New", new_listing_path, class: "btn btn-outline-success" %>
     </div>
-    <%= render partial: "listings/listing", collection: @listings, as: :listing %>
-    <div class="pagination">
-      <%= paginate @listings, param_name: :listings_page %>
-    </div>
+    <% if @listings.present? %>
+      <%= render partial: "listings/listing", collection: @listings, as: :listing %>
+      <div class="pagination">
+        <%= paginate @listings, param_name: :listings_page %>
+      </div>
+    <% else %>
+      <p class="text-muted">No listings available.</p>
+    <% end %>
   </div>
 </div>
 </div>

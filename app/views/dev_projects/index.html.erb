@@ -28,8 +28,10 @@
               </p>
               <span class="badge bg-secondary mb-3"><%= dev_project.property_type %></span>
               <br>
-              <%= link_to "Show this project", dev_project, class: "btn btn-outline-primary btn-sm" %>
-              <%= link_to "Delete", dev_project_path(dev_project), method: :delete, data: { confirm: "Are you sure?" } %>
+              <div class="d-flex">
+                <%= link_to "Show this project", dev_project, class: "btn btn-outline-primary btn-sm" %>
+                <%= button_to "Delete", dev_project_path(dev_project), method: :delete, class: "btn btn-danger btn-sm ml-1", data: { confirm: "Are you sure?" } %>
+              </div>
             </div>
           </div>
         </div>

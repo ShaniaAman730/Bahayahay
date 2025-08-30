@@ -33,10 +33,11 @@
           <%= form.label :company_name %><br />
           <%= form.text_field :company_name, class: "form-control w-25", placeholder: "Company Name" %>
         </div>
+
       <% if @user.realtor? %> 
         <div>
-          <%= form.label :approved %><br />
-          <%= form.check_box :approved %>
+          <%= form.label :admin_approved %><br />
+          <%= form.check_box :admin_approved %>
         </div>
 
         <div class="field">

@@ -34,7 +34,7 @@ private
     end
 
     def user_params
-      params.require(:user).permit(:email, :password, :password_confirmation, :first_name, :last_name, :contact_no, :address, :company_name, :prc_no, :dhsud_no, :prc_id, :dhsud_cert, :gov_id) # Add other fields as needed
+      params.require(:user).permit(:email, :password, :password_confirmation, :first_name, :last_name, :contact_no, :address, :company_name, :prc_no, :dhsud_no, :prc_id, :dhsud_cert, :gov_id, :is_broker, :broker_name, :broker_prc_no) 
     end
    
 

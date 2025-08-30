@@ -8,8 +8,8 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @listings = @user.listings_posted.merge(Listing.approved_listings).page(params[:listings_page]).per(3)
-    @dev_projects = DevProject.page(params[:dev_projects_page]).order(created_at: :desc).per(3)
+    @listings = @user.listings_posted.merge(Listing.public_listings).page(params[:listings_page]).per(3)
+    @dev_projects = @user.dev_projects.page(params[:dev_projects_page]).order(created_at: :desc).per(3)
     @reviews = @user.received_reviews.page(params[:reviews_page]).per(3)
 
     

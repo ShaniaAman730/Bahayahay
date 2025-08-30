@@ -25,7 +25,7 @@ class ListingsController < ApplicationController
     attachment = ActiveStorage::Attachment.find(params[:attachment_id])
 
     # Confirm the attachment is associated with listing_photos
-    if attachment.record == @listing && attachment.name == "listing_photos"
+    if attachment.record == @listing && ["listing_photos", "spa", "tct"].include?(attachment.name)
       attachment.purge
       @listing.reload
       redirect_to edit_listing_path(@listing), notice: "Photo was successfully removed."
@@ -33,7 +33,6 @@ class ListingsController < ApplicationController
       redirect_to edit_listing_path(@listing), alert: "Invalid attachment."
     end
   end
-
 
   def confirm
     @listing = Listing.find(params[:id])

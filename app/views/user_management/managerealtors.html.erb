@@ -19,13 +19,16 @@
         <tr>
           <th>User ID</th>
           <th>Email</th>
-          <th>Approved</th>
           <th>First Name</th>
           <th>Last Name</th>
           <th>Contact No.</th>
           <th>Realty</th>
-          <th>PRC ID or Accreditation No.</th>
+          <th>PRC ID or Accred. No.</th>
           <th>DHSUD Certificate No.</th>
+          <th>Is a broker?</th>
+          <th>Broker Name</th>
+          <th>Broker PRC No.</th>
+          <th>Gov. ID</th>
           <th>Address</th>
           <th>Edit</th>
           <th>Delete</th>
@@ -37,13 +40,21 @@
           <tr>
             <td><%= user.id %></td>
             <td><%= user.email %></td>
-            <td><%= user.admin_approved? ? "Yes" : "No" %></td>
             <td><%= user.first_name %></td>
             <td><%= user.last_name %></td>
             <td><%= user.contact_no %></td>
             <td><%= user.company_name %></td>
-            <td><%= user.prc_no %></td>
-            <td><%= user.dhsud_no %></td>
+            <td><%= user.prc_no %> <br> <%= link_to "View ID", url_for(user.prc_id), target: "_blank" %></td>
+            <td><%= user.dhsud_no %> <br> <%= link_to "View ID", url_for(user.dhsud_cert), target: "_blank" %></td>
+            <td><%= user.is_broker? ? "Yes" : "No" %></td>
+            <% if user.is_broker == false %>
+              <td><%= user.broker_name %></td>
+              <td><%= user.broker_prc_no %></td>
+            <% else %>
+              <td>N/A</td>
+              <td>N/A</td>
+            <% end %>
+            <td><%= link_to "View ID", url_for(user.gov_id), target: "_blank" %></td>
             <td><%= user.address %></td>
             <td><%= link_to "Edit", edit_user_management_path(user), class: "btn btn-light" %></td>
             <td><%= button_to "Delete", user_management_path(user), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger my-1" %></td>
@@ -54,50 +65,11 @@
         <% end %>
       </tbody>
     </table>
-    <% if @user_counter == 0 %>
-      <p>No realtors to approve.</p>
-    <% end %>
+    
+  <div class="d-flex justify-content-center">
+    <%= paginate @users %>
+  </div>
 
-
-    <br>
-    <h3>Approved Realtors</h3>
-
-    <table class="table table-striped-columns"> 
-      <thead>
-        <tr>
-          <th>User ID</th>
-          <th>Email</th>
-          <th>Approved</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Contact No.</th>
-          <th>Realty</th>
-          <th>PRC ID or Accreditation No.</th>
-          <th>DHSUD Certificate No.</th>
-          <th>Address</th>
-          <th>Edit</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @users.each do |user| %>
-        <% if user.realtor? && user.admin_approved? %>
-          <tr>
-            <td><%= user.id %></td>
-            <td><%= user.email %></td>
-            <td><%= user.admin_approved? ? "Yes" : "No" %></td>
-            <td><%= user.first_name %></td>
-            <td><%= user.last_name %></td>
-            <td><%= user.contact_no %></td>
-            <td><%= user.company_name %></td>
-            <td><%= user.prc_no %></td>
-            <td><%= user.dhsud_no %></td>
-            <td><%= user.address %></td>
-            <td><%= link_to "Edit", edit_user_management_path(user), class: "btn btn-light" %></td>
-            <td><%= link_to "Delete", user_management_path(user), method: :delete, form: { data: { turbo_confirm: 'Are you sure?' } }, class: "btn btn-danger my-1" %></td>
-            <td></td>
-          </tr>
-        <% end %>
-        <% end %>
-      </tbody>
-    </table>
+  <% if @user_counter == 0 %>
+    <p>No realtors to approve.</p>
+  <% end %>

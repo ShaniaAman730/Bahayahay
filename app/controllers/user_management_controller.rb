@@ -12,7 +12,11 @@ class UserManagementController < ApplicationController
       else
         @users = User.all
       end
+
+      @users = @users.order(created_at: :desc).page(params[:page]).per(20)
+
     end
+
 
     def index
       @users = User.all
@@ -23,6 +27,8 @@ class UserManagementController < ApplicationController
       else
         @users = User.all
       end
+
+      @users = @users.order(created_at: :desc).page(params[:page]).per(20)
     end
 
     def show

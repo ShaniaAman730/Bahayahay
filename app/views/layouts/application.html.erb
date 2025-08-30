@@ -107,6 +107,24 @@
       });
     </script>
 
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const brokerCheckbox = document.querySelector("#user_is_broker");
+        const brokerFields = document.querySelector("#broker-fields");
+
+        function toggleBrokerFields() {
+          if (brokerCheckbox.checked) {
+            brokerFields.style.display = "none";
+          } else {
+            brokerFields.style.display = "block";
+          }
+        }
+
+        brokerCheckbox.addEventListener("change", toggleBrokerFields);
+        toggleBrokerFields();
+      });
+    </script>
+
     <script src="https://unpkg.com/trix@2.0.0/dist/trix.umd.min.js"></script>
     <script src="https://unpkg.com/@rails/actiontext@latest/dist/actiontext.umd.js"></script>
 

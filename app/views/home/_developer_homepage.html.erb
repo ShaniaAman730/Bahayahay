@@ -16,10 +16,14 @@
       <h4>Create New Development Project</h4>
       <%= link_to "Create New", new_dev_project_path, class: "btn btn-outline-success" %>
     </div>
-    <%= render partial: "dev_projects/dev_project_home", collection: @dev_projects, as: :dev_project %>
-    <div class="pagination">
-      <%= paginate @dev_projects, param_name: :dev_projects_page %>
-    </div>
+    <% if @dev_projects.present? %>
+      <%= render partial: "dev_projects/dev_project_home", collection: @dev_projects, as: :dev_project %>
+      <div class="pagination">
+        <%= paginate @dev_projects, param_name: :dev_projects_page %>
+      </div>
+    <% else %>
+      <p class="text-muted">No development projects available.</p>
+    <% end %>
   </div>
 </div>
 </div>

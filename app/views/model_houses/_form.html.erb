@@ -306,9 +306,9 @@
 
   <% if current_user.developer? %>
     <div class="my-3">
-      <%= form.label :dev_project_id, "Development Porject", class: "form-label fw-semibold" %>
+      <%= form.label :dev_project_id, "Development Project", class: "form-label fw-semibold" %>
       <%= form.collection_select :dev_project_id, current_user.dev_projects, :id, :title, 
-          { prompt: "Select Development Porject" },
+          { prompt: "Select Development Project" },
           { class: "form-select rounded shadow-sm" } %>
     </div>
   <% end %>

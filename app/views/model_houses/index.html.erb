@@ -30,8 +30,10 @@
                 <span class="badge bg-secondary"><%= model_house.baths %> Baths</span>
                 <span class="badge bg-secondary"><%= model_house.sqft %> Sq. ft.</span>
               </div>
-              <%= link_to "Show this model house", model_house, class: "btn btn-outline-primary btn-sm" %>
-              <%= link_to "Delete", model_house_path(model_house), method: :delete, data: { confirm: "Are you sure?" } %>
+              <div class="d-flex">
+                <%= link_to "Show this model house", model_house, class: "btn btn-outline-primary btn-sm" %>
+                <%= button_to "Delete", model_house_path(model_house), method: :delete, class: "btn btn-danger btn-sm ml-1", data: { confirm: "Are you sure?" } %>
+              </div>
             </div>
           </div>
         </div>

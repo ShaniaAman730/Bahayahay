@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_12_081307) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_30_053753) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -332,6 +332,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_081307) do
     t.string "dhsud_no"
     t.text "about"
     t.string "website"
+    t.boolean "is_broker", default: false
+    t.string "broker_name"
+    t.string "broker_prc_no"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
