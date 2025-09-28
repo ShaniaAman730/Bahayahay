@@ -19,10 +19,17 @@ test:
   host: localhost
   port: 5432
 
-production: &production
+production:
   <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
+  url: <%= ENV['DATABASE_URL'] %>
 
-queue:
-  <<: *production
+  cache:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
+    migrations_paths: db/cache_migrate
+
+  queue:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
+    migrations_paths: db/queue_migrate
 
