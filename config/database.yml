@@ -19,9 +19,10 @@ test:
   host: localhost
   port: 5432
 
-production:
+production: &production
   <<: *default
-  url: <%= ENV["postgresql://bahayahay_db_user:iMxMZaDBseb3YqnXp4xg246kOLweJvT5@dpg-d3copvb7mgec73anf0k0-a/bahayahay_db"] %>
- 
+  url: <%= ENV["DATABASE_URL"] %>
+
 queue:
   <<: *production
+
