@@ -1,5 +1,5 @@
 class Review < ApplicationRecord
-  belongs_to :listing, dependent: :destroy
+  belongs_to :listing
   belongs_to :client, class_name: "User"
   belongs_to :realtor, class_name: "User"
   has_many :review_events, dependent: :destroy

@@ -4,27 +4,38 @@ class User < ApplicationRecord
 
   has_many :dev_projects, foreign_key: :user_id, dependent: :destroy
   has_many :model_houses, through: :dev_projects
-  has_many :listings_posted, class_name: "Listing", foreign_key: "realtor_id"
-  has_many :listings_bought, class_name: "Listing", foreign_key: "client_id"
-  has_many :client_conversations, class_name: "Conversation", foreign_key: "client_id"
-  has_many :realtor_conversations, class_name: "Conversation", foreign_key: "realtor_id"
-  has_many :sent_messages, class_name: "Message", foreign_key: "sender_id"
-  has_many :received_reviews, class_name: "Review", foreign_key: "realtor_id"
-  has_many :written_reviews, class_name: "Review", foreign_key: "client_id"
-  has_many :review_events
-  has_many :listings_as_developer, class_name: "Listing", foreign_key: "developer_id"
+
+  has_many :listings_posted, class_name: "Listing", foreign_key: "realtor_id", dependent: :nullify
+  has_many :listings_bought, class_name: "Listing", foreign_key: "client_id", dependent: :nullify
+  has_many :listings_as_developer, class_name: "Listing", foreign_key: "developer_id", dependent: :nullify
+
+  has_many :client_conversations, class_name: "Conversation", foreign_key: "client_id", dependent: :destroy
+  has_many :realtor_conversations, class_name: "Conversation", foreign_key: "realtor_id", dependent: :destroy
+
+  has_many :sent_messages, class_name: "Message", foreign_key: "sender_id", dependent: :destroy
+
+  has_many :received_reviews, class_name: "Review", foreign_key: "realtor_id", dependent: :nullify
+  has_many :written_reviews, class_name: "Review", foreign_key: "client_id", dependent: :nullify
+  has_many :realtor_review_events, class_name: "ReviewEvent", foreign_key: "realtor_id", dependent: :destroy
+  has_many :client_review_events,  class_name: "ReviewEvent", foreign_key: "client_id", dependent: :destroy
+
+
   has_many :guides, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :saved_listings, dependent: :destroy
   has_many :saved_listings_listings, through: :saved_listings, source: :listing
-  # A broker can manage one realty
+
+  # A broker can manage one realty (keep realty even if broker is deleted)
   has_one :managed_realty, class_name: "Realty", foreign_key: :head_broker_id
+
   # A realtor (non-broker) can belong to one realty
-  has_one :realty_membership, foreign_key: :user_id
+  has_one :realty_membership, foreign_key: :user_id, dependent: :destroy
   has_one :realty, through: :realty_membership
+
   # Developer role
   has_many :developer_accreditations, class_name: "Accreditation", foreign_key: "developer_id", dependent: :destroy
   has_many :accredited_realties, through: :developer_accreditations, source: :realty
+
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
