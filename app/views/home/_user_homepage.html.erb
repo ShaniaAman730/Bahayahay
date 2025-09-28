@@ -11,19 +11,19 @@
 
     <%= form_with url: public_listings_path, method: :get, local: true, class: "row g-2 align-items-end" do %>
       <!-- Keyword -->
-      <div class="col-md-4">
+      <div class="col-12 col-md-4">
         <%= label_tag :keyword, "Search Properties", class: "form-label" %>
         <%= text_field_tag :keyword, params[:keyword], class: "form-control", placeholder: "Type a keyword..." %>
       </div>
 
       <!-- Barangay -->
-      <div class="col-md-1">
+      <div class="col-6 col-md-1">
         <%= label_tag :barangay, "Barangay", class: "form-label" %>
         <%= select_tag :barangay, options_for_select(Listing.barangays.keys.map { |brgy| [brgy.humanize, brgy] }, params[:barangay]), include_blank: true, class: "form-select" %>
       </div>
 
       <!-- Bedrooms -->
-      <div class="col-md-1">
+      <div class="col-6 col-md-1">
         <%= label_tag :beds, "Bedrooms", class: "form-label" %>
         <%= select_tag :beds, options_for_select([[1, 1], [2, 2], [3, 3], [4, 4], ['5+', 5]], params[:beds]), include_blank: "Any", class: "form-select" %>
       </div>
@@ -63,31 +63,29 @@
       </div>
 
       <!-- Financing Options -->
-      <div class="col-md-4 d-flex">
-        <label class="form-label mr-2">Financing Options:</label>
-        <div class="form-check mr-2">
+      <div class="col-12 col-md-4">
+        <label class="form-label d-block">Financing Options:</label>
+        <div class="form-check form-check-inline">
           <%= check_box_tag :pagibig_financing, true, params[:pagibig_financing].present?, class: "form-check-input" %>
           <%= label_tag :pagibig_financing, "PAGIBIG", class: "form-check-label" %>
         </div>
-        <div class="form-check mr-2">
+        <div class="form-check form-check-inline">
           <%= check_box_tag :bank_financing, true, params[:bank_financing].present?, class: "form-check-input" %>
           <%= label_tag :bank_financing, "Bank", class: "form-check-label" %>
         </div>
-        <div class="form-check mr-2">
+        <div class="form-check form-check-inline">
           <%= check_box_tag :inhouse_financing, true, params[:inhouse_financing].present?, class: "form-check-input" %>
           <%= label_tag :inhouse_financing, "In-house", class: "form-check-label" %>
         </div>
       </div>
 
       <!-- Submit -->
-      <div class="col-md-5 text-end">
+      <div class="col-12 col-md-5 text-md-end text-center">
         <%= submit_tag "Search", class: "btn btn-success w-50" %>
       </div>
     <% end %>
   </div>
 </div>
-
-
 
 <!-- Explore Homes Cards -->
 <%= render partial: "explorehomes" %>
