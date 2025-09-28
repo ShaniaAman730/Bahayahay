@@ -8,20 +8,26 @@
   box-shadow: 0 5px 7px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.jumbotron-main-img { 
-    background: url("naga2.jpg"); 
-    height: 400px;
-    width: 100%;
+.jumbotron {
+  min-height: 500px;  /* keep desktop design */
 }
+
+@media (max-width: 768px) {
+  .jumbotron {
+    min-height: auto; /* let content define height on mobile */
+    padding-bottom: 2rem; /* give breathing room */
+  }
+}
+
+
+.jumbotron .container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
 
 .card-with-image {
     background-color: white;
-}
-
-.test {
-    font-family: "Lucida Console", "Courier New", monospace;
-    background-color: lightgrey;
-    color: black;
 }
 
 .homepage-search {
@@ -32,7 +38,6 @@
     background: url("agents.jpg"); 
     background-size: cover;
     background-position: center; 
-    height: 400px;
     width: 100%;
 }
 
