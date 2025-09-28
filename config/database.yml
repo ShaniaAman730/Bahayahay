@@ -1,30 +1,25 @@
-   
-    development:
-      adapter: postgresql
-      encoding: utf8
-      database: app_database
-      pool: 5
-      username: postgres
-      password: 1234
-      host: localhost
-      port: 5432
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
-    test:
-      adapter: postgresql
-      encoding: utf8
-      database: app_database
-      pool: 5
-      username: postgres
-      password: 1234
-      host: localhost
-      port: 5432
+development:
+  <<: *default
+  database: app_database
+  username: postgres
+  password: 1234
+  host: localhost
+  port: 5432
 
-    production:
-      adapter: postgresql
-      encoding: utf8
-      database: app_database
-      pool: 5
-      username: postgres
-      password: 1234
-      host: localhost
-      port: 5432
+test:
+  <<: *default
+  database: app_database_test
+  username: postgres
+  password: 1234
+  host: localhost
+  port: 5432
+
+production:
+  <<: *default
+  url: <%= ENV["postgresql://bahayahay_db_user:iMxMZaDBseb3YqnXp4xg246kOLweJvT5@dpg-d3copvb7mgec73anf0k0-a/bahayahay_db"] %>
+
