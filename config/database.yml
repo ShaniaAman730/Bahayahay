@@ -22,4 +22,6 @@ test:
 production:
   <<: *default
   url: <%= ENV["postgresql://bahayahay_db_user:iMxMZaDBseb3YqnXp4xg246kOLweJvT5@dpg-d3copvb7mgec73anf0k0-a/bahayahay_db"] %>
-
+ 
+queue:
+  <<: *production
