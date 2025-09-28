@@ -58,5 +58,4 @@ module ListingsHelper
 
     }.select { |key, _| listing.send(key) }
   end
-
 end

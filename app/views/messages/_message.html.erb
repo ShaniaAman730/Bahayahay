@@ -1,8 +1,11 @@
 <% is_sent = defined?(local_user) && local_user && message.sender == local_user %>
 
-<div class="<%= is_sent ? 'sent' : 'received' %>">
-  <p class="mb-1"><strong><%= message.sender.first_name %></strong></p>
-  <p class="mb-1"><%= message.body %></p>
-  <small><em><%= message.created_at.strftime("%I:%M %p") %></em></small>
+<div class="message-wrapper" data-sender-id="<%= message.sender_id %>">
+  <div class="message-container"> <!-- will be toggled to justify-end / justify-start by JS -->
+    <div class="message-bubble"> <!-- JS will add bootstrap classes (bg-success/text-white, border, etc.) -->
+      <strong><%= message.sender.first_name %></strong>
+      <p class="mb-1"><%= message.body %></p>
+      <small><em><%= message.created_at.strftime("%b %d, %Y %I:%M %p") %></em></small>
+    </div>
+  </div>
 </div>
-<br>

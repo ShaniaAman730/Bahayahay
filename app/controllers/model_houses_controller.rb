@@ -22,10 +22,7 @@ class ModelHousesController < ApplicationController
 
   # GET /model_houses or /model_houses.json
   def index
-    @model_houses = ModelHouse.all
-                              .order(:title)
-                              .page(params[:page])
-                              .per(10)
+    @model_houses = ModelHouse.all.order(:title).page(params[:page]).per(10)
   end
 
   # GET /model_houses/1 or /model_houses/1.json

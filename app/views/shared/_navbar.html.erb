@@ -1,137 +1,160 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light p-2">
-   <%= link_to root_path, class: "navbar-brand" do %>
-        <%= image_tag "favicon-96x96", alt: "Bahayahay Logo", class: "d-inline-block align-top", size: "30x30" %>
-        Bahayahay
-      <% end %>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <%= link_to root_path, class: "navbar-brand d-flex align-items-center" do %>
+    <%= image_tag "favicon-96x96", alt: "Bahayahay Logo", size: "30x30", class: "me-1" %>
+    Bahayahay
+  <% end %>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <% if user_signed_in? %>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <% if current_user.admin? %>
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/home">Website Home<span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="/public_listings">Live Listings<span class="sr-only">(current)</span></a>
-        </li>
-      </ul>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <% if user_signed_in? %>
+      <% if current_user.admin? %>
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/home">Website Home</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/public_listings">Live Listings</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class:"nav-link" %>
+          </li>
+        </ul>
 
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item active">
-          <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class:"nav-link" %>
-        </li>
-      </ul>
-
-    <% elsif current_user.developer? %>
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/dev_projects">Your Projects<span class="sr-only"></span></a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="/model_houses">Your Model Houses<span class="sr-only"></span></a>
-        </li>
-        <li class="nav-item active mt-1">
-          <div class="btn-group">
-            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Post New
-            </button>
-            <div class="dropdown-menu">
-              <%= link_to "Development Project", new_dev_project_path, class: "dropdown-item" %>
-              <%= link_to "Model House", new_model_house_path, class: "dropdown-item" %>
+      <% elsif current_user.developer? %>
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/dev_projects">Your Projects</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/model_houses">Your Model Houses</a>
+          </li>
+          <li class="nav-item active mt-1">
+            <div class="btn-group">
+              <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Post New
+              </button>
+              <div class="dropdown-menu">
+                <%= link_to "Development Project", new_dev_project_path, class: "dropdown-item" %>
+                <%= link_to "Model House", new_model_house_path, class: "dropdown-item" %>
+              </div>
             </div>
-          </div>
-        </li>
-      </ul>
+          </li>
+        </ul>
 
       <% elsif current_user.realtor? %>
         <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/public_listings">Explore Homes<span class="sr-only"></span></a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="/listings">Your Listings<span class="sr-only"></span></a>
-        </li>
-        <li class="nav-item active mt-1">
-          <form class="form-inline">
-            <a href="/select_type" class="btn btn-secondary btn-sm" role="button">New Listing</a>
-          </form>
-        </li> 
-      </ul>
+          <li class="nav-item active">
+            <a class="nav-link" href="/public_listings">Explore Homes</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="/listings">Your Listings</a>
+          </li>
+          </li>
+          <li class="nav-item active">
+            <% if current_user&.is_broker? && current_user.managed_realty.blank? %>
+              <%= link_to "Apply to Create a Realty", new_realty_path, class: "nav-link" %>
+            <% elsif current_user&.is_broker? && current_user.managed_realty.present? %>  
+              <%= link_to "Your Realty", realty_path(current_user.managed_realty), class: "nav-link" %>
+            <% end %>  
+          </li>
+          <% if current_user.realtor? && (current_user.is_broker || current_user.realty.present?) %>
+            <li class="nav-item active mt-1">
+              <a href="/select_type" class="btn btn-secondary btn-sm" role="button">New Listing</a>
+            </li>
+          <% end %>
+        </ul>
 
-    <% elsif current_user.client? %>
+      <% elsif current_user.client? %>
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/public_listings">Explore Homes</a>
+          </li>
+        </ul>
+      <% end %>
+    <% else %>
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="/public_listings">Explore Homes<span class="sr-only"></span></a>
+          <a class="nav-link" href="/public_listings">Explore Homes</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/agents">Find an Agent</a>
+        </li>
+        <li class="nav-item active">
+          <%= link_to "Sign-up as a Realtor", new_realtor_signup_path, class:"nav-link" %>
         </li>
       </ul>
-    <% end %>       
-         <% else %>
-      
-         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/public_listings">Explore Homes<span class="sr-only"></span></a>
-          </li>
-          <li class="nav-item active">
-            <a class="nav-link" href="/agents">Find an Angent<span class="sr-only"></span></a>
-          </li>
-          <li class="nav-item active">
-            <%= link_to "Sign-up as a Realtor", new_realtor_signup_path, class:"nav-link" %>
-          </li>
-        </ul>
-
-         <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-           <%= link_to "Log In", new_user_session_path, class:"nav-link" %>
-          </li>
-          <li class="nav-item active">
-           <form class="form-inline">
-            <a href="/users/sign_up" class="btn btn-success mr-1" role="button">Sign-up</a>
-          </form>
-          </li>       
-        </ul>
-      </div>
-  <% end %>
-
-  <% if user_signed_in? && !current_user.admin? %>
-   <ul class="navbar-nav ml-auto">
+      <ul class="navbar-nav ml-auto">
         <li class="nav-item active">
-           <a class="nav-link" href="#"><i class="bi bi-bell-fill"></i><span class="sr-only"></span></a>
+          <%= link_to "Log In", new_user_session_path, class:"nav-link" %>
         </li>
-        <% if current_user.developer? || current_user.realtor? %>
-          <li class="nav-item active">
-             <a class="nav-link" href="<%= reviews_user_path(current_user) %>">
+        <li class="nav-item active">
+          <a href="/users/sign_up" class="btn btn-success ml-2" role="button">Sign-up</a>
+        </li>
+      </ul>
+    <% end %>
+
+    <% if user_signed_in? && !current_user.admin? %>
+      <ul class="navbar-nav ml-auto d-flex align-items-center">
+        <% if current_user.realtor? %>
+          <li class="nav-item active mx-2 position-relative">
+            <a class="btn btn-light position-relative" href="<%= reviews_user_path(current_user) %>">
               <i class="bi bi-chat-left-quote-fill"></i>
-              <span class="sr-only">Reviews</span>
             </a>
           </li>
         <% end %>
         <% if current_user.client? || current_user.realtor? %>
-          <li class="nav-item active">
-             <a class="nav-link" href="/conversations"><i class="bi bi-chat-dots-fill"></i></i><span class="sr-only"></span></a>
+          <li class="nav-item active mx-2 position-relative">
+            <a class="btn btn-light position-relative" href="/conversations">
+              <i class="bi bi-send-fill"></i>
+              <span id="inbox-badge"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none px-1 py-0"
+                style="font-size: 0.75rem; transform: translate(-50%, -30%);">
+                0
+              </span>
+            </a>
           </li>
         <% end %>
         <% if current_user.client? %>
-          <li class="nav-item active">
-             <a class="nav-link" href="/saved_listings"><i class="bi bi-floppy2-fill"></i></i><span class="sr-only"></span></a>
+          <li class="nav-item active mx-2">
+            <a class="btn btn-light" href="/saved_listings">
+              <i class="bi bi-floppy2-fill"></i>
+            </a>
+          </li>
+
+           <li class="nav-item active mx-2 position-relative">
+            <a class="btn btn-light position-relative" href="<%= review_events_user_path(current_user) %>">
+              <i class="bi bi-chat-left-quote-fill"></i>
+            </a>
           </li>
         <% end %>
+        <% if current_user.developer? %>
         <li class="nav-item active">
+          <%= link_to "Accreditation Requests", developer_requests_accreditations_path, class: "nav-link" %>
+        </li>
+        <% end %>
+        <li class="nav-item active mx-2">
           <div class="btn-group">
-            <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
               <i class="bi bi-person-circle"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-              <button class="dropdown-item" type="button"><%= link_to "My Profile", user_path(current_user), class:"nav-link" %></button>
-              <a class="dropdown-item" type="button" href="/users/edit">Account Settings<span class="sr-only">(current)</span></a>
+              <%= link_to "My Profile", user_path(current_user), class:"dropdown-item" %>
+              <a class="dropdown-item" href="/users/edit">Account Settings</a>
               <div class="dropdown-divider"></div>
-              <button class="dropdown-item" type="button"><%= link_to "Sign Out", destroy_user_session_path, method: :delete, class:"nav-link" %></button>
+              <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class:"dropdown-item" %>
             </div>
           </div>
         </li>
       </ul>
-  <% end %>
+    <% end %>
+  </div>
 </nav>

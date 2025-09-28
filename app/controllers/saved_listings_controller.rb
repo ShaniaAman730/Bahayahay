@@ -9,14 +9,16 @@ class SavedListingsController < ApplicationController
   def create
     @listing = Listing.find(params[:listing_id])
     current_user.saved_listings.create(listing: @listing)
-    redirect_to @listing, notice: "Listing saved."
+    redirect_back fallback_location: listings_path, notice: "Listing saved."
   end
 
   def destroy
-    saved_listing = current_user.saved_listings.find_by(listing_id: params[:listing_id])
-    saved_listing.destroy if saved_listing
-    redirect_to listing_path(params[:listing_id]), notice: "Listing removed from saved."
+    saved_listing = current_user.saved_listings.find(params[:id])
+    listing = saved_listing.listing
+    saved_listing.destroy
+    redirect_back fallback_location: listings_path, notice: "Listing removed from saved."
   end
+
 
   private
 

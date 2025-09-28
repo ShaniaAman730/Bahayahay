@@ -5,51 +5,61 @@
         <h1><i class="bi bi-arrow-left-circle text-success"></i></h1>
       <% end %>
     <% end %>  
+
+
   <div class="listing-container container">
+    <div class="row">
+      <div class="col-12 col-md-12 mt-4">
+        <% if @listing.listing_photos.attached? %>
+          <!-- First large image -->
+          <div class="p1 mb-2 image-gallery">
+            <%= image_tag @listing.listing_photos.first,
+                class: "img-thumbnail media",
+                style: "width: 1175px; height: auto; object-fit: cover; cursor: pointer;",
+                data: { index: 0 } %>
+          </div>
 
-    <% if @listing.listing_photos.attached? %>
-      <!-- First large image -->
-      <div class="p1 mb-2 image-gallery">
-        <%= image_tag @listing.listing_photos.first,
-            class: "img-thumbnail media",
-            style: "width: 1175px; height: auto; object-fit: cover; cursor: pointer;",
-            data: { index: 0 } %>
-      </div>
-
-      <!-- Thumbnails (rest of the gallery) -->
-      <div class="d-flex flex-wrap gap-2 mb-4">
-        <div class="image-gallery d-flex flex-wrap gap-2">
-          <% @listing.listing_photos[1..7].each_with_index do |photo, index| %>
-            <div style="flex: 0 0 auto;">
-              <%= image_tag photo,
-                  class: "img-thumbnail media",
-                  style: "width: 120px; height: 120px; object-fit: cover; cursor: pointer;",
-                  data: { index: index + 1 } %> 
+          <!-- Thumbnails (rest of the gallery) -->
+          <div class="d-flex flex-wrap gap-2 mb-4">
+            <div class="image-gallery d-flex flex-wrap gap-2">
+              <% @listing.listing_photos[1..7].each_with_index do |photo, index| %>
+                <div style="flex: 0 0 auto;">
+                  <%= image_tag photo,
+                      class: "img-thumbnail media",
+                      style: "width: 120px; height: 120px; object-fit: cover; cursor: pointer;",
+                      data: { index: index + 1 } %> 
+                </div>
+              <% end %>
             </div>
-          <% end %>
-        </div>
 
-        <!-- Separate container, outside .image-gallery -->
-        <div style="flex: 0 0 auto;">
-          <%= link_to public_listing_path(@listing), class: "btn btn-outline-success d-flex flex-column align-items-center justify-content-center", style: "width: 120px; height: 120px;" do %>
-            <span class="text-center">Show<br>More<br>Photos</span>
-          <% end %>
+            <!-- Separate container, outside .image-gallery -->
+            <div style="flex: 0 0 auto;">
+              <%= link_to public_listing_path(@listing), class: "btn btn-outline-success d-flex flex-column align-items-center justify-content-center", style: "width: 120px; height: 120px;" do %>
+                <span class="text-center">Show<br>More<br>Photos</span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Gallery Modal -->
+        <div id="galleryModal" class="modal" style="display:none;">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <img class="modal-content" id="modalImage">
+          <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+          <a class="next" onclick="changeImage(1)">&#10095;</a>
         </div>
       </div>
-    <% end %>
-
-    <!-- Gallery Modal -->
-    <div id="galleryModal" class="modal" style="display:none;">
-      <span class="close" onclick="closeModal()">&times;</span>
-      <img class="modal-content" id="modalImage">
-      <a class="prev" onclick="changeImage(-1)">&#10094;</a>
-      <a class="next" onclick="changeImage(1)">&#10095;</a>
     </div>
 
     <div class="row mt-4">
       <!-- LEFT SIDE OF THE SCREEN -->
-      <div class="col-12 col-sm-6 col-md-8">
-        <h2 class="ml-2"><%= @listing.title %></h2>
+      <div class="col-12 col-md-8">
+        <% if @listing.active == false %><div class="alert alert-warning"><strong>Notice:</strong> This property has already been sold.</div><% end %>
+        <div class="d-flex ml-2">
+          <h2 class="ml-2"><%= @listing.title %></h2>
+          <div class="vr mx-3 my-1" style="height: 30px;"></div>
+            <p class="fw-light text-success border border-success px-1 mt-1 ml-1"><%= @listing.project_type %></p>
+        </div>
         <!-- notification for_edit -->
         <% if current_user == @listing.realtor && @listing.for_edit? %>
           <div class="alert alert-warning">
@@ -77,17 +87,21 @@
 
       <div class="container mt-2 mb-2 bg-light">  
         <div class="p-3">  
-           <h5>Amenities</h5>
+           <h5>Amenities</h5><br>
+           <% if amenities_listings(@listing).present? %>
             <% groups = amenities_listings(@listing).in_groups(5, false) %>
             <div class="row">
               <% groups.each do |group| %>
-                <div class="col-md-4">
+                <div class="col-md-4 small">
                   <% group.each do |amenities_html| %>
                     <p><%= amenities_html.html_safe %></p>
                   <% end %>
                 </div>
               <% end %>
             </div>
+            <% else %>
+              No amenities available.
+            <% end %>
           </div>
         </div>
           
@@ -102,10 +116,11 @@
 
         <div class="d-flex align-items-center gap-3 flex-wrap"> 
         <% if user_signed_in? && current_user.client? %>
-          <% if current_user.saved_listings.exists?(listing: @listing) %>
-            <%= button_to saved_listing_path(listing_id: @listing.id),
+        <% saved_listing = current_user.saved_listings.find_by(listing_id: @listing.id) %>
+          <% if saved_listing.present? %>
+            <%= button_to saved_listing_path(saved_listing),
                           method: :delete,
-                          class: "btn btn-warning d-flex align-items-center gap-2" do %>
+                          class: "btn btn-success d-flex align-items-center gap-2" do %>
               <i class="bi bi-bookmarks-fill"></i> Unsave
             <% end %>
           <% else %>
@@ -122,6 +137,159 @@
         <p class="mb-0"><strong>No. of Inquiries:</strong> <%= @listing.contact_clicks %></p>
 
       </div>
+
+    <% if @listing.active? %>
+      <!-- Map Goes Here -->
+      <div class="p-1 mt-3">
+        <h5>Map</h5>
+        <div id="map" style="height:500px;"></div>
+        <p class="mt-1"><em>Note: If no location is provided by the realtor, the map will have no location pin.</em></p>
+      </div>
+
+      <!-- Nearby Places -->
+      <% if @listing.latitude.present? && @listing.longitude.present? %>
+        <div class="mt-4">
+          <h5>Nearby Places</h5>
+          <ul class="nav nav-tabs" id="amenityTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="restaurants-tab" data-bs-toggle="tab" data-bs-target="#restaurants" type="button" role="tab">
+                <i class="bi bi-cup-straw"></i> Restaurants
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="schools-tab" data-bs-toggle="tab" data-bs-target="#schools" type="button" role="tab">
+                <i class="bi bi-mortarboard"></i> Schools
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="banks-tab" data-bs-toggle="tab" data-bs-target="#banks" type="button" role="tab">
+                <i class="bi bi-bank"></i> Banks
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="hospitals-tab" data-bs-toggle="tab" data-bs-target="#hospitals" type="button" role="tab">
+                <i class="bi bi-hospital"></i> Hospitals
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="supermarkets-tab" data-bs-toggle="tab" data-bs-target="#supermarkets" type="button" role="tab">
+                <i class="bi bi-cart4"></i> Supermarkets
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="churches-tab" data-bs-toggle="tab" data-bs-target="#churches" type="button" role="tab">
+                <i class="bi bi-house-door"></i> Churches
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content border p-3" id="amenityTabsContent">
+            <div class="tab-pane fade show active" id="restaurants" role="tabpanel"><ul id="restaurants-list" class="row row-cols-2"></ul></div>
+            <div class="tab-pane fade" id="schools" role="tabpanel"><ul id="schools-list" class="row row-cols-2"></ul></div>
+            <div class="tab-pane fade" id="banks" role="tabpanel"><ul id="banks-list" class="row row-cols-2"></ul></div>
+            <div class="tab-pane fade" id="hospitals" role="tabpanel"><ul id="hospitals-list" class="row row-cols-2"></ul></div>
+            <div class="tab-pane fade" id="supermarkets" role="tabpanel"><ul id="supermarkets-list" class="row row-cols-2"></ul></div>
+            <div class="tab-pane fade" id="churches" role="tabpanel"><ul id="churches-list" class="row row-cols-2"></ul></div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Map & Nearby Places Script -->
+      <script>
+        document.addEventListener("turbo:load", function () {
+          const mapElement = document.getElementById("map");
+          if (mapElement && !mapElement.dataset.mapLoaded) {
+            mapElement.dataset.mapLoaded = true;
+
+            <% if @listing.latitude.present? && @listing.longitude.present? %>
+              var lat = <%= @listing.latitude %>;
+              var lng = <%= @listing.longitude %>;
+            <% else %>
+              var lat = 13.6218; // Naga City default
+              var lng = 123.1948;
+            <% end %>
+
+            var map = L.map("map").setView([lat, lng], 15);
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+              attribution: "© OpenStreetMap contributors"
+            }).addTo(map);
+
+            <% if @listing.latitude.present? && @listing.longitude.present? %>
+              // Listing location
+              L.marker([lat, lng]).addTo(map)
+                .bindPopup("<%= j @listing.title %>")
+                .openPopup();
+
+              // Nearby places
+              const redIcon = L.icon({
+                iconUrl: "<%= asset_path('green-pin.png') %>",
+                iconSize: [20, 20],
+                iconAnchor: [10, 20]
+              });
+
+              const categories = {
+                restaurant: document.getElementById("restaurants-list"),
+                school: document.getElementById("schools-list"),
+                bank: document.getElementById("banks-list"),
+                hospital: document.getElementById("hospitals-list"),
+                supermarket: document.getElementById("supermarkets-list"),
+                church: document.getElementById("churches-list") // unified key for both cases
+              };
+
+              // Overpass Query (for 500m radius)
+              fetch("https://overpass-api.de/api/interpreter", {
+                method: "POST",
+                body: `
+                  [out:json];
+                  (
+                    node(around:500, ${lat}, ${lng})[amenity~"restaurant|school|bank|hospital|supermarket"];
+                    node(around:500, ${lat}, ${lng})["amenity"="place_of_worship"]["religion"="christian"];
+                    way(around:500, ${lat}, ${lng})["building"="church"];
+                    node(around:500, ${lat}, ${lng})["building"="church"];
+                  );
+                  out center;
+                `
+              })
+              .then(res => res.json())
+              .then(data => {
+                data.elements.forEach(function (el) {
+                  if ((el.lat && el.lon) || el.center) {
+                    const coords = el.center ? [el.center.lat, el.center.lon] : [el.lat, el.lon];
+                    let type = el.tags.amenity || el.tags.building;
+
+                    // normalize churches into one category
+                    if (type === "place_of_worship" || type === "church") {
+                      type = "church";
+                    }
+
+                    L.marker(coords, { icon: redIcon })
+                      .addTo(map)
+                      .bindPopup(el.tags.name || type);
+
+                    if (categories[type]) {
+                      const li = document.createElement("li");
+                      li.classList.add("col");
+                      li.textContent = el.tags.name || type;
+                      categories[type].appendChild(li);
+                    }
+                  }
+                });
+
+                // fallback if no results
+                Object.keys(categories).forEach(key => {
+                  if (categories[key] && categories[key].children.length === 0) {
+                    categories[key].innerHTML = "<li class='col'>No nearby places found.</li>";
+                  }
+                });
+              })
+              .catch(err => console.error("Overpass error:", err));
+            <% end %>
+          }
+        }, { once: true });
+      </script>
+    <% end %>  
+
 
         <% if @listing.developer.present? %>
           <div class="card mt-5">
@@ -143,10 +311,42 @@
 
         <% end %>
 
+        <% if !@listing.active && @listing.review.present? %>
+          
+          <div class="card mt-5">
+            <div class="card-body d-flex align-items-center">
+              <div>
+              <h5 class="card-title mb-1">Review by Client</h5>
+              <br>
+              <p class="card-text text-muted mb-2">
+
+                <% knowledge = @listing.review.knowledge_rating.to_i %>
+                <strong>Knowledge & Expertise:</strong> <%= '★' * knowledge + '☆' * (5 - knowledge) %><br>
+
+                <% responsiveness = @listing.review.responsiveness_rating.to_i %>
+                <strong>Responsiveness:</strong> <%= '★' * responsiveness + '☆' * (5 - responsiveness) %><br>
+
+                <% professionalism = @listing.review.professionalism_rating.to_i %>
+                <strong>Professionalism:</strong> <%= '★' * professionalism + '☆' * (5 - professionalism) %><br>
+                <br>
+                <em>"<%= @listing.review.comment %>"
+                <strong>— <%= @listing.client.first_name %> <%= @listing.client.last_name[0] %>.</strong></em>
+              </p>  
+              </div>
+            
+            </div>
+          </div>
+
+        <% end %>
+
+      </div>
+
+      <!-- SPACE -->
+      <div class="col-12 col-md-1 mt-4">
       </div>
 
       <!-- RIGHT SIDE OF THE SCREEN -->
-      <div class="col-12 col-md-4 mt-4">
+      <div class="col-12 col-md-3 mt-4">
         <div class="col-9 border border-secondary rounded p-3">
           <div class="row d-flex">
             <div class="col">
@@ -173,11 +373,11 @@
         </div>
       </div>
 
-  <% if user_signed_in? && current_user.realtor? %>
+  <% if user_signed_in? && current_user.id == @listing.realtor.id && @listing.active? %>
     <hr class="hr p-2 mt-5" /> 
     <div class="d-flex p-1">
       <%= link_to "Edit", edit_listing_path(@listing), class: "btn btn-light" %>
-      <%= button_to "Delete", @listing, method: :delete, class: "btn btn-danger ml-1" %>
+      <%= button_to "Delete", @listing, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger ml-1" %>
     </div>
   <% end %>
   <br>
@@ -206,4 +406,3 @@
 </div>
 </div>
 </div>
-

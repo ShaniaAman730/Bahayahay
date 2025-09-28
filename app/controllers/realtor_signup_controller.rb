@@ -19,11 +19,42 @@ class RealtorSignupController < ApplicationController
       flash[:alert] = "Realtor account could not be created: #{@user.errors.full_messages.join(", ")}"
       render :new # Render the new user form again
     end
-end
+  end
 
-def thank_you_realtor
+  def thank_you_realtor
 
-end
+  end
+
+  def search_brokers
+    brokers = User.where(is_broker: true)
+                  .includes(:managed_realty)
+                  .where("first_name ILIKE :q OR last_name ILIKE :q", q: "%#{params[:q]}%")
+
+    render json: brokers.map { |b|
+      {
+        id: b.id,
+        name: b.full_name,
+        prc_no: b.prc_no,
+        company_name: b.managed_realty&.name,
+        address: b.managed_realty&.business_location
+      }
+    }
+  end
+
+  def search_realties
+    realties = Realty.where("name ILIKE ?", "%#{params[:q]}%")
+
+    render json: realties.map { |r|
+      {
+        id: r.id,
+        company_name: r.name,
+        address: r.business_location,
+        broker_name: r.head_broker&.full_name,
+        broker_prc_no: r.head_broker&.prc_no
+      }
+    }
+  end
+
 
 private 
 

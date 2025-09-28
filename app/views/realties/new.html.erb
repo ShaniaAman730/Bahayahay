@@ -1,0 +1,45 @@
+<div class="form-container mt-5">
+	<h2>Apply for a Realty</h2>
+
+	<%= form_with model: @realty, local: true do |f| %>
+	  <% if @realty.errors.any? %>
+	    <div class="alert alert-danger">
+	      <ul>
+	        <% @realty.errors.full_messages.each do |msg| %>
+	          <li><%= msg %></li>
+	        <% end %>
+	      </ul>
+	    </div>
+	  <% end %>
+
+	  <div class="form-row p-2">
+      	<div class="col col-md-6 mb-3">
+      		<%= f.label :name, "Realty Name" %>
+	    	<%= f.text_field :name, class: "form-control", required: true %>
+      	</div>
+      	<div class="col col-md-6 mb-3">
+      		<%= f.label :business_location %>
+	    	<%= f.text_field :business_location, class: "form-control", required: true %>
+      	</div>
+     </div> 	
+
+	  <div class="form-row p-2">
+      	<div class="col col-md-6 mb-3">
+      		<%= f.label :email %>
+	    	<%= f.email_field :email, class: "form-control", required: true %>
+      	</div>
+      	<div class="col col-md-6 mb-3">
+      		<%= f.label :phone_number %>
+	    	<%= f.text_field :phone_number, class: "form-control", required: true %>
+      	</div>
+     </div> 	
+
+
+	  <div class="form-row p-2">
+	    <%= f.label :business_permit %>
+	    <%= f.file_field :business_permit, direct_upload: true, class: "form-control", accept: "image/*", data: { max_size: 400.kilobytes} %>
+	  </div>
+
+	  <%= f.submit "Submit Application", class: "btn btn-primary mt-4" %>
+	<% end %>
+</div>

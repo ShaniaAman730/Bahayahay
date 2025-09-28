@@ -9,6 +9,7 @@ class MessagesController < ApplicationController
 
     if @message.save
       respond_to do |format|
+
         format.turbo_stream
         format.html { redirect_to conversation_path(@conversation) }
       end
@@ -18,9 +19,7 @@ class MessagesController < ApplicationController
         format.html { render "conversations/show", status: :unprocessable_entity }
       end
     end
-
   end
-
 
   private
 

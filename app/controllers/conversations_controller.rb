@@ -11,8 +11,11 @@ class ConversationsController < ApplicationController
   end
 
   def show
+    @conversation = Conversation.find(params[:id])
     @messages = @conversation.messages.order(created_at: :asc)
     @message = Message.new
+
+    @conversation.messages.where.not(sender: current_user).update_all(read: true)
   end
 
   def create

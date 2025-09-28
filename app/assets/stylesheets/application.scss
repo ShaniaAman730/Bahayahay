@@ -121,12 +121,20 @@ trix-editor {
   position: fixed;
   top: 0; left: 0;
   width: 100vw; height: 100vh;
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   z-index: 9999;
+
+  opacity: 0;
+  transform: scale(1.05);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
+.modal.show {
+  opacity: 1;
+  transform: scale(1);
+}
 
 #modalImage {
   max-height: 90vh;
@@ -204,4 +212,48 @@ trix-editor {
 
 trix-toolbar .trix-button-group--file-tools {
   display: none !important;
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white; /* change to your theme color if needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+
+  /* smooth fade out */
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loader-gif {
+  width: 150px;  /* adjust size */
+  height: auto;
+}
+
+.loader-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@media (max-width: 768px) {
+  .responsive-text {
+    font-size: 1.2rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+  .responsive-text {
+    font-size: 1.5rem;
+  }
+}
+
+@media (min-width: 1201px) {
+  .responsive-text {
+    font-size: 1.8rem;
+  }
 }

@@ -3,24 +3,31 @@ class Listing < ApplicationRecord
 	belongs_to :realtor, class_name: "User"
  	belongs_to :client, class_name: "User", optional: true
  	belongs_to :developer, class_name: "User", optional: true
- 	has_one :review
+ 	has_one :review, dependent: :destroy
+ 	has_one :review_event, dependent: :destroy
  	has_many :saved_listings, dependent: :destroy
 	has_many :users_who_saved, through: :saved_listings, source: :user
 
 
 	has_many_attached :listing_photos
-	validate :listing_photos_limit
-
 	has_one_attached :valid_id
 	has_one_attached :birthcert
-
 	has_many_attached :spa
 	has_many_attached :tct
 
 	has_rich_text :description
-	
+
+	validates :listing_photos, total_file_size: { less_than: 2.megabytes }
+	validates :valid_id, total_file_size: { less_than: 200.kilobytes }
+	validates :birthcert, total_file_size: { less_than: 200.kilobytes }
+	validates :spa, total_file_size: { less_than: 500.kilobytes }
+	validates :tct, total_file_size: { less_than: 1000.kilobytes }
+
+	validate :listing_photos_limit
 	validate :validate_spa_attachment_limit
   validate :validate_tct_attachment_limit
+
+  validate :realtor_must_have_realty, on: :create
 
   validates :title, presence: true
   validates :beds, :baths, :sqft, numericality: { only_integer: true, allow_nil: true }
@@ -34,7 +41,7 @@ class Listing < ApplicationRecord
 
 	enum :furnish_type, { "Fully furnished": 1, "Semi-furnished": 2, "Bare unit": 3 }
 	enum :barangay, { 'Abella': 0, 'Bagumbayan Norte': 1, 'Bagumbayan Sur': 2, 'Balatas': 3, 'Calauag': 4, 'Cararayan': 5, 'Carolina': 6, 'Concepcion Grande': 7, 'Concepcion Pequeña': 8, 'Dayangdang': 9, 'Del Rosario': 10, 'Dinaga': 11, 'Igualdad': 12, 'Lerma': 13, 'Liboton': 13, 'Mabolo': 14, 'Pacol': 15, 'Panicuason': 16, 'Peñafrancia': 17, 'Sabang': 18, 'San Felipe': 19, 'San Francisco': 20, 'San Isidro': 21, 'Santa Cruz': 22, 'Tabuco': 23, 'Tinago': 24, 'Triangulo': 25 }
-	enum :project_type, { 'Subdivision': 0, 'Condominium': 1, 'Commercial': 3 }
+	enum :project_type, { 'Subdivision': 0, 'Condominium': 1, 'Commercial': 3, 'Build-and-Sell': 4, 'Pre-owned': 5  }
 	enum :listing_type, { project: 0, independent: 1 }
 	enum :citizenship, {
 						  "Afghan": 0, "Albanian": 1, "Algerian": 2, "American": 3, "Andorran": 4, "Angolan": 5, "Anguillan": 6,
@@ -91,7 +98,7 @@ class Listing < ApplicationRecord
 	end
 
 	def listing_photos_limit
-	  if listing_photos.attached? && listing_photos.count > 8
+	  if listing_photos.attached? && listing_photos.count > 14
 	    errors.add(:listing_photos, "You can only upload up to 8 files.")
 	  end
 	end
@@ -126,4 +133,46 @@ class Listing < ApplicationRecord
 	  )
 	end
 	
+	def first_photo_url
+	  listing_photos.attached? ? Rails.application.routes.url_helpers.rails_blob_url(listing_photos.first, only_path: true) : "/images/default-property.png"
+	end
+
+
+	def realtor_must_have_realty
+	  if realtor&.realtor? && !realtor.is_broker && realtor.realty.blank?
+	    errors.add(:base, "You must be part of a Realty to post listings. Please submit a Realty application.")
+	  end
+	end
+
+
+	BARANGAY_COORDS = {
+    "Abella" => [13.6258, 123.1856],
+    "Bagumbayan Norte" => [13.6282, 123.1859],
+    "Bagumbayan Sur" => [13.6265, 123.1862],
+    "Balatas" => [13.6195, 123.1782],
+    "Calauag" => [13.6152, 123.1901],
+    "Cararayan" => [13.6093, 123.1845],
+    "Carolina" => [13.5975, 123.2100],
+    "Concepcion Grande" => [13.6268, 123.1967],
+    "Concepcion Pequeña" => [13.6210, 123.2015],
+    "Dayangdang" => [13.6242, 123.1894],
+    "Del Rosario" => [13.6351, 123.1920],
+    "Dinaga" => [13.6203, 123.1928],
+    "Igualdad" => [13.6179, 123.1883],
+    "Lerma" => [13.6220, 123.1942],
+    "Liboton" => [13.6247, 123.1982],
+    "Mabolo" => [13.6279, 123.2007],
+    "Pacol" => [13.6044, 123.2082],
+    "Panicuason" => [13.5770, 123.2321],
+    "Peñafrancia" => [13.6198, 123.1965],
+    "Sabang" => [13.6206, 123.1850],
+    "San Felipe" => [13.6280, 123.2041],
+    "San Francisco" => [13.6215, 123.1910],
+    "San Isidro" => [13.6062, 123.1943],
+    "Santa Cruz" => [13.6187, 123.1878],
+    "Tabuco" => [13.6230, 123.1978],
+    "Tinago" => [13.6252, 123.1935],
+    "Triangulo" => [13.6199, 123.1939]
+  }.freeze
+
 end

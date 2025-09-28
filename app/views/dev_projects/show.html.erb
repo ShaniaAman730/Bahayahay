@@ -57,25 +57,176 @@
 
          <div class="container mt-2 mb-2 bg-light">  
           <div class="p-3">  
-             <h5>Amenities</h5>
+             <h5>Amenities</h5><br>
+              <% if amenities_dev_projects(@dev_project).present? %>
               <% groups = amenities_dev_projects(@dev_project).in_groups(5, false) %>
               <div class="row">
                 <% groups.each do |group| %>
-                  <div class="col-md-4">
+                  <div class="col-md-4 small">
                     <% group.each do |amenities_html| %>
                       <p><%= amenities_html.html_safe %></p>
                     <% end %>
                   </div>
                 <% end %>
               </div>
+            <% else %>
+              No amenities available.
+            <% end %>
             </div>
           </div>
 
+        <!-- Map Goes Here -->
+        <div class="p-1 mt-3">
+          <h5>Map</h5>
+          <div id="map" style="height:500px;"></div>
+          <p class="mt-1"><em>Note: If no location is provided by the developer, the map will have no location pin.</em></p>
         </div>
 
+        <!-- Nearby Places -->
+        <% if @dev_project.latitude.present? && @dev_project.longitude.present? %>
+          <div class="mt-4">
+            <h5>Nearby Places</h5>
+            <ul class="nav nav-tabs" id="amenityTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="restaurants-tab" data-bs-toggle="tab" data-bs-target="#restaurants" type="button" role="tab">
+                  <i class="bi bi-cup-straw"></i> Restaurants
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="schools-tab" data-bs-toggle="tab" data-bs-target="#schools" type="button" role="tab">
+                  <i class="bi bi-mortarboard"></i> Schools
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="banks-tab" data-bs-toggle="tab" data-bs-target="#banks" type="button" role="tab">
+                  <i class="bi bi-bank"></i> Banks
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="hospitals-tab" data-bs-toggle="tab" data-bs-target="#hospitals" type="button" role="tab">
+                  <i class="bi bi-hospital"></i> Hospitals
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="supermarkets-tab" data-bs-toggle="tab" data-bs-target="#supermarkets" type="button" role="tab">
+                  <i class="bi bi-cart4"></i> Supermarkets
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="churches-tab" data-bs-toggle="tab" data-bs-target="#churches" type="button" role="tab">
+                  <i class="bi bi-house-door"></i> Churches
+                </button>
+              </li>
+            </ul>
+
+            <div class="tab-content border p-3" id="amenityTabsContent">
+              <div class="tab-pane fade show active" id="restaurants" role="tabpanel"><ul id="restaurants-list" class="row row-cols-2"></ul></div>
+              <div class="tab-pane fade" id="schools" role="tabpanel"><ul id="schools-list" class="row row-cols-2"></ul></div>
+              <div class="tab-pane fade" id="banks" role="tabpanel"><ul id="banks-list" class="row row-cols-2"></ul></div>
+              <div class="tab-pane fade" id="hospitals" role="tabpanel"><ul id="hospitals-list" class="row row-cols-2"></ul></div>
+              <div class="tab-pane fade" id="supermarkets" role="tabpanel"><ul id="supermarkets-list" class="row row-cols-2"></ul></div>
+              <div class="tab-pane fade" id="churches" role="tabpanel"><ul id="churches-list" class="row row-cols-2"></ul></div>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Map & Nearby Places Script -->
+        <script>
+          document.addEventListener("turbo:load", function () {
+            const mapElement = document.getElementById("map");
+            if (mapElement && !mapElement.dataset.mapLoaded) {
+              mapElement.dataset.mapLoaded = true;
+
+              <% if @dev_project.latitude.present? && @dev_project.longitude.present? %>
+                var lat = <%= @dev_project.latitude %>;
+                var lng = <%= @dev_project.longitude %>;
+              <% else %>
+                var lat = 13.6218; // Naga City default
+                var lng = 123.1948;
+              <% end %>
+
+              var map = L.map("map").setView([lat, lng], 15);
+
+              L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: "© OpenStreetMap contributors"
+              }).addTo(map);
+
+              <% if @dev_project.latitude.present? && @dev_project.longitude.present? %>
+                // Dev_project location
+                L.marker([lat, lng]).addTo(map)
+                  .bindPopup("<%= j @dev_project.title %>")
+                  .openPopup();
+
+                // Nearby places
+                const redIcon = L.icon({
+                  iconUrl: "https://cdn-icons-png.flaticon.com/512/252/252025.png",
+                  iconSize: [20, 20],
+                  iconAnchor: [10, 20]
+                });
+
+                const categories = {
+                  restaurant: document.getElementById("restaurants-list"),
+                  school: document.getElementById("schools-list"),
+                  bank: document.getElementById("banks-list"),
+                  hospital: document.getElementById("hospitals-list"),
+                  supermarket: document.getElementById("supermarkets-list"),
+                  place_of_worship: document.getElementById("churches-list")
+                };
+
+                // Overpass Query (For 500m)
+                fetch("https://overpass-api.de/api/interpreter", {
+                method: "POST",
+                body: `
+                  [out:json];
+                  (
+                    node(around:500, ${lat}, ${lng})[amenity~"restaurant|school|bank|hospital|supermarket"];
+                    node(around:500, ${lat}, ${lng})["amenity"="place_of_worship"]["religion"="christian"];
+                    way(around:500, ${lat}, ${lng})["building"="church"];
+                    node(around:500, ${lat}, ${lng})["building"="church"];
+                  );
+                  out center;
+                `
+              })
+                .then(res => res.json())
+                .then(data => {
+                  data.elements.forEach(function (el) {
+                    if (el.lat && el.lon) {
+                      const type = el.tags.amenity;
+
+                      L.marker([el.lat, el.lon], { icon: redIcon })
+                        .addTo(map)
+                        .bindPopup(el.tags.name || type);
+
+                      if (categories[type]) {
+                        const li = document.createElement("li");
+                        li.classList.add("col");
+                        li.textContent = el.tags.name || type;
+                        categories[type].appendChild(li);
+                      }
+                    }
+                  });
+
+                  Object.keys(categories).forEach(key => {
+                    if (categories[key] && categories[key].children.length === 0) {
+                      categories[key].innerHTML = "<li class='col'>No nearby places found.</li>";
+                    }
+                  });
+                })
+                .catch(err => console.error("Overpass error:", err));
+              <% end %>
+            }
+          }, { once: true });
+        </script>
+
+      </div>
+
+      <!-- Space -->
+      <div class="col-12 col-md-1 mt-4">
+      </div>
+
       <!-- RIGHT SIDE OF THE SCREEN -->
-        <div class="col-12 col-md-4 mt-4">
-          <div class="col-9 border border-secondary rounded p-3">
+        <div class="col-12 col-md-3 mt-4">
+          <div class="border border-secondary rounded p-3">
             <div class="row d-flex">
               <div class="col">
                   <% if @dev_project.user.persisted? && @dev_project.user.profile_photo.attached? %>
@@ -140,7 +291,7 @@
     <hr class="hr p-2 mt-5" /> 
       <div class="d-flex p-1">
         <%= link_to "Edit", edit_dev_project_path(@dev_project), class: "btn btn-light" %>
-        <%= button_to "Delete", @dev_project, method: :delete, class: "btn btn-danger ml-1" %>
+        <%= button_to "Delete", @dev_project, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger ml-1" %>
      </div>
     <% end %>
 

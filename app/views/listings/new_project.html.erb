@@ -27,7 +27,7 @@
 
       <div class="form-row p-2">
         <div class="col col-md-6 mb-3">
-            <%= form.label :project_type, "Project type", class: "form-label" %>
+            <%= form.label :project_type, "Property type", class: "form-label" %>
             <%= form.select :project_type, options_for_select(Listing.project_types.collect { |s| [s[0].humanize, s[0]] }, selected: Listing.project_types[:corroborated]),{}, class: "form-select" %>
         </div> 
         <div class="col col-md-6 mb-3"> 
@@ -81,7 +81,7 @@
 
     <div class="field p-2">
      <%= form.label :listing_photos, "Upload photos"  %><br>
-     <%= form.file_field :listing_photos, multiple: true, direct_upload: true, class: "form-control w-100", id: "photos_input" %>
+     <%= form.file_field :listing_photos, multiple: true, direct_upload: true, class: "form-control w-100", id: "photos_input", accept: "image/*", data: { max_size: 2.megabytes } %>
     </div>
 
     <div class="field p-2">
@@ -98,6 +98,15 @@
          <%= form.label :barangay, "Barangay", class: "form-label" %>
             <%= form.select :barangay, options_for_select(Listing.barangays.collect { |s| [s[0].humanize, s[0]] }, selected: Listing.barangays[:corroborated]),{}, class: "form-select" %>
       </div>
+    </div>
+
+    <!-- Map Goes Here -->
+    <%= form.hidden_field :latitude, id: "listing_latitude" %>
+    <%= form.hidden_field :longitude, id: "listing_longitude" %>
+
+    <div class="p-2">
+      <p>Add a marker to the property's location</p>
+      <div id="map" style="height:500px;"></div>
     </div>
    
     <div class="container mt-5 bg-light">  

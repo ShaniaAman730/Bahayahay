@@ -1,37 +1,37 @@
-<h2>Leave a Review for <%= @listing.realtor.first_name %></h2>
+<div class="container mt-5">
+  <h2>Leave a Review for <%= @listing.realtor.first_name %></h2>
 
-<%= form_with model: [@listing, @review], local: true do |form| %>
-  <h3>Knowledge & Expertise</h3>
-    <div class="rating">
-      <% 5.downto(1) do |i| %>
-        <label for="knowledge_star<%= i %>">★</label>
-        <%= form.radio_button :knowledge_rating, i, id: "knowledge_star#{i}" %>
-      <% end %>
+  <%= form_with model: [@listing, @review], local: true do |form| %>
+    <h3>Knowledge & Expertise</h3>
+      <div class="rating">
+        <% 5.downto(1) do |i| %>
+          <%= form.radio_button :knowledge_rating, i, id: "knowledge_star#{i}" %>
+          <label for="knowledge_star<%= i %>">★</label>
+        <% end %>
+      </div>
+
+      <h3>Responsiveness</h3>
+      <div class="rating">
+        <% 5.downto(1) do |i| %>
+          <%= form.radio_button :responsiveness_rating, i, id: "responsiveness_star#{i}" %>
+          <label for="responsiveness_star<%= i %>">★</label>
+        <% end %>
+      </div>
+
+      <h3>Professionalism</h3>
+      <div class="rating">
+        <% 5.downto(1) do |i| %>
+          <%= form.radio_button :professionalism_rating, i, id: "professionalism_star#{i}" %>
+          <label for="professionalism_star<%= i %>">★</label>
+        <% end %>
+      </div>
+
+    <div class="form-group">
+      <%= form.label :comment %>
+      <%= form.text_area :comment, rows: 4, class: "form-control" %>
     </div>
 
-
-    <h3>Responsiveness</h3>
-    <div class="rating">
-      <% 5.downto(1) do |i| %>
-        <label for="responsiveness_star<%= i %>">★</label>
-        <%= form.radio_button :responsiveness_rating, i, id: "responsiveness_star#{i}" %>
-      <% end %>
-    </div>
-
-    <h3>Professionalism</h3>
-    <div class="rating">
-      <% 5.downto(1) do |i| %>
-        <label for="professionalism_star<%= i %>">★</label>
-        <%= form.radio_button :professionalism_rating, i, id: "professionalism_star#{i}" %>
-      <% end %>
-    </div>
-
-  <div class="form-group">
-    <%= form.label :comment %>
-    <%= form.text_area :comment, rows: 4, class: "form-control" %>
-  </div>
-
-  <%= form.submit "Submit Review", class: "btn btn-primary" %>
-<% end %>
-
+    <%= form.submit "Submit Review", class: "btn btn-primary" %>
+  <% end %>
+</div>
 

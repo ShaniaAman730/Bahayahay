@@ -1,0 +1,87 @@
+<div class="container mt-5">
+	<div class="listing-container">
+
+	<h4>Review Realty: <%= @realty.name %></h4>
+
+	<div class="alert alert-warning">
+      <strong>Previous reason for rejection (if applicable):</strong> 
+      <%= "#{@realty.rejection_reason}" if @realty.rejection_reason.present? %>
+      <br>
+      <em><small>Note: This is left blank if the realty was not previously rejected and/or was simply updated by the realtor.</small></em>
+    </div>
+
+	<table class="table table-bordered">
+	  <tbody>
+	    <tr>
+	      <td><strong>Broker:</strong></td>
+	      <td><%= @realty.head_broker.full_name %></td>
+	    </tr>
+	    <tr>
+	      <td><strong>Location:</strong></td>
+	      <td><%= @realty.business_location %></td>
+	    </tr>
+	    <tr>
+	      <td><strong>Email:</strong></td>
+	      <td><%= @realty.email %></td>
+	    </tr>
+	    <tr>
+	      <td><strong>Phone:</strong></td>
+	      <td><%= @realty.phone_number %></td>
+	    </tr>
+
+	    <% if @realty.business_permit.attached? %>
+	      <tr>
+	        <td><strong>Business Permit:</strong></td>
+	        <td>
+	         <%= link_to "View Business Permit", url_for(@realty.business_permit), target: "_blank" %>
+	        </td>
+	      </tr>
+	    <% end %>
+	  </tbody>
+	</table>
+	<br>
+
+	<h5>Business Permit</h5>
+	<% if @realty.business_permit.attached? %>
+	  <div class="d-flex flex-wrap gap-2 mb-4 mt-4">
+	    <div class="image-gallery d-flex flex-wrap gap-2">
+	      <% file = @realty.business_permit %>
+	      <% label = "Business Permit" %>
+
+	      <% if file.content_type.start_with?("image/") %>
+	        <div style="flex: 0 0 auto;">
+	          <%= image_tag file,
+	              class: "img-thumbnail media",
+	              style: "width: 200px; height: 200px; object-fit: cover; cursor: pointer;",
+	              data: { index: 1, description: label } %>
+	        </div>
+	      <% end %>
+	    </div>
+	  </div>
+	<% else %>
+	  <p>No business permit uploaded.</p>
+	<% end %>
+
+	<!-- Modal -->
+	<div id="galleryModal" class="modal" style="display:none; flex-direction:column; align-items:center;">
+	  <span class="close" onclick="closeModal()">&times;</span>
+	  <img class="modal-content" id="modalImage">
+	  <div id="modalCaption" style="margin-top:10px; color:white; text-align:center;"></div>
+	  <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+	  <a class="next" onclick="changeImage(1)">&#10095;</a>
+	</div>
+
+
+	<%= button_to "Approve", approve_admin_realty_path(@realty), method: :patch, class: "btn btn-success" %> 
+	<br>
+
+	<%= form_with url: reject_admin_realty_path(@realty), method: :patch, local: true do |f| %>
+	  <div class="mb-3">
+	    <%= f.label :rejection_reason, "Rejection Reason" %>
+	    <%= f.text_area :rejection_reason, rows: 3, class: "form-control" %>
+	  </div>
+	  <%= f.submit "Reject", class: "btn btn-danger" %>
+	<% end %>
+
+	</div>
+</div>

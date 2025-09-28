@@ -1,0 +1,43 @@
+<div class="form-container p-4 mt-5">
+<h2>Edit Realty Info</h2>
+
+<%= form_with model: @realty, local: true do |f| %>
+
+  <div class="mb-3">
+    <%= f.label :banner, "Banner Image" %>
+    <%= f.file_field :banner, direct_upload: true, class: "form-control", accept: "image/*", data: { max_size: 800.kilobytes} %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :logo, "Logo" %>
+    <%= f.file_field :logo, direct_upload: true, class: "form-control", accept: "image/*", data: { max_size: 500.kilobytes} %>
+  </div>
+
+  <div class="field p-2">
+    <%= f.label :about, "About" %><br />
+    <%= f.text_area :about, data: { placeholder: "Tell us about your realty..." }, class: "form-control w-100 post-a", rows: "7" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :business_location %>
+    <%= f.text_field :business_location, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :email %>
+    <%= f.email_field :email, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :phone_number %>
+    <%= f.text_field :phone_number, class: "form-control", required: true %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :website %>
+    <%= f.text_field :website, class: "form-control" %>
+  </div>
+
+  <%= f.submit "Update Realty", class: "btn btn-success" %>
+<% end %>
+</div>

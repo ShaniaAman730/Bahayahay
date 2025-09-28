@@ -1,0 +1,64 @@
+<br>
+
+ <%= render partial: "/shared/admin_dashboard" %>
+
+ <br>
+
+<div class="p-5">
+  <h2>All Users</h2>
+
+  <div class="mb-4">
+    <%= form_with url: all_users_users_path, method: :get, local: true, class: "d-flex gap-2" do %>
+      <%= text_field_tag :q, params[:q], placeholder: "Search users...", 
+            class: "form-control flex-grow-1" %> 
+
+      <%= select_tag :user_type, 
+            options_for_select(User.user_types.keys.map { |t| [t.titleize, t] }, params[:user_type]), 
+            include_blank: "All Types", 
+            class: "form-select w-auto" %> 
+
+      <%= submit_tag "Search", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+
+  <% if @users.any? %>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User Type</th> 
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Contact No</th>
+          <th>Company Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td><%= user.id %></td>
+            <td><%= user.user_type.titleize %></td>
+            <td><%= user.first_name %></td>
+            <td><%= user.last_name %></td>
+            <td><%= user.email %></td>
+            <td><%= user.contact_no %></td>
+            <td><%= user.company_name %></td>
+            <td class="d-flex">
+              <%= link_to "Show", user_path(user), class: "btn btn-sm btn-secondary mr-1" %>
+              <%= button_to "Delete", user_path(user), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-danger" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="mt-3">
+      <%= paginate @users %>
+    </div>
+  <% else %>
+    <p>No users found.</p>
+  <% end %>
+</div>

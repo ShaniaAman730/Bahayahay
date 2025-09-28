@@ -1,0 +1,36 @@
+<div class="container mt-5">
+<h2 class="mb-4">Realties</h2>
+
+<%= form_with url: realties_path, method: :get, local: true, class: "mb-3" do |f| %>
+  <div class="input-group">
+    <%= f.text_field :query, value: params[:query], class: "form-control", placeholder: "Search realties..." %>
+    <button class="btn btn-primary" type="submit">Search</button>
+  </div>
+<% end %>
+
+
+<% if @realties.any? %>
+    <% @realties.each do |realty| %>
+      <div class="card mb-3 p-3 d-flex flex-row align-items-center" style="min-height: 150px;">
+        <div class="me-4">
+          <% if realty.logo.attached? %>
+            <%= image_tag url_for(realty.logo), class: "rounded-circle img-thumbnail", class: "rounded-circle", size: "100x100" %>
+          <% else %>
+            <%= image_tag "no-profile.jpg", class: "rounded-circle img-thumbnail", class: "rounded-circle", size: "100x100" %>
+          <% end %>
+        </div>
+        <div class="flex-grow-1">
+          <h5><%= realty.name %></h5>
+          <p class="text-muted mb-1"><i class="bi bi-geo-alt"></i> <%= realty.business_location %></p>
+          <!-- <p class="mb-1"><strong>Contact:</strong> <%#= agent.contact_no %></p> -->
+            <%= link_to "View Realty", realty_path(realty), class: "btn btn-outline-primary btn-sm me-2" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <%= paginate @realties %>
+  <% else %>
+    <p>No realties found.</p>
+  <% end %>
+</div>
+</div>

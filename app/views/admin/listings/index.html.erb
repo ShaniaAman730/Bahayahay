@@ -1,5 +1,8 @@
-<div class="container mt-5">
-  <div class="index-container">
+ <br>
+
+ <%= render partial: "/shared/admin_dashboard" %>
+
+  <div class="form-container mt-5">
     <h2>Listings Pending for Approval</h2>
     
     <% @pending_listings.each do |listing| %>
@@ -21,7 +24,7 @@
                 </div>
                 <hr width="100%" />
                 <div class="d-flex mt-2">
-                  <p class="m-1"><small>No. of times this listing been sent for approval: <%= listing.approval_requests_count %></p></small>
+                  <p class="m-1"><small>No. of times this listing been edited or sent for approval: <%= listing.approval_requests_count %></p></small>
                   <%= button_to "Delete", admin_listing_path(listing), method: :delete, data: { confirm: "Are you sure you want to delete this listing?" }, class: "btn btn-danger btn-sm ml-3" %>
                 </div>
             </div>
@@ -32,5 +35,4 @@
   <%= paginate @pending_listings, class: "pagination" %>
     
   </div>
-</div>
 

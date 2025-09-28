@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  realtor: one
+  client: one
+  listing: one
+  event_type: MyString
+  message: MyText
+
+two:
+  realtor: two
+  client: two
+  listing: two
+  event_type: MyString
+  message: MyText

@@ -26,7 +26,7 @@
 
       <div class="form-row p-2">
         <div class="col col-md-6 mb-3">
-            <%= form.label :project_type, "Project type", class: "form-label" %>
+            <%= form.label :project_type, "Property type", class: "form-label" %>
             <%= form.select :project_type, options_for_select(Listing.project_types.collect { |s| [s[0].humanize, s[0]] }, selected: Listing.project_types[:corroborated]),{}, class: "form-select" %>
         </div> 
         <div class="col col-md-6 mb-3"> 
@@ -80,7 +80,7 @@
 
     <div class="field p-2">
      <%= form.label :listing_photos, "Upload photos"  %><br>
-     <%= form.file_field :listing_photos,  multiple: true, direct_upload: true, class: "form-control w-100", id: "photos_input" %>
+     <%= form.file_field :listing_photos,  multiple: true, direct_upload: true, class: "form-control w-100", id: "photos_input", accept: "image/*", data: { max_size: 2.megabytes } %>
    </div>
 
     <div class="field p-2">
@@ -97,6 +97,15 @@
          <%= form.label :barangay, "Barangay", class: "form-label" %>
             <%= form.select :barangay, options_for_select(Listing.barangays.collect { |s| [s[0].humanize, s[0]] }, selected: Listing.barangays[:corroborated]),{}, class: "form-select" %>
       </div>
+    </div>
+
+    <!-- Map Goes Here -->
+    <%= form.hidden_field :latitude, id: "listing_latitude" %>
+    <%= form.hidden_field :longitude, id: "listing_longitude" %>
+
+    <div class="p-2">
+      <p>Add a marker to the property's location</p>
+      <div id="map" style="height:500px;"></div>
     </div>
    
     <div class="container mt-5 bg-light">  
@@ -365,7 +374,7 @@
       <%= form.label :ejsprocessed, "If the owner is not alive, is the extrajudicial settlement processed?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
-        <%= form.radio_button :ejsprocessed, true, id: 'ejsprocessed_yes', class: "form-check-input", required: true %>
+        <%= form.radio_button :ejsprocessed, true, id: 'ejsprocessed_yes', class: "form-check-input" %>
         <%= form.label :ejsprocessed, "Yes", for: 'ejsprocessed_yes', class: "form-check-label" %>
       </div>
 
@@ -398,7 +407,7 @@
 
       <div class="field">
         <%= form.label :valid_id, "Valid ID" %><br>
-        <%= form.file_field :valid_id, class: "form-control w-100" %>
+        <%= form.file_field :valid_id, class: "form-control w-100", accept: "image/*", data: { max_size: 200.kilobytes} %>
       </div>
 
       <div class="field">
@@ -408,7 +417,7 @@
 
       <div class="field">
         <%= form.label :birthcert, "If you don't have a TIN, please upload your birth certificate instead" %><br>
-        <%= form.file_field :birthcert, class: "form-control w-100" %>
+        <%= form.file_field :birthcert, class: "form-control w-100", accept: "image/*", data: { max_size: 200.kilobytes} %>
       </div>
   </div>
 
@@ -435,7 +444,7 @@
 
       <div class="field">
         <%= form.label :spa, "Consularized Special Power of Attorney (SPA)" %><br>
-        <%= form.file_field :spa, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 2 } %>
+        <%= form.file_field :spa, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 2, max_size: 500.kilobytes }, accept: "image/*" %>
       </div>
 
       <div class="field">
@@ -451,7 +460,7 @@
 
     <div class="field">
      <%= form.label :tct, "Lastly, please upload at least 4 pages of the certified true copy of the Transfer Certificate of Title (TCT) recently acquired in the last 6 months:"  %><br>
-     <%= form.file_field :tct,  multiple: true, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 2 } %>
+     <%= form.file_field :tct,  multiple: true, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 4, max_size: 1000.kilobytes  }, accept: "image/*" %>
    </div>
 
   </div>  

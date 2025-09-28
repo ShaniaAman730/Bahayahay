@@ -1,0 +1,99 @@
+<div class="listing-container mt-5">
+  <h2>Manage Members for <%= @realty.name %></h2>
+
+<!-- Pending Applications -->
+<div class="bg-light rounded p-4 mb-4">
+  <h4>Pending Applications</h4>
+  <% if @pending_memberships.any? %>
+    <div class="row">
+      <% @pending_memberships.each do |membership| %>
+        <div class="col-md-6 mb-3">
+          <div class="d-flex align-items-center p-2 border rounded">
+            <% if membership.user.profile_photo.attached? %>
+                  <%= image_tag membership.user.profile_photo, class: "rounded-circle me-3", size: "70x70" %>
+                <% else %>
+                  <%= image_tag "no-profile.jpg", class: "rounded-circle me-3", size: "70x70" %>
+                <% end %>
+            <div>
+              <%= link_to membership.user.full_name, user_path(membership.user), 
+                  class: "fw-bold text-decoration-none" %><br>
+              <div class="mt-2 d-flex">
+                <%= button_to "Approve", approve_realty_realty_membership_path(@realty, membership), 
+                    method: :patch, class: "btn btn-outline-success btn-sm me-2" %>
+                <%= button_to "Reject", reject_realty_realty_membership_path(@realty, membership), 
+                    method: :patch, class: "btn btn-outline-danger btn-sm" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No pending applications.</p>
+  <% end %>
+</div>
+
+<!-- Leaving Requests -->
+<div class="bg-light rounded p-4 mb-4">
+  <h4>Leaving Requests</h4>
+  <% if @leaving_memberships.any? %>
+    <div class="row">
+      <% @leaving_memberships.each do |membership| %>
+        <div class="col-md-6 mb-3">
+          <div class="d-flex align-items-center p-2 border rounded">
+            <% if membership.user.profile_photo.attached? %>
+                  <%= image_tag membership.user.profile_photo, class: "rounded-circle me-3", size: "70x70" %>
+                <% else %>
+                  <%= image_tag "no-profile.jpg", class: "rounded-circle me-3", size: "70x70" %>
+                <% end %>
+            <div>
+              <%= link_to membership.user.full_name, user_path(membership.user), 
+                  class: "fw-bold text-decoration-none" %><br>
+              <div class="mt-2 d-flex">
+                <%= button_to "Approve Removal", approve_removal_realty_realty_membership_path(@realty, membership), 
+                    method: :patch, class: "btn btn-outline-success btn-sm me-2" %>
+                <%= button_to "Reject Removal", reject_removal_realty_realty_membership_path(@realty, membership), 
+                    method: :patch, class: "btn btn-outline-warning btn-sm" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No leaving requests.</p>
+  <% end %>
+</div>
+
+<!-- Current Members -->
+<div class="bg-light rounded p-4 mb-4">
+  <h4>Current Members</h4>
+  <% if @approved_memberships.any? %>
+    <div class="row">
+      <% @approved_memberships.each do |membership| %>
+        <div class="col-md-6 mb-3">
+          <div class="d-flex align-items-center p-3 border rounded">
+            <% if membership.user.profile_photo.attached? %>
+                  <%= image_tag membership.user.profile_photo, class: "rounded-circle me-3", size: "70x70" %>
+                <% else %>
+                  <%= image_tag "no-profile.jpg", class: "rounded-circle me-3", size: "70x70" %>
+                <% end %>
+            <div>
+              <%= link_to membership.user.full_name, user_path(membership.user), 
+                  class: "fw-bold text-decoration-none" %><br>
+              <div class="mt-2">
+                <%= button_to "Remove Member", force_remove_realty_realty_membership_path(@realty, membership),
+                    method: :patch, class: "btn btn-outline-danger btn-sm",
+                    data: { confirm: "Are you sure you want to remove this member immediately?" } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No approved members yet.</p>
+  <% end %>
+</div>
+
+</div>

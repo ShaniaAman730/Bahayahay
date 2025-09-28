@@ -7,80 +7,153 @@
       <strong>Previous reason for rejection (if applicable):</strong> 
       <%= "#{@listing.rejection_reason}" if @listing.rejection_reason.present? %>
       <br>
-      <em><small>Note: This is left blank if the listing was not previously rejected and was simply updated by the realtor.</small></em>
+      <em><small>Note: This is left blank if the listing was not previously rejected and/or was simply updated by the realtor.</small></em>
     </div>
 
-    <div class="mb-3">
-      <strong>Is the owner alive?</strong>: <%= @listing.owneralive ? "Yes" : "No" %>
-    </div>
-
-    <div class="mb-3">
-      <strong>Is the estate tax paid?</strong>: <%= @listing.estatetax ? "Yes" : "No" %>
-    </div>
-
-    <div class="mb-3">
-      <strong>Is extrajudicial settlement processed?</strong>: <%= @listing.ejsprocessed ? "Yes" : "No" %>
-    </div>
-
-    <div class="mb-3">
-      <strong>Is the owner a Filipino citizen?</strong>: <%= @listing.filipinocitizen ? "Yes" : "No" %>
-    </div>
-
-    <% unless @listing.filipinocitizen %>
-      <div class="mb-3">
-        <strong>Citizenship:</strong> <%= @listing.citizenship&.humanize %>
-      </div>
-
-      <% if @listing.valid_id.attached? %>
-        <div class="mb-3">
-          <strong>Valid ID:</strong>
-          <%= link_to "View", url_for(@listing.valid_id), target: "_blank" %>
-        </div>
-      <% end %>
-
-      <div class="mb-3">
-        <strong>TIN:</strong> <%= @listing.tin.presence || "N/A" %>
-      </div>
-
-      <% if @listing.birthcert.attached? %>
-        <div class="mb-3">
-          <strong>Birth Certificate:</strong>
-          <%= link_to "View", url_for(@listing.birthcert), target: "_blank" %>
-        </div>
-      <% end %>
+    <h5>Attachments Gallery</h5>
+    <% if !@listing.spa.attached? && !@listing.tct.attached? && !@listing.valid_id.attached? && !@listing.birthcert.attached? %>
+      <p>No attachments available</p>
     <% end %>
+    <!-- Gallery -->
+    <div class="d-flex flex-wrap gap-2 mb-4 mt-4">
+      <div class="image-gallery d-flex flex-wrap gap-2">
+        <% attachments = [] %>
 
-    <div class="mb-3">
-      <strong>Is the owner abroad?</strong>: <%= @listing.ownerabroad ? "Yes" : "No" %>
-    </div>
+        <% attachments << { file: @listing.valid_id, label: "Valid I.D." } if @listing.valid_id.attached? %>
+        <% attachments << { file: @listing.birthcert, label: "Birth Certificate" } if @listing.birthcert.attached? %>
 
-    <% if @listing.ownerabroad %>
-      <% if @listing.spa.attached? %>
-        <div class="mb-3">
-          <strong>SPA Document:</strong>
-          <%= link_to "View", url_for(@listing.spa), target: "_blank" %>
-        </div>
-      <% end %>
-
-      <div class="mb-3">
-        <strong>Attorney-in-fact:</strong> <%= @listing.aif.presence || "N/A" %>
-      </div>
-    <% end %>
-
-    <% if @listing.tct.attached? %>
-      <div class="mb-3">
-        <strong>Transfer Certificate of Title (TCT):</strong>
-        <ul>
-          <% @listing.tct.each do |file| %>
-            <li><%= link_to file.filename.to_s, url_for(file), target: "_blank" %></li>
+        <% if @listing.spa.attached? %>
+          <% @listing.spa.each_with_index do |file, i| %>
+            <% attachments << { file: file, label: "Special Power of Attorney (#{i + 1})" } %>
           <% end %>
-        </ul>
+        <% end %>
+
+        <% if @listing.tct.attached? %>
+          <% @listing.tct.each_with_index do |file, i| %>
+            <% attachments << { file: file, label: "Transfer Certificate Title (#{i + 1})" } %>
+          <% end %>
+        <% end %>
+
+        <% attachments.each_with_index do |item, index| %>
+          <% file = item[:file] %>
+          <% if file.content_type.start_with?("image/") %>
+            <div style="flex: 0 0 auto;">
+              <%= image_tag file,
+                  class: "img-thumbnail media",
+                  style: "width: 200px; height: 200px; object-fit: cover; cursor: pointer;",
+                  data: { index: index + 1, description: item[:label] } %>
+            </div>
+          <% else %>
+            <!-- fallback for non-image files -->
+            <div style="flex: 0 0 auto; width: 200px; height: 200px; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center;">
+              <%= link_to item[:label], url_for(file), target: "_blank" %>
+            </div>
+          <% end %>
+        <% end %>
       </div>
-    <% end %>
+    </div>
+
+
+      <!-- Modal -->
+      <div id="galleryModal" class="modal" style="display:none; flex-direction:column; align-items:center;">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div id="modalCaption" style="margin-top:10px; color:white; text-align:center;"></div>
+        <a class="prev" onclick="changeImage(-1)">&#10094;</a>
+        <a class="next" onclick="changeImage(1)">&#10095;</a>
+    </div>
+
+
+    <h5>Extra Requirements</h5>
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <td><strong>Is the owner alive?</strong></td>
+          <td><%= @listing.owneralive ? "Yes" : "No" %></td>
+        </tr>
+        <tr>
+          <td><strong>Is the estate tax paid?</strong></td>
+          <td><%= @listing.estatetax ? "Yes" : "No" %></td>
+        </tr>
+        <tr>
+          <td><strong>Is extrajudicial settlement processed?</strong></td>
+          <td><%= @listing.ejsprocessed ? "Yes" : "No" %></td>
+        </tr>
+        <tr>
+          <td><strong>Is the owner a Filipino citizen?</strong></td>
+          <td><%= @listing.filipinocitizen ? "Yes" : "No" %></td>
+        </tr>
+
+        <% unless @listing.filipinocitizen %>
+          <tr>
+            <td><strong>Citizenship:</strong></td>
+            <td><%= @listing.citizenship&.humanize %></td>
+          </tr>
+
+          <% if @listing.valid_id.attached? %>
+            <tr>
+              <td><strong>Valid ID:</strong></td>
+              <td><%= link_to "View", url_for(@listing.valid_id), target: "_blank" %></td>
+            </tr>
+          <% end %>
+
+          <tr>
+            <td><strong>TIN:</strong></td>
+            <td><%= @listing.tin.presence || "N/A" %></td>
+          </tr>
+
+          <% if @listing.birthcert.attached? %>
+            <tr>
+              <td><strong>Birth Certificate:</strong></td>
+              <td><%= link_to "View", url_for(@listing.birthcert), target: "_blank" %></td>
+            </tr>
+          <% end %>
+        <% end %>
+
+        <tr>
+          <td><strong>Is the owner abroad?</strong></td>
+          <td><%= @listing.ownerabroad ? "Yes" : "No" %></td>
+        </tr>
+
+        <% if @listing.ownerabroad %>
+          <% if @listing.spa.attached? %>
+            <tr>
+              <td><strong>SPA Documents:</strong></td>
+              <td>
+                <ul class="mb-0">
+                  <% @listing.spa.each do |doc| %>
+                    <li><%= link_to doc.filename.to_s, url_for(doc), target: "_blank" %></li>
+                  <% end %>
+                </ul>
+              </td>
+            </tr>
+          <% end %>
+
+          <tr>
+            <td><strong>Attorney-in-fact:</strong></td>
+            <td><%= @listing.aif.presence || "N/A" %></td>
+          </tr>
+        <% end %>
+
+        <% if @listing.tct.attached? %>
+          <tr>
+            <td><strong>Transfer Certificate of Title (TCT):</strong></td>
+            <td>
+              <ul class="mb-0">
+                <% @listing.tct.each do |file| %>
+                  <li><%= link_to file.filename.to_s, url_for(file), target: "_blank" %></li>
+                <% end %>
+              </ul>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
 
     <%= form_with model: [:admin, @listing], url: reject_admin_listing_path(@listing), method: :patch, local: true do |f| %>
       <div class="mb-3">
-        <label><strong>Reason for rejection:</strong></label><br>
+        <h5>Reason for rejection (if applicable)</h5>
         <div class="d-flex">
           <%= f.radio_button :rejection_reason, "Missing requirements",
                 class: "btn-check",
@@ -102,7 +175,7 @@
 
         <div class="mt-2">
           <%= f.label :custom_reason, "Custom reason (optional)" %>
-          <%= f.text_area :custom_reason, rows: 3, class: "form-control" %>
+          <%= f.text_area :custom_reason, rows: 4, class: "form-control" %>
         </div>
       </div>
       <%= f.submit "Reject", class: "btn btn-danger" %>
@@ -112,6 +185,7 @@
 
     <br>
 
+    <%= link_to "View Listing", listing_path(@listing) %><br>
     <a href="/admin/listings">Back to Listings Pending for Approval</a>
 
   <div class="mb-5"></div>

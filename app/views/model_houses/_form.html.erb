@@ -73,10 +73,10 @@
 
   <div class="field p-2">
     <%= form.label :model_photos, "Upload photos"  %><br>
-    <%= form.file_field :model_photos, multiple: true, direct_upload: true, class: "form-control w-100",  id: "photos_input" %>
+    <%= form.file_field :model_photos, multiple: true, direct_upload: true, class: "form-control w-100",  id: "photos_input", accept: "image/*", data: { max_size: 2.megabytes } %>
   </div>
 
-  <div class="field p-2">
+    <div class="field p-2">
       <%= form.label :description %><br />
       <%= form.rich_text_area :description, id: "model_house_description", class: "post-textarea" %>
     </div>

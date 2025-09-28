@@ -2,6 +2,8 @@ class ListingsController < ApplicationController
   before_action :set_listing, only: %i[ show edit update destroy ]
   before_action :authenticate_realtor!
   before_action :ensure_realtor!
+  before_action :prevent_edit_if_sold, only: [:edit, :update, :destroy]
+  before_action :ensure_realtor_can_post!, only: [:new, :create]
 
   skip_before_action :authenticate_realtor!, only: [:show, :public_listings, :public, :contact_agent]
   skip_before_action :ensure_realtor!, only: [:show, :public_listings, :public, :contact_agent]
@@ -45,6 +47,15 @@ class ListingsController < ApplicationController
     @client = User.find(params[:client_id])
 
     if @listing.update(client: @client, confirmed: true, active: false)
+      # This is for the review feed
+      ReviewEvent.create!(
+        realtor: @listing.realtor,
+        client: @client,
+        listing: @listing,
+        review: @review,
+        event_type: "assigned",
+        message: "#{@client.first_name} has been assigned to your listing #{@listing.title}. They can now leave a review."
+      )
       redirect_to @listing, notice: "Sale confirmed with #{@client.first_name}."
     else
       redirect_to @listing, alert: "Could not confirm the transaction."
@@ -59,12 +70,14 @@ class ListingsController < ApplicationController
         keyword = params[:keyword].downcase
         matching_project_types = Listing.project_types.keys.select { |pt| pt.downcase.include?(keyword) }
         matching_furnish_types = Listing.furnish_types.keys.select { |ft| ft.downcase.include?(keyword) }
+        matching_barangays = Listing.barangays.keys.select { |brgy| brgy.downcase.include?(keyword) }
 
         @listings = @listings.where(
           "LOWER(title) LIKE :q OR project_type IN (:project_types) OR furnish_type IN (:furnish_types)",
           q: "%#{keyword}%",
           project_types: matching_project_types.map { |pt| Listing.project_types[pt] },
-          furnish_types: matching_furnish_types.map { |ft| Listing.furnish_types[ft] }
+          furnish_types: matching_furnish_types.map { |ft| Listing.furnish_types[ft] },
+          barangays: matching_barangays.map { |brgy| Listing.barangays[brgy] }
         )
       end
 
@@ -79,8 +92,17 @@ class ListingsController < ApplicationController
 
       @listings = @listings.where(project_type: params[:project_type]) if params[:project_type].present?
       @listings = @listings.where(furnish_type: params[:furnish_type]) if params[:furnish_type].present?
+      @listings = @listings.where(barangay: params[:barangay]) if params[:barangay].present?
 
-      @listings = @listings.page(params[:page]).per(10)
+      if params[:barangay].present?
+        @listings = @listings.where(barangay: params[:barangay])
+        @map_center = Listing::BARANGAY_COORDS[params[:barangay]]
+      else
+        # Default: Naga City center
+        @map_center = [13.6236, 123.1948]
+      end
+      
+      @listings = @listings.page(params[:page]).per(8)
   end
 
   def select_type
@@ -249,6 +271,19 @@ class ListingsController < ApplicationController
      redirect_to root_path unless current_user.realtor?
     end
 
+    def prevent_edit_if_sold
+      if @listing.present? && !@listing.active?
+        redirect_to @listing, alert: "You cannot edit or delete a sold listing."
+      end
+    end
+
+    def ensure_realtor_can_post!
+      if current_user.realtor? && !current_user.is_broker && current_user.realty.blank?
+        redirect_to root_path, alert: "You must be part of a Realty to post listings. Please submit a Realty application."
+      end
+    end
+
+
     # Only allow a list of trusted parameters through.
     def listing_params
   params.require(:listing).permit(
@@ -268,6 +303,7 @@ class ListingsController < ApplicationController
       :realtor, :client, :listing_type, :listing_type_num, 
       :beds, :baths, :sqft, :contact_clicks, :confirmed, :approved, :active,
       :valid_id, :birthcert, :developer_id, :for_edit, :approval_requests_count,
+      :latitude, :longitude,
       listing_photos: [], spa: [], tct: []
     )
   end

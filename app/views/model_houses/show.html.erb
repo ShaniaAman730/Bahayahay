@@ -60,17 +60,21 @@
 
       <div class="container mt-2 mb-2 bg-light">  
         <div class="p-3">  
-           <h5>Amenities</h5>
+           <h5>Amenities</h5><br>
+           <% if amenities_listings(@model_house).present? %>
             <% groups = amenities_listings(@model_house).in_groups(5, false) %>
             <div class="row">
               <% groups.each do |group| %>
-                <div class="col-md-4">
+                <div class="col-md-4 small">
                   <% group.each do |amenities_html| %>
                     <p><%= amenities_html.html_safe %></p>
                   <% end %>
                 </div>
               <% end %>
             </div>
+            <% else %>
+              No amenities available.
+            <% end %>
           </div>
         </div>
           
@@ -117,7 +121,7 @@
     <hr class="hr p-2 mt-5" /> 
     <div class="d-flex p-1">
       <%= link_to "Edit", edit_model_house_path(@model_house), class: "btn btn-light" %> 
-      <%= button_to "Delete", @model_house, method: :delete, class: "btn btn-danger ml-1" %>
+      <%= button_to "Delete", @model_house, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger ml-1" %>
     </div>
   <% end %>
 

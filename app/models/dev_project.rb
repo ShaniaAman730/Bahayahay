@@ -6,6 +6,8 @@ class DevProject < ApplicationRecord
 	has_rich_text :description
 
 	validate :project_photos_limit
+	validates :project_photos, total_file_size: { less_than: 2.megabytes }
+	
 	validates :title, presence: true
 	validates :address, presence: true
 
@@ -16,7 +18,7 @@ class DevProject < ApplicationRecord
 	enum :property_type, { "Subdivision": 0, "Condominium": 1, "Commercial": 3 }
 
 	def project_photos_limit
-	  if project_photos.attached? && project_photos.count > 8
+	  if project_photos.attached? && project_photos.count > 14
 	    errors.add(:project_photos, "You can only upload up to 8 files.")
 	  end
 	end

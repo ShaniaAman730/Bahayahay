@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_30_053753) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_26_201250) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "accreditations", force: :cascade do |t|
+    t.bigint "realty_id", null: false
+    t.bigint "developer_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["developer_id"], name: "index_accreditations_on_developer_id"
+    t.index ["realty_id"], name: "index_accreditations_on_realty_id"
+  end
 
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
@@ -117,6 +127,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_30_053753) do
     t.bigint "user_id", null: false
     t.integer "barangay"
     t.integer "property_type"
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
     t.index ["user_id"], name: "index_dev_projects_on_user_id"
   end
 
@@ -215,6 +227,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_30_053753) do
     t.string "rejection_reason"
     t.string "custom_reason"
     t.integer "approval_requests_count", default: 0, null: false
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
     t.index ["client_id"], name: "index_listings_on_client_id"
     t.index ["realtor_id"], name: "index_listings_on_realtor_id"
   end
@@ -225,6 +239,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_30_053753) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "sender_id"
+    t.boolean "read", default: false
     t.index ["conversation_id"], name: "index_messages_on_conversation_id"
     t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
@@ -289,6 +304,47 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_30_053753) do
     t.index ["dev_project_id"], name: "index_model_houses_on_dev_project_id"
   end
 
+  create_table "realties", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "business_location"
+    t.string "email"
+    t.string "phone_number"
+    t.integer "status", default: 0, null: false
+    t.text "rejection_reason"
+    t.bigint "head_broker_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "about"
+    t.string "website"
+    t.index ["head_broker_id"], name: "index_realties_on_head_broker_id"
+  end
+
+  create_table "realty_memberships", force: :cascade do |t|
+    t.bigint "realty_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["realty_id"], name: "index_realty_memberships_on_realty_id"
+    t.index ["user_id"], name: "index_realty_memberships_on_user_id"
+  end
+
+  create_table "review_events", force: :cascade do |t|
+    t.bigint "client_id", null: false
+    t.bigint "realtor_id", null: false
+    t.bigint "listing_id", null: false
+    t.string "event_type"
+    t.text "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "read", default: false
+    t.bigint "review_id"
+    t.index ["client_id"], name: "index_review_events_on_client_id"
+    t.index ["listing_id"], name: "index_review_events_on_listing_id"
+    t.index ["realtor_id"], name: "index_review_events_on_realtor_id"
+    t.index ["review_id"], name: "index_review_events_on_review_id"
+  end
+
   create_table "reviews", force: :cascade do |t|
     t.text "comment"
     t.bigint "listing_id", null: false
@@ -299,6 +355,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_30_053753) do
     t.integer "knowledge_rating"
     t.integer "responsiveness_rating"
     t.integer "professionalism_rating"
+    t.boolean "read", default: false
     t.index ["client_id"], name: "index_reviews_on_client_id"
     t.index ["listing_id"], name: "index_reviews_on_listing_id"
     t.index ["realtor_id"], name: "index_reviews_on_realtor_id"
@@ -335,10 +392,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_30_053753) do
     t.boolean "is_broker", default: false
     t.string "broker_name"
     t.string "broker_prc_no"
+    t.boolean "privacy_agreement"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "accreditations", "realties"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "users"
@@ -351,6 +410,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_30_053753) do
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "model_houses", "dev_projects"
+  add_foreign_key "realty_memberships", "realties"
+  add_foreign_key "realty_memberships", "users"
+  add_foreign_key "review_events", "listings"
+  add_foreign_key "review_events", "reviews"
+  add_foreign_key "review_events", "users", column: "client_id"
+  add_foreign_key "review_events", "users", column: "realtor_id"
   add_foreign_key "reviews", "listings"
   add_foreign_key "reviews", "users", column: "client_id"
   add_foreign_key "reviews", "users", column: "realtor_id"

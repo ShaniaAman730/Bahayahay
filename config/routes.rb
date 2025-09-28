@@ -1,20 +1,26 @@
 Rails.application.routes.draw do
+
   get "agents/index"
 
   root "home#index"
   get '/home' => 'home#default_homepage'
   
 
-  devise_for :users, controllers: {registrations: 'users/registrations' }
-  resources :users, only: [:show] do
-  member do
+  devise_for :users, controllers: { registrations: 'users/registrations' }
+  resources :users do
+    member do
+      patch :approve
+      patch :reject
       get :reviews
+      get :review_events
+    end
+    collection do
+      get :all_users
+      get :managerealtors
     end
   end
-  get "agents", to: "agents#index", as: :agents
 
-  resources :user_management, only: [:index, :show, :new, :create, :edit, :update, :destroy] # Generates RESTful routes for users
-  get'/managerealtors' => 'user_management#managerealtors'
+  get "agents", to: "agents#index", as: :agents
 
   resources :dev_projects do
     get '/page/:page', action: :index, on: :collection
@@ -29,11 +35,18 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :realtor_signup, only: [:index, :new, :create]
+  resources :realtor_signup, only: [:index, :new, :create] do
+    collection do
+      get :search_brokers
+      get :search_realties
+    end
+  end
+
   get 'thank_you_realtor', to: 'realtor_signup#thank_you_realtor'
 
+
   resources :listings do
-    resources :reviews, only: [:new, :create]
+    resources :reviews, only: [:new, :create, :destroy]
     get '/page/:page', action: :index, on: :collection
     post 'contact_agent', on: :member
 
@@ -54,11 +67,22 @@ Rails.application.routes.draw do
     resources :messages, only: [:create]
   end
 
+  get "notifications/unread_count", to: "notifications#unread_count"
+
   namespace :admin do
+  resources :users, only: [:new, :create]
+
     resources :listings, only: [:index, :show, :destroy] do
       member do
         patch :approve
         patch :reject
+      end
+    end
+
+    resources :realties, only: [:index, :show, :destroy] do
+      member do
+        patch :approve
+        patch :reject 
       end
     end
   end
@@ -68,7 +92,45 @@ Rails.application.routes.draw do
   end
 
   resources :saved_listings, only: [:index, :create, :destroy]
-  
+
+  get "notifications/unread_count", to: "notifications#unread_count"
+
+  resources :review_events, only: [] do
+    member do
+      patch :mark_as_read
+    end
+  end
+
+ resources :realties do
+  resources :realty_memberships, only: [:create, :update, :destroy] do
+    member do
+      patch :approve
+      patch :reject
+      patch :request_removal
+      patch :approve_removal
+      patch :reject_removal
+      patch :force_remove
+    end
+  end
+
+  resources :accreditations, only: [:create]
+
+  member do
+      get :edit_requirements
+      patch :update_requirements
+      get :manage_members
+    end
+  end
+
+  resources :accreditations, only: [:update, :destroy] do
+    collection do
+      get :developer_requests
+    end
+  end
+
+
+  mount Importmap::Engine => "/rails/importmap"
+
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

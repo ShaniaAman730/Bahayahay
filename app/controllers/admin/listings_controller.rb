@@ -9,7 +9,7 @@ class Admin::ListingsController < ApplicationController
                                .with_attached_listing_photos
                                .order(created_at: :desc)
                                .page(params[:page])
-                               .per(10)
+                               .per(5)
   end
 
   def show

@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <%= favicon_link_tag asset_path('favicon.ico') %>
-  
+
   <title><%= content_for(:title) || "Bahayahay" %></title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <%= csrf_meta_tags %>
@@ -13,120 +12,433 @@
 
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag "style", media: "all" %>
-  <%= javascript_importmap_tags %>
+  <%= javascript_importmap_tags %> 
+  <%= action_cable_meta_tag %> 
 
   <!-- Bootstrap and icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" ... >
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 
-  <!-- Rich text via Trix -->
-  <link rel="stylesheet" href="https://unpkg.com/trix@2.0.0/dist/trix.css">
-    <%= javascript_importmap_tags %>
-    
+  <!-- Trix -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/trix@2.0.0/dist/trix.css">
+  <script src="https://cdn.jsdelivr.net/npm/trix@2.0.0/dist/trix.umd.min.js"></script>
+
+  <!-- Leaflet Map -->
+   <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin=""
+  />
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    crossorigin=""
+  ></script>
+
 </head>
 
-  <body class="d-flex flex-column min-vh-100">
-      <div class="wrapper flex-grow-1">
-        <%= render partial: "shared/navbar" %>
+<body class="d-flex flex-column min-vh-100">
+  <div class="wrapper flex-grow-1">
 
-        <div class="mb-1"></div>
+    <%= render partial: "shared/navbar" %>
 
-        <% flash.each do |key, message| %>
-          <div class="alert alert-<%= key == "notice" ? "success" : "danger" %> alert-dismissible fade show" role="alert">
-            <%= message %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        <% end %>
+    <!-- Loader -->
+    <div id="loader" class="loader-overlay">
+      <%= image_tag "Bahayahay-loader.gif", alt: "Loading...", class: "loader-gif" %>
+    </div>
 
-        <%= yield %>
+    <% flash.each do |key, message| %>
+      <div class="alert alert-<%= key == "notice" ? "success" : "danger" %> alert-dismissible fade show" role="alert">
+        <%= message %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <% end %>
 
-       </div>
+    <% if current_user&.realtor? && !current_user.is_broker && current_user.realty.blank? %>
+      <div class="alert alert-warning">
+        You need to be part of a Realty before you can post listings. Please ask your broker to approve your application or submit another Realty application.
+      </div>
+    <% end %>
 
-       <div class="mb-5"></div>
-       <div class="mb-5"></div>
+    <div class="mb-1"></div>
+    <%= yield %>
+    
+  </div>
 
-      <%= render partial: "shared/footer" %>
-       
+  <% unless content_for?(:hide_footer) %>
+    <div class="mb-5"></div>
+    <div class="mb-5"></div>
+    <%= render "shared/footer" %>
+  <% end %>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <!-- Bootstrap 4 (jQuery + Popper + JS) -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
 
-    <!-- Gallery -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const modal = document.getElementById("galleryModal");
-        const modalImg = document.getElementById("modalImage");
-        const images = document.querySelectorAll(".image-gallery img");
+  <!-- Custom scripts -->
 
-        let currentIndex = 0;
+  <!-- Image Gallery Modal -->
+  <script>
+    document.addEventListener("turbo:load", () => {
+      const modal = document.getElementById("galleryModal");
+      const modalImg = document.getElementById("modalImage");
+      const modalCaption = document.getElementById("modalCaption"); // <-- new
+      const images = document.querySelectorAll(".image-gallery img");
 
+      let currentIndex = 0;
+
+      if (modal && modalImg && images.length > 0) {
         images.forEach((img, index) => {
           img.addEventListener("click", () => {
             currentIndex = index;
-            modalImg.src = img.src;
-            modal.style.display = "flex";
+            openModal(img.src, img.dataset.description);
           });
         });
 
+        function openModal(src, description) {
+          modalImg.src = src;
+
+          // handle caption
+          if (modalCaption) {
+            if (description) {
+              modalCaption.textContent = description;
+              modalCaption.style.display = "block";
+            } else {
+              modalCaption.textContent = "";
+              modalCaption.style.display = "none";
+            }
+          }
+
+          modal.style.display = "flex";
+          requestAnimationFrame(() => {
+            modal.classList.add("show");
+          });
+        }
+
         window.changeImage = function (delta) {
           currentIndex = (currentIndex + delta + images.length) % images.length;
-          modalImg.src = images[currentIndex].src;
+          const newImg = images[currentIndex];
+          modalImg.src = newImg.src;
+
+          if (modalCaption) {
+            if (newImg.dataset.description) {
+              modalCaption.textContent = newImg.dataset.description;
+              modalCaption.style.display = "block";
+            } else {
+              modalCaption.textContent = "";
+              modalCaption.style.display = "none";
+            }
+          }
         };
 
         window.closeModal = function () {
-          modal.style.display = "none";
+          modal.classList.remove("show");
+
+          // wait for transition before hiding
+          modal.addEventListener("transitionend", function handler() {
+            modal.style.display = "none";
+            modal.removeEventListener("transitionend", handler);
+          });
         };
-      });
-    </script>
+      }
+    }, { once: true });
+  </script>
 
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const input = document.getElementById("photos_input");
-        const maxFiles = 12;
+  <!-- Photo Upload Limit -->
+  <script>
+    document.addEventListener("turbo:load", () => {
+      const input = document.getElementById("photos_input");
+      const maxFiles = 14;
 
-        input.addEventListener("change", (e) => {
+      if (input) {
+        input.addEventListener("change", () => {
           if (input.files.length > maxFiles) {
             alert(`You can only upload up to ${maxFiles} files.`);
-            input.value = ""; // Clear the selection
+            input.value = "";
+          }
+        });
+      }
+    }, { once: true });
+  </script>
+
+  <!-- Upload Size Limit -->
+  <script>
+    document.addEventListener("turbo:load", () => {
+      document.addEventListener("change", function(event) {
+        if (event.target.type === "file") {
+          const maxSize = parseInt(event.target.dataset.maxSize, 10); // in bytes
+          if (!maxSize) return; // skip inputs without a max_size
+
+          let totalSize = 0;
+          for (const file of event.target.files) {
+            totalSize += file.size;
+          }
+
+          if (totalSize > maxSize) {
+            let message;
+            if (maxSize < 1024 * 1024) {
+              // Show KB if less than 1 MB
+              const maxInKB = (maxSize / 1024).toFixed(0);
+              message = `Upload too large. Maximum allowed is ${maxInKB} KB total.`;
+            } else {
+              // Show MB otherwise
+              const maxInMB = (maxSize / 1024 / 1024).toFixed(2);
+              message = `Upload too large. Maximum allowed is ${maxInMB} MB total.`;
+            }
+
+            alert(message);
+            event.target.value = ""; // clear file input
+          }
+        }
+      });
+    });
+  </script>
+
+
+
+
+  <!-- Trix Setup (no turbo binding needed) -->
+  <script>
+    window.Trix = window.Trix || {};
+    window.Trix.config = { useShadowDOM: false };
+
+    document.addEventListener("trix-file-accept", function(event) {
+      event.preventDefault();
+    });
+  </script>
+
+  <!-- Broker Checkbox Toggle -->
+  <script>
+    document.addEventListener("turbo:load", () => {
+      const brokerCheckbox = document.querySelector("#user_is_broker");
+      const brokerFields = document.querySelector("#broker-fields");
+
+      if (brokerCheckbox && brokerFields) {
+        function toggleBrokerFields() {
+          brokerFields.style.display = brokerCheckbox.checked ? "none" : "block";
+        }
+        brokerCheckbox.addEventListener("change", toggleBrokerFields);
+        toggleBrokerFields();
+      }
+    }, { once: true });
+  </script>
+
+  <!-- Custom Data Confirm -->
+  <script>
+    document.addEventListener("turbo:load", () => {
+      document.body.addEventListener("click", (event) => {
+        const target = event.target.closest("[data-confirm]");
+        if (target) {
+          const message = target.getAttribute("data-confirm");
+          if (!confirm(message)) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }
+        }
+      });
+    }, { once: true });
+  </script>
+
+  <!-- Unread Notifications (polls every 10s, should run each load) -->
+  <script>
+    document.addEventListener("turbo:load", () => {
+      const badge = document.getElementById("inbox-badge");
+      let timeoutId;
+
+      async function fetchUnreadCount() {
+        try {
+          const response = await fetch("/notifications/unread_count", {
+            headers: { "Accept": "application/json" }
+          });
+          if (!response.ok) return;
+
+          const data = await response.json();
+          const count = data.unread_count;
+
+          if (count > 0) {
+            badge.textContent = count;
+            badge.classList.remove("d-none");
+            scheduleNext(10000); // poll faster if there’s something
+          } else {
+            badge.classList.add("d-none");
+            scheduleNext(60000); // poll slower when idle
+          }
+        } catch (error) {
+          console.error("Error fetching unread count:", error);
+          scheduleNext(60000); // back off on error
+        }
+      }
+
+      function scheduleNext(interval) {
+        clearTimeout(timeoutId);
+        if (!document.hidden) { // only if tab visible
+          timeoutId = setTimeout(fetchUnreadCount, interval);
+        }
+      }
+
+      function handleVisibilityChange() {
+        if (document.hidden) {
+          clearTimeout(timeoutId); // stop polling
+        } else {
+          fetchUnreadCount(); // resume immediately when back
+        }
+      }
+
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+
+      // initial fetch
+      fetchUnreadCount();
+    });
+  </script>
+
+  <!-- Badge Update Utility -->
+  <script>
+    document.addEventListener("turbo:load", () => {
+      window.updateBadge = function(url, badgeId, key) {
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            const badge = document.getElementById(badgeId);
+            if (!badge) return;
+
+            if (data[key] > 0) {
+              badge.textContent = data[key];
+              badge.classList.remove("d-none");
+            } else {
+              badge.classList.add("d-none");
+            }
+          })
+          .catch(err => console.error("Badge fetch error:", err));
+      };
+    }, { once: true });
+  </script>
+
+  <!-- Mark Review Event as Read -->
+  <script>
+    document.addEventListener("turbo:load", () => {
+      document.querySelectorAll(".alert .btn-close").forEach(button => {
+        button.addEventListener("click", () => {
+          const eventId = button.getAttribute("data-event-id");
+          if (eventId) {
+            fetch(`/review_events/${eventId}/mark_as_read`, {
+              method: "PATCH",
+              headers: { "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content }
+            });
           }
         });
       });
-    </script>
+    }, { once: true });
+  </script>
 
-    <script>
-      window.Trix = window.Trix || {};
-      window.Trix.config = { useShadowDOM: false };
+   <!-- Bootstrap Re-init -->
+  <script>
+    document.addEventListener("turbo:load", () => {
+      $('[data-toggle="dropdown"]').dropdown();
+      $('[data-toggle="collapse"]').collapse();
+      $('[data-toggle="tooltip"]').tooltip();
+      $('[data-toggle="popover"]').popover();
+    });
+  </script>
 
-      document.addEventListener("trix-file-accept", function(event) {
-        event.preventDefault();
-      });
-    </script>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        const brokerCheckbox = document.querySelector("#user_is_broker");
-        const brokerFields = document.querySelector("#broker-fields");
-
-        function toggleBrokerFields() {
-          if (brokerCheckbox.checked) {
-            brokerFields.style.display = "none";
-          } else {
-            brokerFields.style.display = "block";
-          }
+  <!-- Tooltip -->
+  <script>
+    document.addEventListener("turbo:load", () => {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      tooltipTriggerList.forEach(tooltipTriggerEl => {
+        // destroy any existing tooltip before reinitializing
+        if (bootstrap.Tooltip.getInstance(tooltipTriggerEl)) {
+          bootstrap.Tooltip.getInstance(tooltipTriggerEl).dispose()
         }
+        new bootstrap.Tooltip(tooltipTriggerEl)
+      })
+    }, { once: true }); 
+  </script>
 
-        brokerCheckbox.addEventListener("change", toggleBrokerFields);
-        toggleBrokerFields();
-      });
-    </script>
+  <!-- Loader -->
+   <script>
+      document.addEventListener("turbo:load", () => {
+      const loader = document.getElementById("loader");
+      if (loader) loader.classList.add("hidden");
+    }, { once: true });
+  </script>
 
-    <script src="https://unpkg.com/trix@2.0.0/dist/trix.umd.min.js"></script>
-    <script src="https://unpkg.com/@rails/actiontext@latest/dist/actiontext.umd.js"></script>
+  <!-- Inbox -->
+  <script>
+    document.addEventListener("turbo:load", () => {
+      const messages = document.getElementById("messages");
 
-  </body>
+      function scrollToBottom() {
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      // Scroll on initial load
+      scrollToBottom();
+
+      // Scroll whenever new content is added via Turbo Stream
+      const observer = new MutationObserver(scrollToBottom);
+      observer.observe(messages, { childList: true });
+    }, { once: true });
+  </script>
+
+  <script>
+  function initMap() {
+    const manila = { lat: 14.5995, lng: 120.9842 };
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 13,
+      center: manila,
+    });
+    const marker = new google.maps.Marker({
+      position: manila,
+      map: map,
+    });
+  }
+</script>
+
+<!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-pMh7zGvP3ScW9ZJkOmCj6bfZii/wGumprMC1lB2d5wM="
+    crossorigin="">
+  </script> 
+
+<!-- Map Scripts -->
+  <script>
+    // FORM MAP (new/edit listing)
+    document.addEventListener("turbo:load", function () {
+      const mapElement = document.getElementById("map");
+      if (mapElement && !mapElement.dataset.mapLoaded) {
+        mapElement.dataset.mapLoaded = true;
+
+        var map = L.map("map").setView([13.621, 123.1948], 13); // Default to Naga
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "© OpenStreetMap contributors"
+        }).addTo(map);
+
+        var marker;
+
+        map.on("click", function (e) {
+          var lat = e.latlng.lat;
+          var lng = e.latlng.lng;
+
+          if (marker) {
+            marker.setLatLng([lat, lng]);
+          } else {
+            marker = L.marker([lat, lng]).addTo(map);
+          }
+
+          // Update hidden fields
+          document.getElementById("listing_latitude").value = lat;
+          document.getElementById("listing_longitude").value = lng;
+        });
+      }
+    }, { once: true });
+  </script>
+
+
+ </body>
 </html>

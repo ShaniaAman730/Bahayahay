@@ -11,9 +11,15 @@
 
     <%= form_with url: public_listings_path, method: :get, local: true, class: "row g-2 align-items-end" do %>
       <!-- Keyword -->
-      <div class="col-md-5">
+      <div class="col-md-4">
         <%= label_tag :keyword, "Search Properties", class: "form-label" %>
         <%= text_field_tag :keyword, params[:keyword], class: "form-control", placeholder: "Type a keyword..." %>
+      </div>
+      
+      <!-- Barangay -->
+      <div class="col-md-1">
+        <%= label_tag :barangay, "Barangay", class: "form-label" %>
+        <%= select_tag :barangay, options_for_select(Listing.barangays.keys.map { |brgy| [brgy.humanize, brgy] }, params[:barangay]), include_blank: true, class: "form-select" %>
       </div>
 
       <!-- Bedrooms -->

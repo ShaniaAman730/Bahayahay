@@ -10,19 +10,72 @@
   
   <div id="messages" class="border rounded p-3 mb-4 bg-light overflow-auto" style="max-height: 400px;">
     <% if request.format.html? %>
-      <%= render @conversation.messages, locals: { local_user: current_user } %>
+      <%= render partial: "messages/message", collection: @messages, as: :message, locals: { local_user: current_user } %>
     <% end %>
   </div>
 
-
   <hr class="my-4">
 
-  <%= form_with(model: [@conversation, Message.new], data: { turbo_stream: true }, id: "new_message_form", class: "mb-3") do |form| %>
-    <div class="mb-3">
-      <%= form.text_area :body, rows: 3, class: "form-control", placeholder: "Type your message..." %>
-    </div>
-    <div>
-      <%= form.submit "Send", class: "btn btn-success" %>
-    </div>
-  <% end %>
+  <div id="new_message_form">
+    <%= form_with(model: [@conversation, Message.new], data: { turbo_stream: true }, id: "new_message_form", class: "mb-3") do |form| %>
+      <div class="mb-3">
+        <%= form.text_area :body, rows: 3, class: "form-control", placeholder: "Type your message..." %>
+      </div>
+      <div>
+        <%= form.submit "Send", class: "btn btn-success" %>
+      </div>
+    <% end %>
+  </div>
 </div>
+
+<script>
+  window.currentUserId = <%= current_user&.id || 'null' %>;
+</script>
+
+<script>
+  window.currentUserId = <%= current_user&.id || 'null' %>;
+
+  document.addEventListener('turbo:load', function () {
+    const messages = document.getElementById('messages');
+    if (!messages) return;
+
+    const styleNode = (node) => {
+      const wrapper = node.matches && node.matches('[data-sender-id]') ? node : node.querySelector('[data-sender-id]');
+      if (!wrapper) return;
+      const senderId = wrapper.dataset.senderId;
+      const container = wrapper.querySelector('.message-container') || wrapper;
+      const bubble = wrapper.querySelector('.message-bubble');
+      if (!bubble) return;
+
+      // reset classes
+      container.classList.remove('justify-content-end','justify-content-start');
+      bubble.classList.remove('bg-success','text-white','bg-white','border','p-2','rounded');
+      bubble.style.maxWidth = '';
+
+      if (String(window.currentUserId) === String(senderId)) {
+        container.classList.add('d-flex','justify-content-end','mb-2');
+        bubble.classList.add('p-2','rounded','bg-success','text-white');
+        bubble.style.maxWidth = '70%';
+      } else {
+        container.classList.add('d-flex','justify-content-start','mb-2');
+        bubble.classList.add('p-2','rounded','bg-white','border');
+        bubble.style.maxWidth = '70%';
+      }
+    };
+
+    // style already-rendered messages
+    messages.querySelectorAll('[data-sender-id]').forEach(el => styleNode(el));
+
+    // watch for new messages (appended by Turbo Streams)
+    const observer = new MutationObserver(mutations => {
+      for (const m of mutations) {
+        for (const node of m.addedNodes) {
+          if (node instanceof Element) styleNode(node);
+        }
+      }
+    });
+
+    observer.observe(messages, { childList: true, subtree: true });
+  });
+</script>
+

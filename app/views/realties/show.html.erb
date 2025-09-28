@@ -1,0 +1,240 @@
+<% if current_user == @realty.head_broker %>
+
+	  <% if @realty.rejected? %>
+	    <div class="alert alert-danger">
+	      Your application was rejected.
+	      <% if @realty.rejection_reason.present? %>
+	        <strong>Reason:</strong> <%= "#{@realty.rejection_reason}" %>.
+	      <% end %>
+	    </div>
+	  <% elsif @realty.pending? %>
+	    <div class="alert alert-warning">
+	      Your application is still pending approval.
+	    </div>
+	  <% end %>
+
+<div class="container mt-5">
+
+	  <% if @realty.rejected? || @realty.pending? %>
+	  	<h2><%= @realty.name %></h2>
+	  	<p><strong>Location:</strong> <%= @realty.business_location %></p>
+		<p><strong>Email:</strong> <%= @realty.email %></p>
+		<p><strong>Phone:</strong> <%= @realty.phone_number %></p>
+		<p><strong>Status:</strong> <%= @realty.status.capitalize %></p>
+	  <% end %>
+	<% end %>
+
+	<% if @realty.rejected? && current_user == @realty.head_broker %>
+  		<%= link_to "Edit Requirements",
+              edit_requirements_realty_path(@realty),
+              class: "btn btn-warning" %>
+	<% end %>
+</div>
+
+
+
+  <% if @realty.approved? %>
+<div class="container mt-5">
+	<div class="position-relative mb-5">
+	  <!-- Banner -->
+	  <% if @realty.banner.attached? %>
+	    <%= image_tag @realty.banner, 
+	        class: "img-fluid w-100 rounded-3", 
+	        style: "max-height: 350px; object-fit: cover;" %>
+	  <% else %>
+	    <%= image_tag("default-banner.jpg", 
+	        class: "img-fluid w-100 rounded-3", 
+	        style: "max-height: 350px; object-fit: cover;" ) %>
+	  <% end %>
+
+	  <!-- Profile Logo (40% overlap, left-aligned) -->
+	  <div class="position-absolute" style="left: 40px; bottom: -80px;">
+	    <% if @realty.logo.attached? %>
+	      <%= image_tag @realty.logo, 
+	          class: "rounded-circle img-thumbnail shadow", 
+	          size: "200x200" %>
+	    <% else %>
+	      <%= image_tag("no-profile.jpg", 
+	          class: "rounded-circle img-thumbnail shadow", 
+	          size: "200x200") %>
+	    <% end %>
+	  </div>
+	</div>
+
+	<br><br>
+
+	<div class="row mt-2">
+	 <div class="col-12 col-md-8">
+
+	   <div class="d-flex justify-content-between align-items-center mb-3">
+		  <h2 class="fw-bold mb-1"><%= @realty.name %></h2>
+		  <div>
+		    <% if current_user&.realtor? && current_user != @realty.head_broker %>
+		      <% membership = @realty.realty_memberships.find_by(user: current_user) %>
+		      <% if membership.nil? %>
+		        <%= button_to "Apply to Join",
+                      realty_realty_memberships_path(@realty),
+                      method: :post,
+                      class: "btn btn-primary btn-sm" %>
+		     <% elsif membership.pending? %>
+		       <p>Your application is pending...</p>
+		      <% elsif membership.rejected? || membership.left? %>
+		        <%= button_to "Reapply to Join",
+                      realty_realty_memberships_path(@realty),
+                      method: :post,
+                      class: "btn btn-primary btn-sm" %>
+		      <% elsif membership.approved? %>
+		        <%= button_to "Request Membership Removal",
+                      request_removal_realty_realty_membership_path(@realty, membership),
+                      method: :patch,
+                      class: "btn btn-danger btn-sm",
+                      data: { confirm: "Are you sure you want to request removal from this realty?" } %>
+		      <% elsif membership.leaving? %>
+		        <p>Your removal request is pending broker approval...</p>
+		      <% end %>
+		    <% end %>
+		  </div>
+		</div>
+
+
+	  	<p class="text-muted mb-2"><i class="bi bi-geo-alt"></i> <%= @realty.business_location %></p>
+
+	  	<% if @realty.about.present? %>
+	      <div class="my-3 p-4 border rounded">
+	      	<h5>About Us</h5>
+	       	<p class="mb-0"><%= @realty.about %></p>
+	       </div>
+	    <% end %>
+
+	    <%= link_to user_path(@realty.head_broker), class: "text-decoration-none text-dark" do %>
+		  <div class="card my-4">
+		    <div class="card-body d-flex align-items-center">
+		      <% if @realty.head_broker.persisted? && @realty.head_broker.profile_photo.attached? %>
+		        <%= image_tag @realty.head_broker.profile_photo, class: "rounded-circle me-3", size: "80x80" %>
+		      <% else %>
+		        <%= image_tag("no-profile.jpg", class: "rounded-circle me-3", size: "80x80") %>
+		      <% end %>
+		      <div>
+		        <h5 class="card-title mb-1">
+		          <%= @realty.head_broker.first_name %> <%= @realty.head_broker.last_name %>
+		        </h5>
+		        <p class="card-text text-muted mb-2">
+		          Broker <br>
+		          PRC ID No.: <%= @realty.head_broker.prc_no %>
+		        </p>
+		      </div>
+		    </div>
+		  </div>
+		<% end %>
+
+	  	<% if current_user == @realty.head_broker %>
+	  		<%= link_to edit_realty_path(@realty), class: "btn btn-light d-inline-flex align-items-center btn-sm" do %>
+			  <i class="bi bi-pencil me-2"></i> Edit Realty Info
+			<% end %>
+		  	<%= link_to manage_members_realty_path(@realty), class: "btn btn-primary d-inline-flex align-items-center btn-sm" do %>
+			  <i class="bi bi-gear me-2"></i> Manage Members
+			<% end %>
+		<% end %>
+		
+		<hr>
+
+		<h4>Members</h4>
+		<div class="row">
+		  <% @realty.realty_memberships.approved.each do |membership| %>
+		    <% member = membership.user %>
+		    <div class="col-md-6 mb-4">
+		      <%= link_to user_path(member), class: "text-decoration-none text-dark" do %>
+		        <div class="card h-100">
+		          <div class="card-body d-flex align-items-center">
+		            <% if member.profile_photo.attached? %>
+		              <%= image_tag member.profile_photo, class: "rounded-circle me-3", size: "70x70" %>
+		            <% else %>
+		              <%= image_tag "no-profile.jpg", class: "rounded-circle me-3", size: "70x70" %>
+		            <% end %>
+		            <div>
+		              <h6 class="card-title mb-1"><%= member.first_name %> <%= member.last_name %></h6>
+		              <p class="card-text text-muted mb-0 small">
+		                Salesperson <br>
+		                PRC Accreditation No.: <%= member.prc_no %>
+		              </p>
+		            </div>
+		          </div>
+		        </div>
+		      <% end %>
+		    </div>
+		  <% end %>
+		</div>
+	  <% end %>
+
+	  <hr>
+
+	  <h4>Developer Partnerships</h4>
+		<div class="mt-4">
+		  <% developers = @realty.accreditations.approved.includes(:developer).page(params[:page]).per(8) %>
+
+		  <% if developers.any? %>
+		    <div class="row">
+		      <% developers.each do |acc| %>
+		        <div class="col-md-6 mb-3">
+		          <div class="card h-100">
+		            <div class="card-body d-flex align-items-center">
+		              <% if acc.developer.profile_photo.attached? %>
+		                <%= image_tag acc.developer.profile_photo, class: "rounded-circle me-3", size: "70x70" %>
+		              <% else %>
+		                <%= image_tag "no-profile.jpg", class: "rounded-circle me-3", size: "70x70" %>
+		              <% end %>
+
+		              <div class="flex-grow-1">
+		                <h5 class="card-title mb-1"><%= acc.developer.company_name %></h5>
+		                <%= link_to "View Profile", user_path(acc.developer), class: "btn btn-outline-primary btn-sm" %>
+		              </div>
+		            </div>
+		          </div>
+		        </div>
+		      <% end %>
+		    </div>
+
+		    <div class="mt-3">
+		      <%= paginate developers %>
+		    </div>
+		  <% else %>
+		    <p>No developer partnerships yet.</p>
+		  <% end %>
+		</div>
+
+	</div>
+
+	<!-- SPACE -->
+    <div class="col-1 col-md-1 mt-4">
+    </div>
+
+    <!-- RIGHT SECTION -->
+    <div class="col-12 col-md-3 mt-5">
+	  <div class="p-4 border rounded mb-3">
+	    <h5 class="mb-3">Contact Info</h5>
+	    <div class="row">
+	      <div class="small text-muted">
+	        <table class="table table-sm">
+	          <tbody>
+	            <tr>
+	              <td><i class="bi bi-telephone"></i> Cellphone No.</td>
+	              <td class="text-break"><%= @realty.phone_number %></td>
+	            </tr>
+	            <tr>
+	              <td><i class="bi bi-envelope-at"></i> Email</td>
+	              <td class="text-break"><%= @realty.email %></td>
+	            </tr>
+	            <tr>
+	              <td><i class="bi bi-globe-americas"></i> Website</td>
+	              <td class="text-break"><%= @realty.website %></td>
+	            </tr>
+	          </tbody>
+	        </table>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+  </div>
+
+</div>

@@ -44,12 +44,35 @@
 
     <div class="form-row p-2">
       <div class="col col-md-6 mb-3">
-        <%= form.label :company_name, "Realty/Company Name" %>
-        <%= form.text_field :company_name, required: true, class: "form-control w-100", placeholder: "Realty/Company Name" %>
+        <%= form.label :is_broker, "Are you a Licensed Real Estate Broker?" %><br>
+        <%= form.check_box :is_broker, {}, true, false %> Yes
+      </div>
+    </div>
+
+    <div id="broker-fields" style="display:none;">
+      <div class="form-row p-2">
+        <div class="col col-md-6 mb-3">
+           <%= form.label :broker_name, "Broker's Name" %>
+          <%= form.text_field :broker_name, id: "broker-name", class: "form-control w-100", placeholder: "Search broker..." %>
+          <ul id="broker-suggestions" class="list-group position-absolute w-100" style="z-index:1000;"></ul>
+        </div>
+
+        <div class="col col-md-6 mb-3">
+          <%= form.label :broker_prc_no, "Broker's PRC ID No." %>
+          <%= form.text_field :broker_prc_no, class: "form-control w-100", placeholder: "Broker's PRC ID No." %>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row p-2">
+      <div class="col col-md-6 mb-3">
+        <%= form.label :company_name, "Realty Name" %>
+          <%= form.text_field :company_name, id: "realty-name", class: "form-control w-100", placeholder: "Search realty..." %>
+          <ul id="realty-suggestions" class="list-group position-absolute w-100" style="z-index:1000;"></ul>
       </div>
       <div class="col col-md-6 mb-3">
-        <%= form.label :address, "Realty/Company Address" %>
-        <%= form.text_field :address, required: true, class: "form-control w-100", placeholder: "Realty/Company Name" %>
+        <%= form.label :address, "Realty Address" %>
+        <%= form.text_field :address, required: true, class: "form-control w-100", placeholder: "Realty Address" %>
       </div>
     </div>
 
@@ -61,7 +84,7 @@
       </div>
       <div class="col col-md-6 mb-3">
         <%= form.label :prc_id, "Upload a picture of your PRC ID/Accreditation or your official PRC receipt" %>
-        <%= form.file_field :prc_id, class: "form-control", class: "form-control w-100" %>
+        <%= form.file_field :prc_id, class: "form-control", class: "form-control w-100", accept: "image/*", data: { max_size: 400.kilobytes } %>
       </div>
     </div>
 
@@ -72,33 +95,23 @@
       </div>
       <div class="col col-md-6 mb-3">
         <%= form.label :dhsud_cert, "Upload a picture of your DHSUD Certificate" %>
-        <%= form.file_field :dhsud_cert, class: "form-control", class: "form-control w-100" %>
-      </div>
-    </div>
-
-    <div class="form-row p-2">
-      <div class="col col-md-6 mb-3">
-        <%= form.label :is_broker, "Are you a Licensed Real Estate Broker?" %><br>
-        <%= form.check_box :is_broker, {}, true, false %> Yes
-      </div>
-    </div>
-
-    <div id="broker-fields" style="display:none;">
-      <div class="form-row p-2">
-        <div class="col col-md-6 mb-3">
-          <%= form.label :broker_name, "Broker's Name" %>
-          <%= form.text_field :broker_name, class: "form-control w-100", placeholder: "Broker's Name" %>
-        </div>
-        <div class="col col-md-6 mb-3">
-          <%= form.label :broker_prc_no, "Broker's PRC ID No." %>
-          <%= form.text_field :broker_prc_no, class: "form-control w-100", placeholder: "Broker's PRC ID No." %>
-        </div>
+        <%= form.file_field :dhsud_cert, class: "form-control", class: "form-control w-100", accept: "image/*", data: { max_size: 400.kilobytes } %>
       </div>
     </div>
 
     <div class="field p-2 mb-3">
      <%= form.label :gov_id, "To verify your identity, please upload a picture of your government I.D." %>
-     <%= form.file_field :gov_id, class: "form-control", class: "form-control w-100" %>
+     <%= form.file_field :gov_id, class: "form-control", class: "form-control w-100", accept: "image/*", data: { max_size: 400.kilobytes } %>
+    </div>
+
+    <div class="form-check mb-3">
+      <%= form.check_box :privacy_agreement, class: "form-check-input" %>
+      <%= form.label :privacy_agreement, "I have read and agree to the Data Privacy Act of 2012 (RA 10173).", class: "form-check-label" %>
+      <br>
+      <small>
+        You can read the full law here: 
+        <a href="https://www.privacy.gov.ph/data-privacy-act/" target="_blank">Data Privacy Act (RA 10173)</a>
+      </small>
     </div>
 
     <div class="form-row p-2">
@@ -116,9 +129,90 @@
     </div>
 
     <div class="actions">
-      <%= form.submit "Create Account", class: "btn btn-secondary" %>
+      <%= form.submit "Create Account", class: "btn btn-secondary", data: { confirm_privacy: true } %>
     </div>
+
   <% end %>
   <br>
  </div>
 </div>
+
+<script>
+  document.addEventListener("turbo:load", function() {
+    const form = document.querySelector("form");
+    const submitBtn = form?.querySelector("input[type='submit'][data-confirm-privacy]");
+
+    if (submitBtn) {
+      submitBtn.addEventListener("click", function(event) {
+        const message = `By proceeding, you acknowledge and consent to the collection and processing of your personal data in accordance with the Data Privacy Act of 2012 (RA 10173).
+
+Your personal information will be used solely for account verification, communication, and compliance with regulatory requirements. We will not share your data without your consent, except as required by law.
+
+Do you agree to these terms?`;
+
+        const agreed = confirm(message);
+        if (!agreed) {
+          event.preventDefault(); // stop form submission
+        }
+      }, { once: true }); // ensures the handler runs only once
+    }
+  });
+</script>
+
+
+<script>
+  document.addEventListener("turbo:load", function() {
+    // prevent double-binding if Turbo caches
+    if (window.realtorSignupAutocompleteInitialized) return;
+    window.realtorSignupAutocompleteInitialized = true;
+
+    function setupAutocomplete(inputId, suggestionId, url, fillCallback) {
+      const input = document.getElementById(inputId);
+      const suggestions = document.getElementById(suggestionId);
+
+      if (!input || !suggestions) return; // safety
+
+      input.addEventListener("input", function() {
+        const query = this.value.trim();
+        if (query.length < 2) {
+          suggestions.innerHTML = "";
+          return;
+        }
+
+        fetch(`${url}?q=${encodeURIComponent(query)}`)
+          .then(res => res.json())
+          .then(data => {
+            suggestions.innerHTML = "";
+            data.forEach(item => {
+              const li = document.createElement("li");
+              li.className = "list-group-item list-group-item-action";
+              li.textContent = item.name || item.company_name;
+
+              li.addEventListener("click", () => {
+                fillCallback(item);
+                suggestions.innerHTML = "";
+              });
+
+              suggestions.appendChild(li);
+            });
+          });
+      });
+    }
+
+    // Broker autocomplete
+    setupAutocomplete("broker-name", "broker-suggestions", "/realtor_signup/search_brokers", function(broker) {
+      document.getElementById("broker-name").value = broker.name;
+      document.getElementById("user_broker_prc_no").value = broker.prc_no;
+      document.getElementById("realty-name").value = broker.company_name || "";
+      document.getElementById("user_address").value = broker.address || "";
+    });
+
+    // Realty autocomplete
+    setupAutocomplete("realty-name", "realty-suggestions", "/realtor_signup/search_realties", function(realty) {
+      document.getElementById("realty-name").value = realty.company_name;
+      document.getElementById("user_address").value = realty.address || "";
+      document.getElementById("broker-name").value = realty.broker_name || "";
+      document.getElementById("user_broker_prc_no").value = realty.broker_prc_no || "";
+    });
+  });
+  </script>

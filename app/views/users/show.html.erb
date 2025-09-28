@@ -8,7 +8,7 @@
         <div class="row g-4 align-items-center">
           <div class="col-auto">
             <% if @user.persisted? && @user.profile_photo.attached? %>
-              <%= image_tag @user.profile_photo, class: "rounded-circle img-thumbnail", class: "rounded-circle", size: "200x200" %>
+              <%= image_tag @user.profile_photo, class: "rounded-circle", size: "200x200" %>
             <% else %>
               <%= image_tag("no-profile.jpg", class: "rounded-circle img-thumbnail", size: "200x200") %>
             <% end %>
@@ -16,7 +16,17 @@
           <div class="col">
             <% if @user.realtor? %>
               <h2 class="fw-bold mb-1"><%= @user.first_name %> <%= @user.last_name %></h2>
-              <p class="text-muted mb-2"><%= @user.company_name %></p>
+             <div class="mb-2"> 
+              <p class="text-muted mb-2">
+                <% if @user.is_broker?  %>
+                  <em>Real Estate Broker</em>
+                <% else %>
+                  <em>Real Estate Salesperson</em>
+                <% end %>
+              <br>  
+              <%= @user.company_name %>
+              </p>
+            </div>
             <% elsif @user.developer? %>
               <h2 class="fw-bold mb-1"><%= @user.company_name %></h2>
             <% elsif @user.client? %>
@@ -29,6 +39,7 @@
         </div>
 
         <!-- About Section -->
+        <% if @user.realtor? || @user.developer? || @user.about.present? %>
         <div class="mt-4 p-4 border rounded">
           <% if @user.realtor? %>
             <h4>About <%= @user.first_name %></h4>
@@ -37,6 +48,7 @@
           <% end %>
           <p class="mb-0"><%= @user.about %></p>
         </div>
+        <% end %>
 
         <!-- Realtor IDs -->
         <div class="ml-3">
@@ -55,6 +67,51 @@
           </div>
         <% end %>
         </div>
+
+
+      <% if @user.realty.present? %>
+      <%= link_to realty_path(@user.realty), class: "text-decoration-none text-dark" do %>
+      <div class="card my-4">
+        <div class="card-body d-flex align-items-center">
+            <% if @user.realty.logo.attached? %>
+            <%= image_tag @user.realty.logo, class: "rounded-circle me-4", size: "80x80" %>
+          <% else %>
+            <%= image_tag("no-profile.jpg", class: "rounded-circle me-4", size: "80x80") %>
+          <% end %>
+          <div>
+            <p class="card-title small mb-1">
+              <em><%= @user.first_name %> is a part of the realty:</em>
+            </h5>
+            <h5 class="card-text mb-2">
+              <%= @user.realty.name %>
+            </h5>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% elsif @user.managed_realty.present? %>
+    <%= link_to realty_path(@user.managed_realty), class: "text-decoration-none text-dark" do %>
+      <div class="card my-4">
+        <div class="card-body d-flex align-items-center">
+            <% if @user.managed_realty.logo.attached? %>
+            <%= image_tag @user.managed_realty.logo, class: "rounded-circle me-4", size: "80x80" %>
+          <% else %>
+            <%= image_tag("no-profile.jpg", class: "rounded-circle me-4", size: "80x80") %>
+          <% end %>
+          <div>
+            <p class="card-title small mb-1">
+              <em><%= @user.first_name %> is the broker of the realty:</em>
+            </h5>
+            <h5 class="card-text mb-2">
+              <%= @user.managed_realty.name %>
+            </h5>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <% end %>
+
 
         <!-- Listings -->
         <% if @user.realtor? %>
@@ -81,8 +138,42 @@
               <p class="text-muted">No development projects available.</p>
             <% end %>
           </div>
-        <% end %>
 
+          <div class="mt-4 p-4 border rounded">
+            <h4>Accredited Realties</h4>
+            <% realties = @user.accredited_realties.approved.page(params[:page]).per(8) %>
+
+            <% if realties.any? %>
+              <div class="row mt-3">
+                <% realties.each do |realty| %>
+                  <div class="col-md-6 mb-3">
+                    <div class="card h-100">
+                      <div class="card-body d-flex align-items-center">
+                        <% if realty.logo.attached? %>
+                          <%= image_tag realty.logo, class: "rounded-circle me-3", size: "60x60" %>
+                        <% else %>
+                          <%= image_tag "no-logo.png", class: "rounded-circle me-3", size: "60x60" %>
+                        <% end %>
+
+                        <div class="flex-grow-1">
+                          <h5 class="card-title mb-1"><%= realty.name %></h5>
+                          <%= link_to "View Realty", realty_path(realty), class: "btn btn-outline-primary btn-sm" %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+
+              <div class="mt-3">
+                <%= paginate realties %>
+              </div>
+            <% else %>
+              <p>No accredited realties yet.</p>
+            <% end %>
+          </div>
+        <% end %>
+        
         <!-- Reviews -->
         <% if @user.realtor? && @user.received_reviews.any? %>
           <div class="mt-5">
@@ -90,16 +181,31 @@
             <% @reviews.each do |review| %>
               <div class="card mb-3">
                 <div class="card-body">
-                  <% knowledge = review.knowledge_rating.to_i %>
-									<p><strong>Knowledge & Expertise:</strong> <%= '★' * knowledge + '☆' * (5 - knowledge) %></p>
+                  <div class="card-body d-flex align-items-center">
+                    <div>
+                      <h5><%= review.client.first_name %> <%= review.client.last_name[0] %>.</h5>
+                      <p class="card-text text-muted mb-2">
+                        <% knowledge = review.knowledge_rating.to_i %>
+      									<strong>Knowledge & Expertise:</strong> <%= '★' * knowledge + '☆' * (5 - knowledge) %><br>
 
-									<% responsiveness = review.responsiveness_rating.to_i %>
-									<p><strong>Responsiveness:</strong> <%= '★' * responsiveness + '☆' * (5 - responsiveness) %></p>
+      									<% responsiveness = review.responsiveness_rating.to_i %>
+      									<strong>Responsiveness:</strong> <%= '★' * responsiveness + '☆' * (5 - responsiveness) %><br>
 
-									<% professionalism = review.professionalism_rating.to_i %>
-									<p><strong>Professionalism:</strong> <%= '★' * professionalism + '☆' * (5 - professionalism) %></p>
+      									<% professionalism = review.professionalism_rating.to_i %>
+      									<strong>Professionalism:</strong> <%= '★' * professionalism + '☆' * (5 - professionalism) %><br><br>
 
-									p><%= review.comment %></p>
+      									<em>"<%= review.comment %>"</em>
+                    </p>
+                    </div>
+
+                    <div class="ms-auto">
+                      <% if review.listing.listing_photos.attached? %>
+                        <%= link_to listing_path(review.listing_id), title: "View listing", data: { bs_toggle: "tooltip" } do %>
+                          <%= image_tag review.listing.listing_photos.first, class: "rounded", size: "170x170" %>
+                        <% end %>
+                      <% end %>
+                    </div> 
+                  </div> 
                 </div>
               </div>
             <% end %>
@@ -108,30 +214,117 @@
         <% end %>
       </div>
 
+      <!-- SPACE -->
+      <div class="col-12 col-md-1 mt-4">
+      </div>
+
       <!-- RIGHT SECTION -->
-      <div class="col-12 col-md-4 mt-4">
-        <% if @user.realtor? || @user.developer? %>
-          <div class="bg-light p-4 rounded mb-3">
-            <h5 class="mb-3">Professional Details</h5>
-            <div class="row">
-              <div class="col-sm-5 small text-muted">
-                <p>Cellphone No.:</p>
-                <p>Email:</p>
-                <p>Address:</p>
-                <p>Website:</p>
-              </div>
-              <div class="col-sm-7 small">
-                <p><%= @user.contact_no %></p>
-                <p><%= @user.email %></p>
-                <p><%= @user.address %></p>
-                <p><%= @user.website %></p>
+      <div class="col-12 col-md-3 mt-4">
+        <% if current_user&.head_broker? && @realty.present? && @developer.developer? %>
+          <% if @existing_accreditation.nil? %>
+            <div class="card shadow-sm mb-4">
+              <div class="card-body">
+                <h5 class="card-title">Request Partnership</h5>
+                <p class="card-text">
+                  Apply for your realty to be accredited with <%= @developer.company_name %>.
+                </p>
+                <%= button_to "Request Accreditation",
+                      realty_accreditations_path(@realty, developer_id: @developer.id),
+                      method: :post,
+                      class: "btn btn-outline-primary btn-sm w-100" %>
               </div>
             </div>
-          </div>
+          <% elsif @existing_accreditation.pending? %>
+            <div class="card shadow-sm mb-4">
+              <div class="card-body">
+                <h5 class="card-title">Request Sent</h5>
+                <p class="card-text text-muted">Your request is pending approval.</p>
+              </div>
+            </div>
+          <% elsif @existing_accreditation.rejected? %>
+            <div class="card shadow-sm mb-4">
+              <div class="card-body">
+                <h5 class="card-title text-danger">Request Rejected</h5>
+                <p class="card-text">This developer has rejected your request.</p>
+                <%= button_to "Reapply",
+                      realty_accreditations_path(@realty, developer_id: @developer.id),
+                      method: :post,
+                      class: "btn btn-outline-primary btn-sm w-100" %>
+              </div>
+            </div>
+          <% elsif @existing_accreditation.approved? %>
+            <!-- Do nothing -->
+          <% end %>
         <% end %>
+
+        <% if @user.realtor? || @user.developer? %>
+          <div class="p-4 border rounded mb-3">
+            <h5 class="mb-3">Professional Details</h5>
+            <div class="row">
+              <div class="small text-muted">
+                <table class="table table-sm">
+                  <tbody>
+                  <tr>
+                    <td><i class="bi bi-telephone"></i>  Cellphone No.</td>
+                    <td class="text-break"><%= @user.contact_no %></td>
+                  </tr>
+                  <tr>
+                    <td><i class="bi bi-envelope-at"></i>  Email</td>
+                    <td class="text-break"><%= @user.email %></td>
+                  </tr>
+                  <tr>
+                    <td><i class="bi bi-geo-alt"></i>  Address</td>
+                    <td class="text-break"><%= @user.address %></td>
+                  </tr>
+                  <tr>
+                    <td><i class="bi bi-globe-americas"></i>  Website</td>
+                    <td class="text-break"><%= @user.website %></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        
 
         <% if user_signed_in? && current_user.client? && @user.realtor? %>
           <%= button_to "Message", conversations_path(realtor_id: @user.id), method: :post, class: "btn btn-success w-100" %>
+        <% end %>
+
+        <div class="mt-4 mb-3">
+          <h5 class="mb-3">Posted Guides</h5>
+          <% if @user.guides.any? %>
+            <% @guides.each do |guide| %>
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="card-body d-flex align-items-center">
+                    <div class="small">
+                      <strong><%= guide.title %></strong>
+                      <p class="text-muted"><%= truncate(guide.body.to_plain_text, length: 30) %></p>
+                    </div>
+
+                    <div class="ms-auto mr-1">
+                      <% if guide.guide_photo.attached? %>
+                        <%= link_to guide_path(guide.id), title: "Go to guide", data: { bs_toggle: "tooltip" } do %>
+                          <%= image_tag guide.guide_photo, class: "rounded", size: "80x80" %>
+                        <% end %>
+                      <% end %>
+                    </div> 
+                  </div> 
+                </div>
+              </div>
+            <% end %>
+            <%= paginate @guides, param_name: :guides_page %>
+          </div>
+        <% else %>
+        This user has not published any guides.
+        <% end %>
+      </div>
+
+
+
+        </div>
+
         <% end %>
       </div>
     </div>
