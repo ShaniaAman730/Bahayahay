@@ -45,7 +45,9 @@
           <div class="d-flex ml-2">
             <h2 class="ml-2"><%= @dev_project.title %></h2>
             <div class="vr mx-3 my-1" style="height: 30px;"></div>
-            <p class="fw-light text-success border border-success px-1 mt-1 ml-1"><%= @dev_project.property_type %></p>
+            <div class="flex-wrap">
+              <p class="fw-light text-success border border-success px-1 mt-1 ml-1"><%= @dev_project.property_type %></p>
+            </div>
           </div>
             
          <h6 class="fw-light ml-2"><i class="bi bi-geo-alt-fill"></i>  <%= @dev_project.address %>, <%= @dev_project.barangay %>, Naga City</h6>

@@ -1,33 +1,33 @@
     <div class="shadow-sm p-4 mb-2 bg-white rounded">
     <%= form_with url: public_listings_path, method: :get, local: true, class: "row g-2 align-items-end" do %>
     <!-- First Row -->
-    <div class="row g-2 ml-5">
+    <div class="row g-2">
       <!-- Keyword -->
-      <div class="col-md-3">
+      <div class="col-12 col-md-3"> 
         <%= label_tag :keyword, "Search Properties", class: "form-label" %>
         <%= text_field_tag :keyword, params[:keyword], class: "form-control", placeholder: "Type a keyword..." %>
       </div>
 
       <!-- Barangay -->
-      <div class="col-md-1">
+      <div class="col-12 col-md-1">
         <%= label_tag :barangay, "Barangay", class: "form-label" %>
-        <%= select_tag :barangay, options_for_select(Listing.barangays.keys.map { |brgy| [brgy.humanize, brgy] }, params[:barangay]), include_blank: true, class: "form-select" %>
+        <%= select_tag :barangay, options_for_select(Listing.barangays.keys.map { |brgy| [brgy.humanize, brgy] }, params[:barangay]), include_blank: "Any", class: "form-select" %>
       </div>
 
       <!-- Bedrooms -->
-      <div class="col-md-1">
+      <div class="col-6 col-md-1">
         <%= label_tag :beds, "Bedrooms", class: "form-label" %>
         <%= select_tag :beds, options_for_select([[1, 1], [2, 2], [3, 3], [4, 4], ['5+', 5]], params[:beds]), include_blank: "Any", class: "form-select" %>
       </div>
 
       <!-- Baths -->
-      <div class="col-md-1">
+      <div class="col-6 col-md-1">
         <%= label_tag :baths, "T&B", class: "form-label" %>
         <%= select_tag :baths, options_for_select([[1, 1], [2, 2], [3, 3], [4, 4], ['5+', 5]], params[:baths]), include_blank: "Any", class: "form-select" %>
       </div>
 
       <!-- Min Price -->
-      <div class="col-md-1">
+      <div class="col-6 col-md-1">
         <%= label_tag :min_price, "Min Price", class: "form-label" %>
         <%= select_tag :min_price, options_for_select([
           ['Any', ''], ['₱800k', 800_000], ['₱1M', 1_000_000], ['₱2M', 2_000_000],
@@ -36,7 +36,7 @@
       </div>
 
       <!-- Max Price -->
-      <div class="col-md-1">
+      <div class="col-6 col-md-1">
         <%= label_tag :max_price, "Max Price", class: "form-label" %>
         <%= select_tag :max_price, options_for_select([
           ['Any', ''], ['₱1M', 1_000_000], ['₱2M', 2_000_000], ['₱3M', 3_000_000],
@@ -46,17 +46,17 @@
     </div>
 
     <!-- Second Row -->
-    <div class="row g-2 mt-2 ml-5">
+    <div class="row g-2 mt-2">
       <!-- Project Type -->
-      <div class="col-md-1">
+      <div class="col-6 col-md-1">
         <%= label_tag :project_type, "Project Type", class: "form-label" %>
-        <%= select_tag :project_type, options_for_select(Listing.project_types.keys.map { |pt| [pt.humanize, pt] }, params[:project_type]), include_blank: true, class: "form-select" %>
+        <%= select_tag :project_type, options_for_select(Listing.project_types.keys.map { |pt| [pt.humanize, pt] }, params[:project_type]), include_blank: "Any", class: "form-select" %>
       </div>
 
       <!-- Furnish Type -->
-      <div class="col-md-1">
+      <div class="col-6 col-md-1">
         <%= label_tag :furnish_type, "Furnish Type", class: "form-label" %>
-        <%= select_tag :furnish_type, options_for_select(Listing.furnish_types.keys.map { |ft| [ft.humanize, ft] }, params[:furnish_type]), include_blank: true, class: "form-select" %>
+        <%= select_tag :furnish_type, options_for_select(Listing.furnish_types.keys.map { |ft| [ft.humanize, ft] }, params[:furnish_type]), include_blank: "Any", class: "form-select" %>
       </div>
 
       <!-- Financing Options -->
@@ -77,7 +77,7 @@
       </div>
 
       <!-- Submit Button -->
-      <div class="col-md-3 ml-5 mt-4">
+      <div class="col-12 col-md-3 ml-5 mt-4">
         <%= submit_tag "Search", class: "btn btn-success w-50" %>
       </div>
     </div>
@@ -85,7 +85,7 @@
   </div>
 
 <div class="row mt-1">
-<div class="col-md-5 shadow bg-white rounded p-4">
+<div class="col-12 col-md-6 col-lg-5 shadow bg-white rounded p-4">
   <% if @listings.any? %>
   <div class="row row-cols-1 row-cols-md-2 g-4">
     <% @listings.each do |listing| %>
@@ -147,11 +147,13 @@
 <% end %>
 
 <%= paginate @listings, class: "pagination justify-content-center" %>
+
 </div>
-  <div class="col-md-7">
-    <div id="public-map" style="height: 900px;"></div>
+  <div class="col-12 col-md-7">
+    <div id="public-map" class="map-container"></div>
   </div>
 </div>
+
 
 <% content_for :hide_footer, true %>
 

@@ -21,29 +21,29 @@
     </div>
 
     <div class="form-row p-2">
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= form.label :first_name %>
-        <%= form.text_field :first_name, required: true, class: "form-control w-100", placeholder: "First name" %>
+        <%= form.text_field :first_name, required: true, class: "form-control", placeholder: "First name" %>
       </div>
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= form.label :last_name %>
-        <%= form.text_field :last_name, required: true, class: "form-control w-100", placeholder: "Last name" %>
+        <%= form.text_field :last_name, required: true, class: "form-control", placeholder: "Last name" %>
       </div>
     </div>
 
     <div class="form-row p-2">
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= form.label :email %>
-        <%= form.email_field :email, required: true, autofocus: true, autocomplete: "email", class: "form-control w-100", placeholder: "Email" %>
+        <%= form.email_field :email, required: true, autofocus: true, autocomplete: "email", class: "form-control", placeholder: "Email" %>
       </div>
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= form.label :contact_no %>
-        <%= form.text_field :contact_no, required: true, class: "form-control w-100", placeholder: "Contact no." %>
+        <%= form.text_field :contact_no, required: true, class: "form-control", placeholder: "Contact no." %>
       </div>
     </div>
 
     <div class="form-row p-2">
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= form.label :is_broker, "Are you a Licensed Real Estate Broker?" %><br>
         <%= form.check_box :is_broker, {}, true, false %> Yes
       </div>
@@ -51,57 +51,57 @@
 
     <div id="broker-fields" style="display:none;">
       <div class="form-row p-2">
-        <div class="col col-md-6 mb-3">
+        <div class="col-12 col-md-6 mb-3">
            <%= form.label :broker_name, "Broker's Name" %>
-          <%= form.text_field :broker_name, id: "broker-name", class: "form-control w-100", placeholder: "Search broker..." %>
+          <%= form.text_field :broker_name, id: "broker-name", class: "form-control", placeholder: "Search broker..." %>
           <ul id="broker-suggestions" class="list-group position-absolute w-100" style="z-index:1000;"></ul>
         </div>
 
-        <div class="col col-md-6 mb-3">
+        <div class="col-12 col-md-6 mb-3">
           <%= form.label :broker_prc_no, "Broker's PRC ID No." %>
-          <%= form.text_field :broker_prc_no, class: "form-control w-100", placeholder: "Broker's PRC ID No." %>
+          <%= form.text_field :broker_prc_no, class: "form-control", placeholder: "Broker's PRC ID No." %>
         </div>
       </div>
     </div>
 
     <div class="form-row p-2">
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= form.label :company_name, "Realty Name" %>
-          <%= form.text_field :company_name, id: "realty-name", class: "form-control w-100", placeholder: "Search realty..." %>
+          <%= form.text_field :company_name, id: "realty-name", class: "form-control", placeholder: "Search realty..." %>
           <ul id="realty-suggestions" class="list-group position-absolute w-100" style="z-index:1000;"></ul>
       </div>
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= form.label :address, "Realty Address" %>
-        <%= form.text_field :address, required: true, class: "form-control w-100", placeholder: "Realty Address" %>
+        <%= form.text_field :address, required: true, class: "form-control", placeholder: "Realty Address" %>
       </div>
     </div>
 
     <div class="form-row p-2">
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= form.label :prc_no, "PRC ID or Accreditation number" %>
         <div class="mb-4"></div>
-        <%= form.text_field :prc_no, required: true, class: "form-control w-100", placeholder: "PRC ID or Accreditation number" %>
+        <%= form.text_field :prc_no, required: true, class: "form-control", placeholder: "PRC ID or Accreditation number" %>
       </div>
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= form.label :prc_id, "Upload a picture of your PRC ID/Accreditation or your official PRC receipt" %>
-        <%= form.file_field :prc_id, class: "form-control", class: "form-control w-100", accept: "image/*", data: { max_size: 400.kilobytes } %>
+        <%= form.file_field :prc_id, class: "form-control", class: "form-control", accept: "image/*", data: { max_size: 400.kilobytes } %>
       </div>
     </div>
 
     <div class="form-row p-2">
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= form.label :dhsud_no, "DHSUD Certificate number" %>
-        <%= form.text_field :dhsud_no, required: true, class: "form-control w-100", placeholder: "DHSUD Certificate number" %>
+        <%= form.text_field :dhsud_no, required: true, class: "form-control", placeholder: "DHSUD Certificate number" %>
       </div>
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= form.label :dhsud_cert, "Upload a picture of your DHSUD Certificate" %>
-        <%= form.file_field :dhsud_cert, class: "form-control", class: "form-control w-100", accept: "image/*", data: { max_size: 400.kilobytes } %>
+        <%= form.file_field :dhsud_cert, class: "form-control", class: "form-control", accept: "image/*", data: { max_size: 400.kilobytes } %>
       </div>
     </div>
 
     <div class="field p-2 mb-3">
      <%= form.label :gov_id, "To verify your identity, please upload a picture of your government I.D." %>
-     <%= form.file_field :gov_id, class: "form-control", class: "form-control w-100", accept: "image/*", data: { max_size: 400.kilobytes } %>
+     <%= form.file_field :gov_id, class: "form-control", class: "form-control", accept: "image/*", data: { max_size: 400.kilobytes } %>
     </div>
 
     <div class="form-check mb-3">
@@ -115,16 +115,16 @@
     </div>
 
     <div class="form-row p-2">
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= form.label :password %>
         <% if @minimum_password_length %>
           <em>(<%= @minimum_password_length %> characters minimum)</em>
         <% end %><br />
-        <%= form.password_field :password, required: true, autocomplete: "new-password", class: "form-control w-100", placeholder: "Password" %>
+        <%= form.password_field :password, required: true, autocomplete: "new-password", class: "form-control", placeholder: "Password" %>
       </div>
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= form.label :password_confirmation %>
-        <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", class: "form-control w-100", placeholder: "Password" %>
+        <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", class: "form-control", placeholder: "Password" %>
       </div>
     </div>
 

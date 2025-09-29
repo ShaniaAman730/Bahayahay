@@ -6,14 +6,6 @@
   vertical-align: top;
 }
 
-.login-box {
-  width: 30%;
-  height: 10%;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 5px 7px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
 .jumbotron {
   min-height: 500px;  /* keep desktop design */
 }
@@ -41,9 +33,9 @@
     }
 
 .jumbotron-second-img { 
-    background: url("agents.jpg"); 
+    background: url("agents2.png"); 
     background-size: cover;
-    background-position: center; 
+    background-position: center top; 
     width: 100%;
 }
 
@@ -266,5 +258,21 @@ trix-toolbar .trix-button-group--file-tools {
 @media (min-width: 1201px) {
   .responsive-text {
     font-size: 1.8rem;
+  }
+}
+
+/* Map Default (desktop) */
+.map-container {
+  height: 900px;
+  overflow: hidden;
+}
+
+/* Map Mobile override */
+@media (max-width: 768px) {
+  .map-container {
+    height: 500px;   /* smaller map height */
+    margin: 0 auto;  /* center it */
+    width: 95%;      /* keep some spacing */
+    border-radius: 12px;
   }
 }

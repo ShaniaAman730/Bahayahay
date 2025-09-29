@@ -19,7 +19,7 @@
       <!-- Barangay -->
       <div class="col-6 col-md-1">
         <%= label_tag :barangay, "Barangay", class: "form-label" %>
-        <%= select_tag :barangay, options_for_select(Listing.barangays.keys.map { |brgy| [brgy.humanize, brgy] }, params[:barangay]), include_blank: true, class: "form-select" %>
+        <%= select_tag :barangay, options_for_select(Listing.barangays.keys.map { |brgy| [brgy.humanize, brgy] }, params[:barangay]), include_blank: "Any", class: "form-select" %>
       </div>
 
       <!-- Bedrooms -->
@@ -90,16 +90,9 @@
 <!-- Explore Homes Cards -->
 <%= render partial: "explorehomes" %>
 
+
 <!-- Second Jumbotron -->
-<div class="jumbotron jumbotron-fluid jumbotron-second-img">
-  <div class="container pt-5 pl-5">
-    <h1 class="display-4 text-end realtor-text">Find licensed realtors near you.</h1>
-    <br>
-    <%= link_to "Agent Search", '/agents', class:"btn btn-secondary float-right" %>
-    <%= link_to "Register", 'realtor_signup/new', class:"btn btn-success float-right mr-1" %>
-  </div>
-  </p>
-</div>
+<%= render partial: "agents_jumbotron" %>
 
 <!-- Guide Cards -->
 <%= render partial: "guides" %>

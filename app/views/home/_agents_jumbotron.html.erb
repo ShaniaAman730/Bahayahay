@@ -1,0 +1,23 @@
+<div class="jumbotron jumbotron-fluid position-relative text-white" style="background-image: url(<%= asset_path('agents2.png') %>); background-size: cover; background-position: center center;">
+  <!-- Black overlay -->
+  <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.4); z-index: 1;"></div>
+
+  <div class="position-absolute top-0 start-0 m-3 text-start" style="z-index: 2;">
+    <div class="d-flex align-items-center gap-2">
+      <%= image_tag "rebap-logo.png", alt: "Logo 1", class: "img-fluid", style: "height: 50px;" %>
+      <%= image_tag "rebap-naga-logo.png", alt: "Logo 2", class: "img-fluid", style: "height: 50px;" %>
+      <%= image_tag "ahente-1.png", alt: "Logo 3", class: "img-fluid", style: "height: 50px;" %>
+    </div>
+    <small class="text-white d-block mt-1">In partnership with REBAP Naga City Chapter</small>
+  </div>
+  
+  <div class="container h-100 d-flex flex-column justify-content-center position-relative mt-5" style="z-index: 2;">
+    <h6 class="display-6 text-end realtor-text">Sa Ahenteng Rehistrado, Sigurado!</h6>
+    <h1 class="display-2 text-end realtor-text">Find Legit Agents Here.</h1>
+
+    <div class="d-flex justify-content-end mt-3">
+      <%= link_to "Agent Search", '/agents', class:"btn btn-secondary me-2" %>
+      <%= link_to "Register", 'realtor_signup/new', class:"btn btn-success" %>
+    </div>
+  </div>
+</div>
