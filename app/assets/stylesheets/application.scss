@@ -1,5 +1,11 @@
 @import 'bootstrap';
 
+.logo-name::after {
+  content: ' BETA';
+  font-size: 10px;
+  vertical-align: top;
+}
+
 .login-box {
   width: 30%;
   height: 10%;
