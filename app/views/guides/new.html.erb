@@ -15,8 +15,10 @@
 
     <div class="field p-2">
       <%= form.label :body %><br />
-      <%= form.rich_text_area :body, id: "guide_body", class: "post-textarea" %>
+      <%= form.rich_text_area :body, id: "guide_body", class: "post-textarea trix-limit", data: { max_length: 10000 } %>
+      <small class="char-counter text-muted">0/10000 characters</small>
     </div>
+
     <br>
     <%= form.submit "Create Guide", class: "btn btn-primary text-end" %>
   <% end %>
