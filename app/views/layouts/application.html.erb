@@ -375,8 +375,8 @@
     }, { once: true });
   </script>
 
-  <!-- Action Cable -->
-   <% if current_user %>
+  <!-- Action Cable 
+   <#% if current_user %>
    <script>
     document.addEventListener("turbo:load", function setupNotifications() {
       // Prevent multiple initializations across Turbo visits
@@ -469,8 +469,9 @@
       to { opacity: 1; transform: translateY(0); }
     }
   </style>
- <% end %>
-
+ <#% end %>
+  -->
+  
   <script>
     function initCharLimits() {
       // Regular textareas

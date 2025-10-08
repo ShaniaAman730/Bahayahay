@@ -16,14 +16,14 @@ class ConversationsController < ApplicationController
     @message = Message.new
 
     # Mark all messages from sender as read
-    unread_messages = @conversation.messages.where.not(sender: current_user).where(read: false)
-    if unread_messages.exists?
-      unread_messages.update_all(read: true)
-      ActionCable.server.broadcast(
-        "notifications_#{current_user.id}",
-        { type: "badge_reset" }
-      )
-    end
+    #unread_messages = @conversation.messages.where.not(sender: current_user).where(read: false)
+    #if unread_messages.exists?
+    #  unread_messages.update_all(read: true)
+    #  ActionCable.server.broadcast(
+    #    "notifications_#{current_user.id}",
+    #    { type: "badge_reset" }
+    #  )
+    #end
   end
 
   def create
