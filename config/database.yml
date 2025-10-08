@@ -22,31 +22,16 @@ test:
 production:
   <<: *default
   # Render provides DATABASE_URL automatically
-  url: <%= ENV['DATABASE_URL'] %>
+  url: <%= ENV["DATABASE_URL"] %>
 
-  # Solid Queue & Cache use the same database (multi-database setup)
-  cache:
-    <<: *default
-    url: <%= ENV['DATABASE_URL'] %>
-    migrations_paths: db/cache_migrate
+  database_connections:
+    cache:
+      <<: *default
+      url: <%= ENV["DATABASE_URL"] %>
+      migrations_paths: db/cache_migrate
 
-  queue:
-    <<: *default
-    url: <%= ENV['DATABASE_URL'] %>
-    migrations_paths: db/queue_migrate
-
-deployment:
-  <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
-
-  cache:
-    <<: *default
-    url: <%= ENV['DATABASE_URL'] %>
-    migrations_paths: db/cache_migrate
-
-  queue:
-    <<: *default
-    url: <%= ENV['DATABASE_URL'] %>
-    migrations_paths: db/queue_migrate
-
+    queue:
+      <<: *default
+      url: <%= ENV["DATABASE_URL"] %>
+      migrations_paths: db/queue_migrate
 
