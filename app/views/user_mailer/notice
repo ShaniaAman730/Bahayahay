@@ -1,0 +1,2 @@
+<h1>Congratulations, <%= @user.full_name %>!</h1>
+<p>Your realtor account in Bahayahay has been approved. You can now log in and start listing properties.</p>

@@ -7,7 +7,7 @@
 
   <!-- Content -->
   <div class="container h-100 d-flex flex-column justify-content-center position-relative mt-4" style="z-index: 2;">
-    <h2 class="display-6 mb-4">Hello <%= current_user.first_name %>! Ready to find your next home?</h2>
+    <h2 class="display-6 mb-4">Hello <%= current_user.first_name %>! Ready to find your dream home?</h2>
 
     <%= form_with url: public_listings_path, method: :get, local: true, class: "row g-2 align-items-end" do %>
       <!-- Keyword -->

@@ -111,21 +111,11 @@ class ModelHousesController < ApplicationController
     end
   end
 
-    # Only allow a list of trusted parameters through.
     def model_house_params
       params.require(:model_house).permit(
-        :title, :description, :price, :inherit_amenities, :furnish_type,
-        :guardhouse, :perimeterfence, :cctv, :clubhouse, :pool, :coveredcourt,
-        :parks, :playground, :joggingpaths, :conveniencestore, :watersystem,
-        :drainagesystem, :undergroundlines, :wastemgmt, :garden, :carport,
-        :dirtykitchen, :gate, :watertank, :homecctv, :homepool, :lanai,
-        :landscaping, :aircon, :provaircon, :wardrobes, :modkitchen, :crfixtures,
-        :lightfixtures, :firesystem, :intercom, :internetprov, :cableprov,
-        :meterperunit, :washingmachineprov, :waterheaterprov, :smarthomeready,
-        :balcony, :cityview, :mountainview, :petfriendly, :facingeast,
-        :beds, :baths, :sqft,
+        :title, :description, :price, :furnish_type, :beds, :baths, :sqft,
         :bank_financing, :inhouse_financing, :pagibig_financing,
-        :dev_project_id, model_photos: []
+        :dev_project_id, amenity_ids: [], model_photos: []
       )
     end
 

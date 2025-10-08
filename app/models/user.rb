@@ -36,6 +36,8 @@ class User < ApplicationRecord
   has_many :developer_accreditations, class_name: "Accreditation", foreign_key: "developer_id", dependent: :destroy
   has_many :accredited_realties, through: :developer_accreditations, source: :realty
 
+  # Statistics
+  has_many :statistics, as: :trackable, dependent: :destroy
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -47,12 +49,13 @@ class User < ApplicationRecord
     managed_realty.present?
   end
 
-  validates :first_name, presence: true
-  validates :last_name, presence: true
-  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :contact_no, presence: true
-  validates :privacy_agreement, acceptance: true, if: :realtor?
-  validate :broker_must_exist_if_not_broker, if: -> { realtor? && !is_broker }
+  validates :first_name, presence: true, on: :create
+  validates :last_name, presence: true, on: :create
+  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }, on: :create
+  validates :contact_no, presence: true, on: :create
+  validates :privacy_agreement, acceptance: true, if: -> { realtor? }, on: :create
+  validate :broker_must_exist_if_not_broker, if: -> { realtor? && !is_broker }, on: :create
+
 
   has_one_attached :profile_photo
   has_one_attached :prc_id
@@ -66,10 +69,11 @@ class User < ApplicationRecord
 
   # Validation for broker details if not a broker
   with_options if: -> { user_type == 2 && is_broker == false } do
-      validates :broker_name, presence: true
-      validates :broker_prc_no, presence: true
+      validates :broker_name, presence: true, on: :create
+      validates :broker_prc_no, presence: true, on: :create
   end
   
+  validate :about_length_within_limit
 
   paginates_per 10
 
@@ -112,5 +116,26 @@ class User < ApplicationRecord
       errors.add(:base, "Your broker must have an existing Realty created before you can sign up.")
     end
   end
+
+  def total_views
+    statistics.view.count
+  end
+
+  def unique_visitors
+    statistics.view.distinct.count(:user_id)
+  end
+
+  def any_email_sent?
+    welcome_email_sent_at.present? || realtor_approval_email_sent_at.present? || realtor_rejection_email_sent_at.present?
+  end
+
+  def about_length_within_limit
+    max_chars = 500
+    if about.present? && about.length > max_chars
+      errors.add(:about, "must be #{max_chars} characters or fewer")
+    end
+  end
+
+
 
 end

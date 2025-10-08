@@ -2,17 +2,23 @@ class ListingsController < ApplicationController
   before_action :set_listing, only: %i[ show edit update destroy ]
   before_action :authenticate_realtor!
   before_action :ensure_realtor!
-  before_action :prevent_edit_if_sold, only: [:edit, :update, :destroy]
+  before_action :prevent_edit_if_sold, only: [:edit, :update]
   before_action :ensure_realtor_can_post!, only: [:new, :create]
 
   skip_before_action :authenticate_realtor!, only: [:show, :public_listings, :public, :contact_agent]
   skip_before_action :ensure_realtor!, only: [:show, :public_listings, :public, :contact_agent]
 
+  def statistics_data
+    @listing = Listing.find(params[:id])
+    data = @listing.statistics.view.group_by_day(:created_at, last: 7).count
+    render json: data
+  end
+
   def contact_agent
     @listing = Listing.find(params[:id])
     @realtor = @listing.realtor
 
-    # increment contact count
+    # contact count
     @listing.increment!(:contact_clicks)
 
     # find or create conversation
@@ -145,6 +151,13 @@ class ListingsController < ApplicationController
       .pluck(:client_id)
       .uniq
       .map { |id| User.find(id) }
+
+    # Statistics tracker
+    Statistic.create!(
+      trackable: @listing,
+      user: current_user,
+      event_type: :view
+    )
   end
 
   def public
@@ -286,26 +299,17 @@ class ListingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def listing_params
-  params.require(:listing).permit(
-      :title, :description, :price, :bank_financing, :inhouse_financing,
-      :pagibig_financing, :furnish_type, :project_type,
-      :barangay, :address, :filipinocitizen, :citizenship, :tin,
-      :ownerabroad, :owneralive, :estatetax, :ejsprocessed,
-      :aif, :guardhouse, :perimeterfence, :cctv,
-      :clubhouse, :pool, :coveredcourt, :parks, :playground,
-      :joggingpaths, :conveniencestore, :watersystem, :drainagesystem,
-      :undergroundlines, :wastemgmt, :garden, :carport, :dirtykitchen,
-      :gate, :watertank, :homecctv, :homepool, :lanai, :landscaping,
-      :aircon, :provaircon, :wardrobes, :modkitchen, :crfixtures,
-      :lightfixtures, :firesystem, :intercom, :internetprov, :cableprov,
-      :meterperunit, :washingmachineprov, :waterheaterprov, :smarthomeready,
-      :balcony, :cityview, :mountainview, :petfriendly, :facingeast,
-      :realtor, :client, :listing_type, :listing_type_num, 
-      :beds, :baths, :sqft, :contact_clicks, :confirmed, :approved, :active,
-      :valid_id, :birthcert, :developer_id, :for_edit, :approval_requests_count,
-      :latitude, :longitude,
-      listing_photos: [], spa: [], tct: []
-    )
+      params.require(:listing).permit(
+          :title, :description, :price, :bank_financing, :inhouse_financing,
+          :pagibig_financing, :furnish_type, :project_type,
+          :barangay, :address, :filipinocitizen, :citizenship, :tin,
+          :ownerabroad, :owneralive, :estatetax, :ejsprocessed,
+          :aif, :realtor, :client, :listing_type, :listing_type_num, 
+          :beds, :baths, :sqft, :contact_clicks, :confirmed, :approved, :active,
+          :valid_id, :birthcert, :developer_id, :for_edit, :approval_requests_count,
+          :latitude, :longitude, amenity_ids: [],
+          listing_photos: [], spa: [], tct: []
+        )
   end
 
 

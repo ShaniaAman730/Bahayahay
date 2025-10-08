@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_26_201250) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_08_022315) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,6 +62,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_26_201250) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "amenities", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "label"
+    t.string "icon"
+    t.integer "category", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_amenities_on_category"
+    t.index ["name", "category"], name: "index_amenities_on_name_and_category", unique: true
+  end
+
   create_table "comments", force: :cascade do |t|
     t.text "body"
     t.bigint "user_id", null: false
@@ -86,44 +97,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_26_201250) do
     t.string "title"
     t.text "description"
     t.string "address"
-    t.boolean "inherit_amenities", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "guardhouse", default: false, null: false
-    t.boolean "perimeterfence", default: false, null: false
-    t.boolean "clubhouse", default: false, null: false
-    t.boolean "pool", default: false, null: false
-    t.boolean "coveredcourt", default: false, null: false
-    t.boolean "playground", default: false, null: false
-    t.boolean "joggingpath", default: false, null: false
-    t.boolean "mphall", default: false, null: false
-    t.boolean "tenniscourt", default: false, null: false
-    t.boolean "retailstrip", default: false, null: false
-    t.boolean "chapel", default: false, null: false
-    t.boolean "petpark", default: false, null: false
-    t.boolean "sewagefacility", default: false, null: false
-    t.boolean "lobbyconcierge", default: false, null: false
-    t.boolean "cctv", default: false, null: false
-    t.boolean "elevators", default: false, null: false
-    t.boolean "gym", default: false, null: false
-    t.boolean "eventhall", default: false, null: false
-    t.boolean "playarea", default: false, null: false
-    t.boolean "roofdeck", default: false, null: false
-    t.boolean "parking", default: false, null: false
-    t.boolean "firealarm", default: false, null: false
-    t.boolean "businesscenter", default: false, null: false
-    t.boolean "loungearea", default: false, null: false
-    t.boolean "spa", default: false, null: false
-    t.boolean "laundrystation", default: false, null: false
-    t.boolean "generator", default: false, null: false
-    t.boolean "fiberready", default: false, null: false
-    t.boolean "parcellockers", default: false, null: false
-    t.boolean "restaurant", default: false, null: false
-    t.boolean "mall", default: false, null: false
-    t.boolean "transportterminal", default: false, null: false
-    t.boolean "bikingtrail", default: false, null: false
-    t.boolean "itpark", default: false, null: false
-    t.boolean "clinic", default: false, null: false
     t.bigint "user_id", null: false
     t.integer "barangay"
     t.integer "property_type"
@@ -160,48 +135,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_26_201250) do
     t.string "tin"
     t.boolean "ownerabroad"
     t.string "aif"
-    t.boolean "guardhouse", default: false, null: false
-    t.boolean "perimeterfence", default: false, null: false
-    t.boolean "cctv", default: false, null: false
-    t.boolean "clubhouse", default: false, null: false
-    t.boolean "pool", default: false, null: false
-    t.boolean "coveredcourt", default: false, null: false
-    t.boolean "parks", default: false, null: false
-    t.boolean "playground", default: false, null: false
-    t.boolean "joggingpaths", default: false, null: false
-    t.boolean "conveniencestore", default: false, null: false
-    t.boolean "watersystem", default: false, null: false
-    t.boolean "drainagesystem", default: false, null: false
-    t.boolean "undergroundlines", default: false, null: false
-    t.boolean "wastemgmt", default: false, null: false
-    t.boolean "garden", default: false, null: false
-    t.boolean "carport", default: false, null: false
-    t.boolean "dirtykitchen", default: false, null: false
-    t.boolean "gate", default: false, null: false
-    t.boolean "watertank", default: false, null: false
-    t.boolean "homecctv", default: false, null: false
-    t.boolean "homepool", default: false, null: false
-    t.boolean "lanai", default: false, null: false
-    t.boolean "landscaping", default: false, null: false
-    t.boolean "aircon", default: false, null: false
     t.boolean "provaircon", default: false, null: false
-    t.boolean "wardrobes", default: false, null: false
-    t.boolean "modkitchen", default: false, null: false
-    t.boolean "crfixtures", default: false, null: false
-    t.boolean "lightfixtures", default: false, null: false
-    t.boolean "firesystem", default: false, null: false
-    t.boolean "intercom", default: false, null: false
-    t.boolean "internetprov", default: false, null: false
-    t.boolean "cableprov", default: false, null: false
-    t.boolean "meterperunit", default: false, null: false
-    t.boolean "washingmachineprov", default: false, null: false
-    t.boolean "waterheaterprov", default: false, null: false
-    t.boolean "smarthomeready", default: false, null: false
-    t.boolean "balcony", default: false, null: false
-    t.boolean "cityview", default: false, null: false
-    t.boolean "mountainview", default: false, null: false
-    t.boolean "petfriendly", default: false, null: false
-    t.boolean "facingeast", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "realtor_id", null: false
@@ -248,50 +182,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_26_201250) do
     t.string "title"
     t.text "description"
     t.decimal "price"
-    t.boolean "inherit_amenities"
     t.integer "furnish_type"
-    t.boolean "guardhouse", default: false, null: false
-    t.boolean "perimeterfence", default: false, null: false
-    t.boolean "cctv", default: false, null: false
-    t.boolean "clubhouse", default: false, null: false
-    t.boolean "pool", default: false, null: false
-    t.boolean "coveredcourt", default: false, null: false
-    t.boolean "parks", default: false, null: false
-    t.boolean "playground", default: false, null: false
-    t.boolean "joggingpaths", default: false, null: false
-    t.boolean "conveniencestore", default: false, null: false
-    t.boolean "watersystem", default: false, null: false
-    t.boolean "drainagesystem", default: false, null: false
-    t.boolean "undergroundlines", default: false, null: false
-    t.boolean "wastemgmt", default: false, null: false
-    t.boolean "garden", default: false, null: false
-    t.boolean "carport", default: false, null: false
-    t.boolean "dirtykitchen", default: false, null: false
-    t.boolean "gate", default: false, null: false
-    t.boolean "watertank", default: false, null: false
-    t.boolean "homecctv", default: false, null: false
-    t.boolean "homepool", default: false, null: false
-    t.boolean "lanai", default: false, null: false
-    t.boolean "landscaping", default: false, null: false
-    t.boolean "aircon", default: false, null: false
     t.boolean "provaircon", default: false, null: false
-    t.boolean "wardrobes", default: false, null: false
-    t.boolean "modkitchen", default: false, null: false
-    t.boolean "crfixtures", default: false, null: false
-    t.boolean "lightfixtures", default: false, null: false
-    t.boolean "firesystem", default: false, null: false
-    t.boolean "intercom", default: false, null: false
-    t.boolean "internetprov", default: false, null: false
-    t.boolean "cableprov", default: false, null: false
-    t.boolean "meterperunit", default: false, null: false
-    t.boolean "washingmachineprov", default: false, null: false
-    t.boolean "waterheaterprov", default: false, null: false
-    t.boolean "smarthomeready", default: false, null: false
-    t.boolean "balcony", default: false, null: false
-    t.boolean "cityview", default: false, null: false
-    t.boolean "mountainview", default: false, null: false
-    t.boolean "petfriendly", default: false, null: false
-    t.boolean "facingeast", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "beds"
@@ -302,6 +194,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_26_201250) do
     t.boolean "pagibig_financing", default: false, null: false
     t.bigint "dev_project_id"
     t.index ["dev_project_id"], name: "index_model_houses_on_dev_project_id"
+  end
+
+  create_table "property_amenities", force: :cascade do |t|
+    t.bigint "amenity_id", null: false
+    t.string "property_type", null: false
+    t.bigint "property_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["amenity_id"], name: "index_property_amenities_on_amenity_id"
+    t.index ["property_type", "property_id", "amenity_id"], name: "index_property_amenities_on_property_and_amenity", unique: true
+    t.index ["property_type", "property_id"], name: "index_property_amenities_on_property"
+    t.index ["property_type", "property_id"], name: "index_property_amenities_on_property_type_and_property_id"
   end
 
   create_table "realties", force: :cascade do |t|
@@ -370,6 +274,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_26_201250) do
     t.index ["user_id"], name: "index_saved_listings_on_user_id"
   end
 
+  create_table "statistics", force: :cascade do |t|
+    t.string "trackable_type", null: false
+    t.bigint "trackable_id", null: false
+    t.bigint "user_id"
+    t.integer "event_type", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["trackable_type", "trackable_id"], name: "index_statistics_on_trackable"
+    t.index ["user_id"], name: "index_statistics_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -393,6 +308,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_26_201250) do
     t.string "broker_name"
     t.string "broker_prc_no"
     t.boolean "privacy_agreement"
+    t.datetime "welcome_email_sent_at"
+    t.datetime "realtor_approval_email_sent_at"
+    t.datetime "realtor_rejection_email_sent_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -410,6 +328,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_26_201250) do
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "model_houses", "dev_projects"
+  add_foreign_key "property_amenities", "amenities"
   add_foreign_key "realty_memberships", "realties"
   add_foreign_key "realty_memberships", "users"
   add_foreign_key "review_events", "listings"
@@ -421,4 +340,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_26_201250) do
   add_foreign_key "reviews", "users", column: "realtor_id"
   add_foreign_key "saved_listings", "listings"
   add_foreign_key "saved_listings", "users"
+  add_foreign_key "statistics", "users"
 end

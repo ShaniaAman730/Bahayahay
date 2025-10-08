@@ -30,7 +30,7 @@
 
 .homepage-search {
       width: 60%; 
-    }
+}
 
 .jumbotron-second-img { 
     background: url("agents2.png"); 
@@ -275,4 +275,19 @@ trix-toolbar .trix-button-group--file-tools {
     width: 95%;      /* keep some spacing */
     border-radius: 12px;
   }
+}
+
+/* Fixed height for public_listings page */
+.fixed-img {
+  height: 300px;         
+  width: 100%;          
+  object-fit: cover;    
+  object-position: center; 
+}
+
+.char-counter {
+  font-size: 0.9rem;
+  display: block;
+  margin-top: 4px;
+  transition: color 0.2s ease;
 }

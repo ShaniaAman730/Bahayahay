@@ -1,0 +1,39 @@
+class RemoveBooleanAmenityColumnsFromDevProjects < ActiveRecord::Migration[8.0]
+  def change
+    remove_column :dev_projects, :guardhouse, :boolean
+    remove_column :dev_projects, :perimeterfence, :boolean
+    remove_column :dev_projects, :clubhouse, :boolean
+    remove_column :dev_projects, :pool, :boolean
+    remove_column :dev_projects, :coveredcourt, :boolean
+    remove_column :dev_projects, :playground, :boolean
+    remove_column :dev_projects, :joggingpath, :boolean
+    remove_column :dev_projects, :mphall, :boolean
+    remove_column :dev_projects, :tenniscourt, :boolean
+    remove_column :dev_projects, :retailstrip, :boolean
+    remove_column :dev_projects, :chapel, :boolean
+    remove_column :dev_projects, :petpark, :boolean
+    remove_column :dev_projects, :sewagefacility, :boolean
+    remove_column :dev_projects, :lobbyconcierge, :boolean
+    remove_column :dev_projects, :cctv, :boolean
+    remove_column :dev_projects, :elevators, :boolean
+    remove_column :dev_projects, :gym, :boolean
+    remove_column :dev_projects, :eventhall, :boolean
+    remove_column :dev_projects, :playarea, :boolean
+    remove_column :dev_projects, :roofdeck, :boolean
+    remove_column :dev_projects, :parking, :boolean
+    remove_column :dev_projects, :firealarm, :boolean
+    remove_column :dev_projects, :businesscenter, :boolean
+    remove_column :dev_projects, :loungearea, :boolean
+    remove_column :dev_projects, :spa, :boolean
+    remove_column :dev_projects, :laundrystation, :boolean
+    remove_column :dev_projects, :generator, :boolean
+    remove_column :dev_projects, :fiberready, :boolean
+    remove_column :dev_projects, :parcellockers, :boolean
+    remove_column :dev_projects, :restaurant, :boolean
+    remove_column :dev_projects, :mall, :boolean
+    remove_column :dev_projects, :transportterminal, :boolean
+    remove_column :dev_projects, :bikingtrail, :boolean
+    remove_column :dev_projects, :itpark, :boolean
+    remove_column :dev_projects, :clinic, :boolean
+  end
+end

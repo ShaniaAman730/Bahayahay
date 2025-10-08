@@ -15,7 +15,15 @@ class ConversationsController < ApplicationController
     @messages = @conversation.messages.order(created_at: :asc)
     @message = Message.new
 
-    @conversation.messages.where.not(sender: current_user).update_all(read: true)
+    # Mark all messages from sender as read
+    unread_messages = @conversation.messages.where.not(sender: current_user).where(read: false)
+    if unread_messages.exists?
+      unread_messages.update_all(read: true)
+      ActionCable.server.broadcast(
+        "notifications_#{current_user.id}",
+        { type: "badge_reset" }
+      )
+    end
   end
 
   def create

@@ -7,6 +7,10 @@ class Listing < ApplicationRecord
  	has_one :review_event, dependent: :destroy
  	has_many :saved_listings, dependent: :destroy
 	has_many :users_who_saved, through: :saved_listings, source: :user
+	has_many :statistics, as: :trackable, dependent: :destroy
+	has_many :property_amenities, as: :property, dependent: :destroy
+	has_many :amenities, through: :property_amenities
+
 
 
 	has_many_attached :listing_photos
@@ -16,6 +20,7 @@ class Listing < ApplicationRecord
 	has_many_attached :tct
 
 	has_rich_text :description
+	validate :description_length_within_limit
 
 	validates :listing_photos, total_file_size: { less_than: 2.megabytes }
 	validates :valid_id, total_file_size: { less_than: 200.kilobytes }
@@ -144,6 +149,18 @@ class Listing < ApplicationRecord
 	  end
 	end
 
+	def total_views
+    statistics.view.count
+  end
+
+  def unique_visitors
+    statistics.view.distinct.count(:user_id)
+  end
+
+  def days_since_posted
+    (Date.current - created_at.to_date).to_i
+  end
+
 
 	BARANGAY_COORDS = {
     "Abella" => [13.6258, 123.1856],
@@ -174,5 +191,12 @@ class Listing < ApplicationRecord
     "Tinago" => [13.6252, 123.1935],
     "Triangulo" => [13.6199, 123.1939]
   }.freeze
+
+  def description_length_within_limit
+    max_chars = 1500
+    if description.to_plain_text.length > max_chars
+      errors.add(:description, "must be #{max_chars} characters or fewer")
+    end
+  end
 
 end

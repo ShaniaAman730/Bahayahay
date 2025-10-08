@@ -1,6 +1,4 @@
-<p style="color: green"><%= notice %></p>
 <div class="container mt-5">
-  <div class="index-container">
   <% content_for :title, "My Development Projects" %>
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>My Development Projects</h2>
@@ -39,8 +37,4 @@
     <% end %>
 
   <%= paginate @dev_projects, class: "pagination" %>
-
-  </div>
-  <div class="mb-5"></div>
-  <div class="mb-5"></div>
 </div>

@@ -92,9 +92,8 @@
       <div class="col">
           <div class="card h-100 position-relative">
             <% if listing.listing_photos.attached? %>
-              <%= image_tag listing.listing_photos.first, 
-                            class: "card-img-top img-fluid", 
-                            resize_to_fit: [400, 300] %>
+              <%= image_tag listing.listing_photos.first,
+               class: "card-img-top fixed-img" %>
 
               <% if user_signed_in? && current_user.client? %>
               <% saved_listing = current_user.saved_listings.find_by(listing_id: listing.id) %>

@@ -6,6 +6,12 @@ class DevProjectsController < ApplicationController
   skip_before_action :authenticate_developer!, only: [:show]
   skip_before_action :ensure_developer!, only: [:show]
 
+  def statistics_data
+    @dev_project = DevProject.find(params[:id])
+    data = @dev_project.statistics.view.group_by_day(:created_at, last: 7).count
+    render json: data
+  end
+
   def remove_attachment
     @dev_project = DevProject.find(params[:id])
     attachment = ActiveStorage::Attachment.find(params[:attachment_id])
@@ -29,6 +35,13 @@ class DevProjectsController < ApplicationController
   def show
     @dev_project = DevProject.find(params[:id])
     @model_houses = @dev_project.model_houses
+
+    # Statistics tracker
+    Statistic.create!(
+      trackable: @dev_project,
+      user: current_user,
+      event_type: :view
+    )
   end
 
   # GET /dev_projects/new
@@ -86,7 +99,6 @@ class DevProjectsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_dev_project
       @dev_project = DevProject.find(params.expect(:id))
     end
@@ -95,8 +107,7 @@ class DevProjectsController < ApplicationController
      redirect_to root_path unless current_user.developer?
     end
 
-    # Only allow a list of trusted parameters through.
     def dev_project_params
-      params.expect(dev_project: [ :title, :description, :barangay, :address, :inherit_amenities, :guardhouse, :perimeterfence, :clubhouse, :pool, :coveredcourt,:playground,:joggingpath, :mphall, :tenniscourt, :retailstrip, :chapel,:petpark, :sewagefacility, :lobbyconcierge, :cctv, :elevators, :gym, :eventhall, :playarea, :roofdeck, :parking, :firealarm, :businesscenter, :loungearea, :spa, :laundrystation, :generator, :fiberready, :parcellockers, :restaurant, :mall, :transportterminal, :bikingtrail, :itpark, :clinic, :property_type, :latitude, :longitude, project_photos: [] ])
+      params.expect(dev_project: [ :title, :description, :barangay, :address, :property_type, :latitude, :longitude, amenity_ids: [], project_photos: [] ])
     end
 end

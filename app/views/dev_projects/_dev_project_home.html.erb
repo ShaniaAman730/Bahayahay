@@ -12,6 +12,16 @@
           <h4><%= dev_project.title %></h4>
             <p><%= truncate(dev_project.description.to_plain_text, length: 100) %></p>
             <p><i class="bi bi-geo-alt-fill"></i>  <%= dev_project.address %>, <%= dev_project.barangay %>, Naga City</p>
+
+            <!-- Statistics -->
+            <% if current_user&.developer? && current_user.id == dev_project.user.id %>
+              <p class="text-muted small mb-2">
+                <i class="bi bi-eye"></i> <%= pluralize(dev_project.total_views, "view") %> 
+                <i class="bi bi-person ml-1"></i> <%= pluralize(dev_project.unique_visitors, "unique visitor") %> 
+                <i class="bi bi-clock ml-1"></i> <%= dev_project.days_since_posted %> days since posted
+              </p>
+            <% end %> 
+
             <%= link_to 'View Project', dev_project_path(dev_project), class: "btn btn-sm btn-outline-primary" %>
         </div>
       </div>

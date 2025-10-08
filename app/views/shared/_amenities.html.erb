@@ -1,0 +1,22 @@
+<div class="container mt-2 mb-2 bg-light">
+  <div class="p-3">
+    <h5>Amenities</h5>
+    <% if property.amenities.any? %>
+      <% groups = property.amenities.map do |a|
+           (image_tag(a.icon, size: "20x20") + " " + a.label).html_safe
+         end.in_groups(3, false) %>
+
+      <div class="row">
+        <% groups.each do |group| %>
+          <div class="col-md-4 small">
+            <% group.each do |amen_html| %>
+              <p><%= amen_html %></p>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      No amenities available.
+    <% end %>
+  </div>
+</div>

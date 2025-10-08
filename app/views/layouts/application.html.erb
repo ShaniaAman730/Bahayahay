@@ -37,6 +37,17 @@
     crossorigin=""
   ></script>
 
+  <!-- Charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartkick@5.0.1/dist/chartkick.js"></script>
+
+  <% if current_user %>
+  <meta name="current-user-id" content="<%= current_user.id %>">
+<% end %>
+
+
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -243,80 +254,6 @@
     }, { once: true });
   </script>
 
-  <!-- Unread Notifications (polls every 10s, should run each load) -->
-  <script>
-    document.addEventListener("turbo:load", () => {
-      const badge = document.getElementById("inbox-badge");
-      let timeoutId;
-
-      async function fetchUnreadCount() {
-        try {
-          const response = await fetch("/notifications/unread_count", {
-            headers: { "Accept": "application/json" }
-          });
-          if (!response.ok) return;
-
-          const data = await response.json();
-          const count = data.unread_count;
-
-          if (count > 0) {
-            badge.textContent = count;
-            badge.classList.remove("d-none");
-            scheduleNext(10000); // poll faster if there’s something
-          } else {
-            badge.classList.add("d-none");
-            scheduleNext(60000); // poll slower when idle
-          }
-        } catch (error) {
-          console.error("Error fetching unread count:", error);
-          scheduleNext(60000); // back off on error
-        }
-      }
-
-      function scheduleNext(interval) {
-        clearTimeout(timeoutId);
-        if (!document.hidden) { // only if tab visible
-          timeoutId = setTimeout(fetchUnreadCount, interval);
-        }
-      }
-
-      function handleVisibilityChange() {
-        if (document.hidden) {
-          clearTimeout(timeoutId); // stop polling
-        } else {
-          fetchUnreadCount(); // resume immediately when back
-        }
-      }
-
-      document.addEventListener("visibilitychange", handleVisibilityChange);
-
-      // initial fetch
-      fetchUnreadCount();
-    });
-  </script>
-
-  <!-- Badge Update Utility -->
-  <script>
-    document.addEventListener("turbo:load", () => {
-      window.updateBadge = function(url, badgeId, key) {
-        fetch(url)
-          .then(response => response.json())
-          .then(data => {
-            const badge = document.getElementById(badgeId);
-            if (!badge) return;
-
-            if (data[key] > 0) {
-              badge.textContent = data[key];
-              badge.classList.remove("d-none");
-            } else {
-              badge.classList.add("d-none");
-            }
-          })
-          .catch(err => console.error("Badge fetch error:", err));
-      };
-    }, { once: true });
-  </script>
-
   <!-- Mark Review Event as Read -->
   <script>
     document.addEventListener("turbo:load", () => {
@@ -331,7 +268,7 @@
           }
         });
       });
-    }, { once: true });
+    });
   </script>
 
    <!-- Bootstrap Re-init -->
@@ -438,6 +375,153 @@
       }
     }, { once: true });
   </script>
+
+  <!-- Action Cable -->
+   <% if current_user %>
+   <script>
+    document.addEventListener("turbo:load", function setupNotifications() {
+      // Prevent multiple initializations across Turbo visits
+      if (window.notificationsInitialized) return;
+      window.notificationsInitialized = true;
+
+      // Determine WebSocket protocol
+      const protocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+      const cable = new WebSocket(`${protocol}${window.location.host}/cable`);
+
+      // Helper function to safely update badge
+      function updateBadge(callback) {
+        const badge = document.getElementById("inbox-badge");
+        if (badge) callback(badge);
+      }
+
+      cable.onopen = () => {
+        console.log("Connected to Action Cable");
+
+        // Subscribe to NotificationsChannel
+        const subscribeMsg = {
+          command: "subscribe",
+          identifier: JSON.stringify({ channel: "NotificationsChannel" })
+        };
+        cable.send(JSON.stringify(subscribeMsg));
+      };
+
+      cable.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        const message = data.message;
+        if (!message) return;
+
+        // New message notification
+        if (message.type === "message") {
+          showNotification(`💬 New message from ${message.from}: ${message.content}`);
+
+          // Increment unread badge
+          updateBadge(badge => {
+            let count = parseInt(badge.textContent) || 0;
+            badge.textContent = count + 1;
+            badge.classList.remove("d-none");
+          });
+        }
+
+        // 🧹 Badge reset when inbox is opened
+        if (message.type === "badge_reset") {
+          updateBadge(badge => {
+            badge.textContent = "0";
+            badge.classList.add("d-none");
+          });
+        }
+      };
+
+      function showNotification(text) {
+        // Truncate long text
+        const truncated = text.length > 80 ? text.slice(0, 80) + "…" : text;
+
+        // Create toast
+        const notificationBox = document.createElement("div");
+        notificationBox.textContent = truncated;
+        notificationBox.className = "notification-toast";
+        document.body.appendChild(notificationBox);
+
+        // Play notification sound
+        new Audio("/sounds/notification.mp3").play();
+
+        // Auto-remove after 5 seconds
+        setTimeout(() => notificationBox.remove(), 5000);
+      }
+    });
+  </script>
+
+  <style>
+    .notification-toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #28a745;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      z-index: 9999;
+      font-size: 14px;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+ <% end %>
+
+  <script>
+    function initCharLimits() {
+      // Regular textareas
+      document.querySelectorAll(".char-limit").forEach(textarea => {
+        const counter = textarea.parentElement.querySelector(".char-counter");
+        const max = parseInt(textarea.dataset.maxLength) || 1000;
+        if (!counter) return;
+
+        const updateCounter = () => {
+          const count = textarea.value.length;
+          counter.textContent = `${count}/${max} characters`;
+          counter.classList.toggle("text-danger", count > max);
+          counter.classList.toggle("text-muted", count <= max);
+        };
+
+        if (!textarea.dataset.charLimitInit) {
+          textarea.addEventListener("input", updateCounter);
+          textarea.dataset.charLimitInit = true;
+        }
+
+        updateCounter();
+      });
+
+      // ActionText (Trix editors)
+      document.querySelectorAll("trix-editor.trix-limit").forEach(editor => {
+        const counter = editor.parentElement.querySelector(".char-counter");
+        const max = parseInt(editor.dataset.maxLength) || 1000;
+        if (!counter) return;
+
+        const updateCounter = () => {
+          const text = editor.editor.getDocument().toString();
+          const count = text.length;
+          counter.textContent = `${count}/${max} characters`;
+          counter.classList.toggle("text-danger", count > max);
+          counter.classList.toggle("text-muted", count <= max);
+        };
+
+        if (!editor.dataset.charLimitInit) {
+          editor.addEventListener("trix-change", updateCounter);
+          editor.dataset.charLimitInit = true;
+        }
+
+        updateCounter();
+      });
+    }
+
+    document.addEventListener("turbo:load", initCharLimits);
+    document.addEventListener("DOMContentLoaded", initCharLimits);
+  </script>
+
 
 
  </body>

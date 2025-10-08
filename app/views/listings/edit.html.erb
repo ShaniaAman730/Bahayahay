@@ -1,9 +1,5 @@
 <div class="container mt-5">
-  <div class="form-container">
-
     <h2 class="text-center mt-5">Edit Listing</h2>
-
-
     <% if @listing.listing_type_num == 0 %>
       <%= render 'form_new_project', listing: @listing %>
     <% elsif @listing.listing_type_num == 1 %>
@@ -11,10 +7,4 @@
     <% else %>
       <p>Unknown listing type</p>
     <% end %>
-
-  </div>
- <div class="mb-5"></div>
- <div class="mb-5"></div>
 </div>
-<br>
-<br>

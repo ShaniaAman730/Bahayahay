@@ -2,10 +2,10 @@
   <div class="d-flex">
     <% if user_signed_in? && current_user.developer? %>
       <%= link_to dev_projects_path do %>
-        <h1><i class="bi bi-arrow-left-circle text-success"></i></h1>
+        <h1><i class="bi bi-arrow-left-circle text-success mr-3"></i></h1>
       <% end %>
     <% end %>
-  <div class="listing-container">
+  <div>
   
       <% if @dev_project.project_photos.attached? %>
         <!-- First large image -->
@@ -57,25 +57,7 @@
           <p><%= @dev_project.description %></p>
         </div>
 
-         <div class="container mt-2 mb-2 bg-light">  
-          <div class="p-3">  
-             <h5>Amenities</h5><br>
-              <% if amenities_dev_projects(@dev_project).present? %>
-              <% groups = amenities_dev_projects(@dev_project).in_groups(5, false) %>
-              <div class="row">
-                <% groups.each do |group| %>
-                  <div class="col-md-4 small">
-                    <% group.each do |amenities_html| %>
-                      <p><%= amenities_html.html_safe %></p>
-                    <% end %>
-                  </div>
-                <% end %>
-              </div>
-            <% else %>
-              No amenities available.
-            <% end %>
-            </div>
-          </div>
+       <%= render "shared/amenities", property: @dev_project %>
 
         <!-- Map Goes Here -->
         <div class="p-1 mt-3">
@@ -298,8 +280,5 @@
     <% end %>
 
     </div>    
-   </div>
   </div>
-  <div class="mb-5"></div>
-  <div class="mb-5"></div>
 </div>

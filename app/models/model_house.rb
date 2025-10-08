@@ -1,10 +1,12 @@
 class ModelHouse < ApplicationRecord
-
 	belongs_to :dev_project, optional: true
+	has_many :property_amenities, as: :property, dependent: :destroy
+	has_many :amenities, through: :property_amenities
 
 	has_rich_text :description
 	has_many_attached :model_photos
 	
+	validate :description_length_within_limit
 	validate :model_photos_limit
 	validates :model_photos, total_file_size: { less_than: 2.megabytes }
 
@@ -21,6 +23,13 @@ class ModelHouse < ApplicationRecord
 	    errors.add(:model_photos, "You can only upload up to 8 files.")
 	  end
 	end
+
+	def description_length_within_limit
+    max_chars = 1500
+    if description.to_plain_text.length > max_chars
+      errors.add(:description, "must be #{max_chars} characters or fewer")
+    end
+  end
 
 end
 

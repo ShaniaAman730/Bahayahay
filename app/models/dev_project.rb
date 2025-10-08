@@ -1,10 +1,15 @@
 class DevProject < ApplicationRecord
 	belongs_to :user
 	has_many :model_houses, dependent: :nullify
-	has_many_attached :project_photos
+	has_many :statistics, as: :trackable, dependent: :destroy
+	has_many :property_amenities, as: :property, dependent: :destroy
+	has_many :amenities, through: :property_amenities
 
+
+	has_many_attached :project_photos
 	has_rich_text :description
 
+	validate :description_length_within_limit
 	validate :project_photos_limit
 	validates :project_photos, total_file_size: { less_than: 2.megabytes }
 	
@@ -22,6 +27,25 @@ class DevProject < ApplicationRecord
 	    errors.add(:project_photos, "You can only upload up to 8 files.")
 	  end
 	end
+
+  def total_views
+    statistics.view.count
+  end
+
+  def unique_visitors
+    statistics.view.distinct.count(:user_id)
+  end
+
+  def days_since_posted
+    (Date.current - created_at.to_date).to_i
+  end
+
+  def description_length_within_limit
+    max_chars = 1500
+    if description.to_plain_text.length > max_chars
+      errors.add(:description, "must be #{max_chars} characters or fewer")
+    end
+  end
 
 end
 

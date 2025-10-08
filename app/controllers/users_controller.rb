@@ -6,7 +6,8 @@ class UsersController < ApplicationController
   skip_before_action :ensure_realtor_developer!, only: [:show, :review_events]
   skip_before_action :authenticate_user!, only: [:show]
 
-  # ----------- PUBLIC / RESTRICTED ACTIONS -----------
+
+   # ---- PROFILE ----
 
   def show
     @user = User.find(params[:id])
@@ -27,7 +28,16 @@ class UsersController < ApplicationController
     if @user.admin? && !current_user.admin?
       redirect_to root_path, notice: "User's profile is not available."
     end
+
+    # Statistics tracker
+    Statistic.create!(
+      trackable: @user,
+      user: current_user,
+      event_type: :view
+    )
   end
+
+  # ----------- REVIEWS -----------
 
   def reviews
     @user = User.find(params[:id])
@@ -93,7 +103,9 @@ class UsersController < ApplicationController
   def approve
     @user = User.find(params[:id])
     if @user.update(admin_approved: true)
-      redirect_to managerealtors_users_path, notice: "Realtor approved."
+      UserMailer.realtor_approval_email(@user).deliver_later
+      @user.update_column(:realtor_approval_email_sent_at, Time.current)
+      redirect_to managerealtors_users_path, notice: 'Realtor approved and email sent!'
     else
       redirect_to managerealtors_users_path, alert: "Approval failed: #{@user.errors.full_messages.join(", ")}"
     end
@@ -102,9 +114,9 @@ class UsersController < ApplicationController
   def reject
     @user = User.find(params[:id])
     if @user.update(admin_approved: false)
-      redirect_to managerealtors_users_path, notice: "Realtor rejected. Account will be deleted in 24 hours."
-      # UserMailer.application_rejected(@user).deliver_later
-      # UserDeletionJob.set(wait: 24.hours).perform_later(@user.id)
+      UserMailer.realtor_rejection_email(@user).deliver_later
+      @user.update_column(:realtor_rejection_email_sent_at, Time.current)
+      redirect_to managerealtors_users_path, notice: "Realtor rejected and email sent."
     else
       redirect_to managerealtors_users_path, alert: "Rejection failed: #{@user.errors.full_messages.join(", ")}"
     end
@@ -146,4 +158,9 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:email, :password, :password_confirmation, :first_name, :last_name, :contact_no, :user_type, :company_name, :address, :admin_approved, :profile_photo)
   end
+
+  def profile_params
+    params.require(:user).permit(:contact_no, :company_name,:address, :about, :website, :profile_photo, :broker_name, :broker_prc_no)
+  end
+  
 end

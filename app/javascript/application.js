@@ -4,6 +4,7 @@ import "controllers"
 import "@rails/activestorage"
 import "trix"
 import "@rails/actiontext"
-
-console.log("✅ Importmap is working!");
+import "chartkick"
+import "chart.js"
 import "channels"
+

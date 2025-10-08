@@ -1,0 +1,90 @@
+<div class="container mt-5">
+
+ <%= render "profile_picture", user: current_user %>
+
+ <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true }, local: true) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
+
+    <div class="field p-2">
+      <%= f.label :profile_photo %><br>
+      <%= f.file_field :profile_photo, class: "form-control w-50", accept: "image/*", data: { max_size: 500.kilobytes } %>
+    </div>
+
+    <% if current_user.realtor? || current_user.developer? %>
+      <div class="field p-2">
+        <%= f.label :about, "About" %><br />
+        <%= f.text_area :about, placeholder: "Tell us about yourself...", data: { max_length: 500 }, class: "form-control w-100 post-a char-limit", rows: 7 %>
+        <small class="char-counter text-muted">0/500 characters</small>
+      </div>
+
+
+    <div class="form-row p-2">
+      <div class="col-12 col-md-6 mb-3">
+        <div class="field">
+          <%= f.label :contact_no %><br />
+          <%= f.text_field :contact_no, class: "form-control w-100", placeholder: "Contact no." %>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 mb-3">
+        <div class="field">
+          <%= f.label :website %><br />
+          <%= f.text_field :website, class: "form-control w-100", placeholder: "Website" %>
+        </div>
+      </div>
+    </div>
+    <% end %>
+
+    <% if current_user.realtor? %>
+      <% if current_user.is_broker == false %>
+        <div class="form-row p-2">
+          <div class="col-12 col-md-6 mb-3">
+            <div class="field">
+              <%= f.label :broker_name, "Broker's Name" %><br />
+              <%= f.text_field :broker_name, class: "form-control w-100", placeholder: "Broker's Name" %>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 mb-3">
+            <div class="field">
+              <%= f.label :broker_prc_no, "Broker's PRC No." %><br />
+              <%= f.text_field :broker_prc_no, class: "form-control w-100", placeholder: "Broker's PRC No." %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+        <div class="form-row p-2">
+          <div class="col-12 col-md-6 mb-3">
+            <div class="field">
+              <%= f.label :company_name, "Realty" %><br />
+              <%= f.text_field :company_name, class: "form-control w-100", placeholder: "Realty" %>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 mb-3">
+            <div class="field">
+              <%= f.label :address, "Realty Address" %><br />
+              <%= f.text_field :address, class: "form-control w-100", placeholder: "Realty Address" %>
+            </div>
+          </div>
+        </div>
+
+    <% elsif current_user.developer? %>
+      <div class="form-row p-2">
+        <div class="col-12 col-md-6 mb-3">
+          <div class="field">
+            <%= f.label :company_name, "Company Name" %><br />
+            <%= f.text_field :company_name, class: "form-control w-100", placeholder: "Company Name" %>
+          </div>
+        </div>
+      <div class="col-12 col-md-6 mb-3">
+        <div class="field">
+            <%= f.label :address, "Business Address" %><br />
+            <%= f.text_field :address, class: "form-control w-100", placeholder: "Business Address" %>
+          </div>
+        </div>
+      </div>
+      
+    <% end %>
+
+  <%= f.submit "Update Profile", class: "btn btn-primary mt-3" %>
+<% end %>
+
+</div>

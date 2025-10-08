@@ -12,7 +12,21 @@
 <div class="container">
   <div class="index-container container">
   <div class="mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <h4 class="mb-3">Development Projects Performance (Last 7 Days)</h4>
+        <%= line_chart Statistic
+          .where(trackable_type: "DevProject", trackable_id: @dev_projects.pluck(:id))
+          .where(event_type: :view)
+          .group_by_day(:created_at, last: 7)
+          .count,
+          height: "250px",
+          library: { scales: { y: { beginAtZero: true } } } %>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3 mb-4">
       <h4>Create New Development Project</h4>
       <%= link_to "Create New", new_dev_project_path, class: "btn btn-outline-success" %>
     </div>
@@ -23,13 +37,14 @@
       </div>
     <% else %>
       <p class="text-muted">No development projects available.</p>
+      <br><br>
     <% end %>
   </div>
 </div>
 </div>
 
   <!-- Jumbotron with Overlay -->
-<div class="jumbotron jumbotron-fluid position-relative text-white" style="background-image: url(<%= asset_path('documents.jpg') %>); background-size: cover; background-position: center center; height: 400px;">
+<div class="jumbotron jumbotron-fluid position-relative text-white mt-5" style="background-image: url(<%= asset_path('documents.jpg') %>); background-size: cover; background-position: center center; height: 400px;">
   <!-- Black overlay -->
   <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.6); z-index: 1;"></div>
     <div class="container h-100 d-flex flex-column justify-content-center position-relative" style="z-index: 2;">

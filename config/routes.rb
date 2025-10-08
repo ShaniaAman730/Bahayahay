@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'users/registrations' }
   resources :users do
     member do
+      get :statistics_data
       patch :approve
       patch :reject
       get :reviews
@@ -25,6 +26,7 @@ Rails.application.routes.draw do
   resources :dev_projects do
     get '/page/:page', action: :index, on: :collection
     member do
+      get :statistics_data
       delete :remove_attachment
     end
   end
@@ -51,6 +53,7 @@ Rails.application.routes.draw do
     post 'contact_agent', on: :member
 
     member do
+      get :statistics_data
       post :confirm
       get 'public'
       delete :remove_attachment
@@ -130,7 +133,7 @@ Rails.application.routes.draw do
 
 
   mount Importmap::Engine => "/rails/importmap"
-
+  mount ActionCable.server => '/cable'
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

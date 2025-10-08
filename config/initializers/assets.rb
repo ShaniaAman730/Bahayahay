@@ -22,3 +22,7 @@ Rails.application.config.assets.precompile += %w( controllers/index.js )
 Rails.application.config.assets.precompile += %w( channels/consumer.js )
 Rails.application.config.assets.precompile += %w( channels/index.js )
 Rails.application.config.assets.precompile += %w( channels/notifications_channel.js )
+Rails.application.config.assets.precompile += %w( chart.js.js )
+Rails.application.config.assets.precompile += %w( @kurkle--color.js )
+
+

@@ -1,5 +1,3 @@
-#frozen_string_literal: true
-
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
   before_action :configure_account_update_params, only: [:update]
@@ -12,11 +10,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-     super
+    super do |user|
+      if user.persisted?
+        UserMailer.welcome_email(user).deliver_later
+        user.update_column(:welcome_email_sent_at, Time.current)
+      end
+    end
   end
 
   # GET /resource/edit
   def edit
+     @tab = params[:tab] || "profile"  # default to profile
      super
   end
 
@@ -29,6 +33,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   protected
+
+  def update_resource(resource, params)
+    resource.update_without_password(params)
+  end
+
+  def after_update_path_for(resource)
+    user_path(resource)  
+  end
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
@@ -68,4 +80,5 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def after_inactive_sign_up_path_for(resource)
      super(resource)
   end
+
 end

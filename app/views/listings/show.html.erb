@@ -58,8 +58,11 @@
         <div class="d-flex ml-2">
           <h2 class="ml-2"><%= @listing.title %></h2>
           <div class="vr mx-3 my-1" style="height: 30px;"></div>
-          <div class="flex-wrap">
+          <div class="flex-wrap small">
             <p class="fw-light text-success border border-success px-1 mt-1 ml-1"><%= @listing.project_type %></p>
+          </div>
+          <div class="flex-wrap small">
+            <p class="fw-light text-secondary border border-secondary px-1 mt-1 ml-2"><%= @listing.furnish_type %></p>
           </div>
         </div>
         <!-- notification for_edit -->
@@ -93,25 +96,7 @@
         <p><%= @listing.description %></p>
       </div>
 
-      <div class="container mt-2 mb-2 bg-light">  
-        <div class="p-3">  
-           <h5>Amenities</h5><br>
-           <% if amenities_listings(@listing).present? %>
-            <% groups = amenities_listings(@listing).in_groups(5, false) %>
-            <div class="row">
-              <% groups.each do |group| %>
-                <div class="col-md-4 small">
-                  <% group.each do |amenities_html| %>
-                    <p><%= amenities_html.html_safe %></p>
-                  <% end %>
-                </div>
-              <% end %>
-            </div>
-            <% else %>
-              No amenities available.
-            <% end %>
-          </div>
-        </div>
+      <%= render "shared/amenities", property: @listing %>
           
         <div class="d-flex flex-wrap align-items-center mt-2 mb-2 p-1"> 
           <h6 class="fw-semibold mt-2 me-2">Available financing options:</h6>

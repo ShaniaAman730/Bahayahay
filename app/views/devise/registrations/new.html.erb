@@ -8,40 +8,40 @@
     </div>
 
     <div class="field">
-      <%= f.hidden_field :user_type, value: User.user_types[:client] %>
+      <%= f.hidden_field :user_type, value: "client" %>
     </div>
 
     <div class="form-row p-2">
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= f.label :first_name %>
         <%= f.text_field :first_name, required: true, class: "form-control w-100", placeholder: "First name" %>
       </div>
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= f.label :last_name %>
         <%= f.text_field :last_name, required: true, class: "form-control w-100", placeholder: "Last name" %>
       </div>
     </div>
 
     <div class="form-row p-2">
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= f.label :email %>
         <%= f.email_field :email, required: true, autofocus: true, autocomplete: "email", class: "form-control w-100", placeholder: "Email" %>
       </div>
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= f.label :contact_no %>
         <%= f.text_field :contact_no, required: true, class: "form-control w-100", placeholder: "Contact no." %>
       </div>
     </div>
 
     <div class="form-row p-2">
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= f.label :password %>
         <% if @minimum_password_length %>
           <em>(<%= @minimum_password_length %> characters minimum)</em>
         <% end %><br />
         <%= f.password_field :password, autocomplete: "new-password", class: "form-control w-100", placeholder: "Password" %>
       </div>
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= f.label :password_confirmation %>
         <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control w-100", placeholder: "Password" %>
       </div>

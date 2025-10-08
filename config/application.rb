@@ -13,6 +13,7 @@ module Bahayahay
     config.load_defaults 8.0
 
     config.eager_load_paths << Rails.root.join("app/validators")
+    config.assets.precompile << "audios/*"
 
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
@@ -22,7 +23,7 @@ module Bahayahay
 
     # Configuration for the application, engines, and railties goes here.
     #
-    # These settings can be overridden in specific environments using the files
+    # These settings can be overridden in specific environments using the files 
     # in config/environments, which are processed later.
     #
     # config.time_zone = "Central Time (US & Canada)"
