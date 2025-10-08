@@ -1,9 +1,10 @@
 development:
-  adapter: solid_queue
+  database: main
 
 test:
-  adapter: test
+  database: main
 
 production:
-  adapter: solid_queue
+  database: queue
+  polling_interval: 5
 
