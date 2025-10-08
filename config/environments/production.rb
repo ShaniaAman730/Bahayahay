@@ -32,12 +32,12 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Action Cable
-  # config.action_cable.url = "wss://bahayahay.onrender.com/cable"
-  # config.action_cable.allowed_request_origins = ['https://bahayahay.onrender.com']
+    config.action_cable.url = "wss://bahayahay.onrender.com/cable"
+    config.action_cable.allowed_request_origins = ['https://bahayahay.onrender.com']
 
   # Without Action Cable
-  config.action_cable.mount_path = nil
-  config.action_cable.allowed_request_origins = []
+  #config.action_cable.mount_path = nil
+  #config.action_cable.allowed_request_origins = []
 
   # Mailer
   config.action_mailer.default_url_options = { host: "bahayahay.onrender.com", protocol: "https" }
