@@ -21,17 +21,15 @@ test:
 
 production:
   <<: *default
-  # Render provides DATABASE_URL automatically
-  url: <%= ENV["DATABASE_URL"] %>
+  url: <%= ENV['DATABASE_URL'] %>
 
-  database_connections:
-    cache:
-      <<: *default
-      url: <%= ENV["DATABASE_URL"] %>
-      migrations_paths: db/cache_migrate
+  cache:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
+    migrations_paths: db/cache_migrate
 
-    queue:
-      <<: *default
-      url: <%= ENV["DATABASE_URL"] %>
-      migrations_paths: db/queue_migrate
+  queue:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
+    migrations_paths: db/queue_migrate
 
