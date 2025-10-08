@@ -14,6 +14,8 @@ module Bahayahay
 
     config.eager_load_paths << Rails.root.join("app/validators")
     config.assets.precompile << "audios/*"
+    
+    config.solid_queue.connects_to = { database: { writing: :primary, reading: :primary } }
 
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
