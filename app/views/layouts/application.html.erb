@@ -13,7 +13,7 @@
   <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag "style", media: "all" %>
   <%= javascript_importmap_tags %> 
-  <%= action_cable_meta_tag %> 
+  <!-- <#%= action_cable_meta_tag %> -->
 
   <!-- Bootstrap and icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
@@ -272,17 +272,14 @@
 
    <!-- Bootstrap Re-init -->
   <script>
-
     document.addEventListener("turbo:load", () => {
-  // Bootstrap 5: re-init all dropdowns on Turbo page load
-  document.querySelectorAll('.dropdown-toggle').forEach(dropdownToggleEl => {
-    new bootstrap.Dropdown(dropdownToggleEl);
-  });
-});
-
+      document.querySelectorAll('.dropdown-toggle').forEach((dropdownToggleEl) => {
+        if (!bootstrap.Dropdown.getInstance(dropdownToggleEl)) {
+          new bootstrap.Dropdown(dropdownToggleEl);
+        }
+      });
+    });
   </script>
-
-
 
 
   <!-- Tooltip -->

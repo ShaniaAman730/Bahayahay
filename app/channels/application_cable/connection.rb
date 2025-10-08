@@ -1,4 +1,5 @@
 module ApplicationCable
+=begin  
   class Connection < ActionCable::Connection::Base
     identified_by :current_user
 
@@ -16,5 +17,6 @@ module ApplicationCable
       end
     end
   end
+=end
 end
 

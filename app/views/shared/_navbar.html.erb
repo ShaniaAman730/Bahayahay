@@ -35,17 +35,15 @@
           <li class="nav-item active">
             <a class="nav-link" href="/model_houses">Your Model Houses</a>
           </li>
-          <li class="nav-item active mt-1">
-            <div class="btn-group">
-              <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                Post New
-              </button>
-              <div class="dropdown-menu">
-                <%= link_to "Development Project", new_dev_project_path, class: "dropdown-item" %>
-                <%= link_to "Model House", new_model_house_path, class: "dropdown-item" %>
-              </div>
-            </div>
+          <li class="nav-item mt-1 dropdown">
+            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Post New
+            </button>
+            <ul class="dropdown-menu">
+              <%= link_to "Development Project", new_dev_project_path, class: "dropdown-item" %>
+              <%= link_to "Model House", new_model_house_path, class: "dropdown-item" %>
+            </ul>
           </li>
         </ul>
 
@@ -140,19 +138,17 @@
           <%= link_to "Accreditation Requests", developer_requests_accreditations_path, class: "nav-link" %>
         </li>
         <% end %>
-        <li class="nav-item active mx-2">
-          <div class="btn-group">
-            <button type="button" class="btn btn-light dropdown-bs-toggle" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              <i class="bi bi-person-circle"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right">
-              <%= link_to "My Profile", user_path(current_user), class:"dropdown-item" %>
-              <a class="dropdown-item" href="/users/edit">Account Settings</a>
-              <div class="dropdown-divider"></div>
-              <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class:"dropdown-item" %>
-            </div>
-          </div>
+        <li class="nav-item mx-2 dropdown">
+          <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <i class="bi bi-person-circle"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <%= link_to "My Profile", user_path(current_user), class: "dropdown-item" %>
+            <%= link_to "Account Settings", edit_user_registration_path, class: "dropdown-item" %>
+            <div class="dropdown-divider"></div>
+            <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
+          </ul>
         </li>
       </ul>
     <% end %>
