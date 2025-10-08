@@ -13,7 +13,8 @@ module Bahayahay
     config.load_defaults 8.0
 
     config.eager_load_paths << Rails.root.join("app/validators")
-    config.assets.precompile << "audios/*"
+    config.eager_load_paths << Rails.root.join("test/mailers/previews")
+
     
     config.solid_queue.connects_to = { database: { writing: :primary, reading: :primary } }
 
