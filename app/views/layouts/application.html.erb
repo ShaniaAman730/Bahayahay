@@ -272,13 +272,17 @@
 
    <!-- Bootstrap Re-init -->
   <script>
+
     document.addEventListener("turbo:load", () => {
-      $('[data-toggle="dropdown"]').dropdown();
-      $('[data-toggle="collapse"]').collapse();
-      $('[data-toggle="tooltip"]').tooltip();
-      $('[data-toggle="popover"]').popover();
-    });
+  // Bootstrap 5: re-init all dropdowns on Turbo page load
+  document.querySelectorAll('.dropdown-toggle').forEach(dropdownToggleEl => {
+    new bootstrap.Dropdown(dropdownToggleEl);
+  });
+});
+
   </script>
+
+
 
 
   <!-- Tooltip -->
@@ -471,7 +475,7 @@
   </style>
  <#% end %>
   -->
-  
+
   <script>
     function initCharLimits() {
       // Regular textareas
