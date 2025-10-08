@@ -133,7 +133,7 @@ Rails.application.routes.draw do
 
 
   mount Importmap::Engine => "/rails/importmap"
-  mount ActionCable.server => '/cable'
+  # mount ActionCable.server => '/cable'
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
