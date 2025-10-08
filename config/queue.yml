@@ -5,6 +5,7 @@ test:
   database: main
 
 production:
-  database: queue
+  database: main
   polling_interval: 5
+
 
