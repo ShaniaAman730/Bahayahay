@@ -153,11 +153,13 @@ class ListingsController < ApplicationController
       .map { |id| User.find(id) }
 
     # Statistics tracker
-    Statistic.create!(
-      trackable: @listing,
-      user: current_user,
-      event_type: :view
-    )
+    if user_signed_in? && current_user.id != @listing.realtor_id
+      Statistic.create!(
+        trackable: @listing,
+        user: current_user,
+        event_type: :view
+      )
+    end
   end
 
   def public

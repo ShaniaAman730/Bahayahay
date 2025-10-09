@@ -303,8 +303,8 @@
           <h5 class="mb-3">Posted Guides</h5>
           <% if @user.guides.any? %>
             <% @guides.each do |guide| %>
-              <div class="card mb-3">
-                <div class="card-body">
+              <%= link_to guide_path(guide.id), class: "text-decoration-none text-dark" do %>
+                <div class="card mb-3">
                   <div class="card-body d-flex align-items-center">
                     <div class="small">
                       <strong><%= guide.title %></strong>
@@ -313,14 +313,12 @@
 
                     <div class="ms-auto mr-1">
                       <% if guide.guide_photo.attached? %>
-                        <%= link_to guide_path(guide.id), title: "Go to guide", data: { bs_toggle: "tooltip" } do %>
-                          <%= image_tag guide.guide_photo, class: "rounded", size: "80x80" %>
-                        <% end %>
+                        <%= image_tag guide.guide_photo, class: "rounded", size: "80x80" %>
                       <% end %>
                     </div> 
                   </div> 
                 </div>
-              </div>
+              <% end %>
             <% end %>
             <%= paginate @guides, param_name: :guides_page %>
           </div>

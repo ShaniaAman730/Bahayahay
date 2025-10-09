@@ -1,12 +1,4 @@
 <div class="container mt-5">
-  <div class="d-flex">
-    <% if user_signed_in? && current_user.realtor? %>
-      <%= link_to listings_path do %>
-        <h1><i class="bi bi-arrow-left-circle text-success"></i></h1>
-      <% end %>
-    <% end %>  
-
-
   <div class="listing-container container">
     <div class="row">
       <div class="col-12 col-md-12 mt-4">
@@ -55,14 +47,15 @@
       <!-- LEFT SIDE OF THE SCREEN -->
       <div class="col-12 col-md-8">
         <% if @listing.active == false %><div class="alert alert-warning"><strong>Notice:</strong> This property has already been sold.</div><% end %>
-        <div class="d-flex ml-2">
+        <div class="d-flex flex-column flex-md-row align-items-start">
           <h2 class="ml-2"><%= @listing.title %></h2>
-          <div class="vr mx-3 my-1" style="height: 30px;"></div>
-          <div class="flex-wrap small">
-            <p class="fw-light text-success border border-success px-1 mt-1 ml-1"><%= @listing.project_type %></p>
-          </div>
-          <div class="flex-wrap small">
-            <p class="fw-light text-secondary border border-secondary px-1 mt-1 ml-2"><%= @listing.furnish_type %></p>
+          <div class="d-flex flex-row flex-wrap mt-2 mt-md-0 ml-md-3">
+            <p class="fw-light text-success border border-success px-1 me-2 mb-1 mb-md-0">
+              <%= @listing.project_type %>
+            </p>
+            <p class="fw-light text-secondary border border-secondary px-1 mb-1 mb-md-0">
+              <%= @listing.furnish_type %>
+            </p>
           </div>
         </div>
         <!-- notification for_edit -->
@@ -382,7 +375,7 @@
         <%= select_tag :client_id,
             options_from_collection_for_select(@interested_clients, :id, :first_name),
             prompt: "Select Client",
-            class: "form-control w-50" %>
+            class: "form-control" %>
       </div>
       <%= form.submit "Confirm Sale", class: "btn btn-primary" %>
     <% end %>
@@ -395,7 +388,6 @@
     <%= link_to "Leave a Review", new_listing_review_path(@listing), class: "btn btn-success" %>
   <% end %>
   </div>
- </div>
 </div>
 </div>
 </div>

@@ -1,7 +1,8 @@
 <div class="container mt-5">
-  <h1 class="mb-4 text-success">Conversations</h1>
+  <h1 class="text-success logo-name">Bahayahay Chat</h1>
+  <p class="text-muted small">Note: The website’s chat feature is not in real-time due to limited capacity. Please refresh the page to see if a new response is available.</p>
 
-  <div class="row row-cols-1 g-3">
+  <div class="row row-cols-1 g-3 mt-4">
     <% @conversations.each do |conversation| %>
       <% other_user = current_user.client? ? conversation.realtor : conversation.client %>
       <% last_message = conversation.messages.last %>

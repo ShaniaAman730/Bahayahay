@@ -124,14 +124,12 @@
     </div>
   </div>  
 
-  <div class="container mt-5 border border-secondary">  
-   <div class="p-5">  
+  <div class="container mt-5 border border-secondary p-4">  
     <h5>Extra Requirements for Independent Listings</h5>
-    <p><small><em>This is to safeguard all parties for future transactions.</p></small></em>
+    <p class="small"><em>This is to safeguard all parties for future transactions.</em></p>
 
     <div class="row">
-     <div class="col">
-      <div class="mb-3">
+     <div class="col-12 col-md-6 mb-3">
       <%= form.label :owneralive, "Is the owner alive or not?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
@@ -143,11 +141,9 @@
         <%= form.radio_button :owneralive, false, id: 'owneralive_no', class: "form-check-input" %>
         <%= form.label :owneralive, "No", for: 'owneralive_no', class: "form-check-label" %>
       </div>
-      </div>
     </div>
 
-    <div class="col">
-      <div class="mb-3">
+    <div class="col-12 col-md-3 mb-3">
       <%= form.label :estatetax, "Is the estate tax paid?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
@@ -159,7 +155,6 @@
         <%= form.radio_button :estatetax, false, id: 'estatetax_no', class: "form-check-input" %>
         <%= form.label :estatetax, "No", for: 'estatetax_no', class: "form-check-label" %>
       </div>
-      </div>
     </div>
    </div>
 
@@ -167,7 +162,7 @@
       <%= form.label :ejsprocessed, "If the owner is not alive, is the extrajudicial settlement processed?", class: "form-label d-block" %>
 
       <div class="form-check form-check-inline">
-        <%= form.radio_button :ejsprocessed, true, id: 'ejsprocessed_yes', class: "form-check-input", required: true %>
+        <%= form.radio_button :ejsprocessed, true, id: 'ejsprocessed_yes', class: "form-check-input" %>
         <%= form.label :ejsprocessed, "Yes", for: 'ejsprocessed_yes', class: "form-check-label" %>
       </div>
 
@@ -191,7 +186,7 @@
       </div>
     </div>
 
-    <div class="container border border-secondary p-4 mb-3">
+    <div class="container border border-secondary p-3 mb-3">
       <h6>If not, please provide the following:</h6>
       <div class="field">
         <%= form.label :citizenship, "Citizenship", class: "form-label" %>
@@ -228,7 +223,7 @@
       </div>
     </div>
 
-    <div class="container border border-secondary p-4 mb-3">
+    <div class="container border border-secondary p-3 mb-3">
       <h6>If yes, please provide the following:</h6>
 
       <% if @listing.errors[:spa].present? %>
@@ -237,7 +232,7 @@
 
       <div class="field">
         <%= form.label :spa, "Consularized Special Power of Attorney (SPA)" %><br>
-        <%= form.file_field :spa, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 2, max_size: 500.kilobytes },accept: "image/*" %>
+        <%= form.file_field :spa, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 2, max_size: 500.kilobytes }, accept: "image/*" %>
       </div>
 
       <div class="field">
@@ -251,14 +246,12 @@
       <div class="text-danger"><%= @listing.errors[:tct].join(', ') %></div>
     <% end %>
 
-
     <div class="field">
      <%= form.label :tct, "Lastly, please upload at least 4 pages of the certified true copy of the Transfer Certificate of Title (TCT) recently acquired in the last 6 months:"  %><br>
      <%= form.file_field :tct,  multiple: true, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 4, max_size: 1000.kilobytes  }, accept: "image/*" %>
    </div>
-
-  </div>  
  </div>
+
 
 
   <div>

@@ -37,11 +37,13 @@ class DevProjectsController < ApplicationController
     @model_houses = @dev_project.model_houses
 
     # Statistics tracker
-    Statistic.create!(
-      trackable: @dev_project,
-      user: current_user,
-      event_type: :view
-    )
+    if user_signed_in? && current_user.id != @dev_project.user.id
+      Statistic.create!(
+        trackable: @dev_project,
+        user: current_user,
+        event_type: :view
+      )
+    end
   end
 
   # GET /dev_projects/new

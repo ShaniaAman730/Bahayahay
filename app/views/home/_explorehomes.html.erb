@@ -1,55 +1,89 @@
 <section class="pt-5 pb-5">
   <div class="container">
-    <div class="row">
-      <div class="col-6">
-        <h3 class="mb-3">Explore Homes in Naga</h3>
+    <!-- Title + Arrows -->
+    <div class="row align-items-center mb-3">
+      <div class="col-12 col-md-6 text-center text-md-start">
+        <h3 class="mb-3 mb-md-0">Explore Homes in Naga</h3>
       </div>
-      <div class="col-6 text-end">
-        <a class="btn btn-success mb-3 me-1" href="#carouselExampleIndicators2" role="button" data-bs-slide="prev">
+
+      <div class="col-12 col-md-6 text-center text-md-end">
+        <a class="btn btn-success me-2 mb-2" href="#carouselHomes" role="button" data-bs-slide="prev">
           <i class="bi bi-chevron-left"></i>
         </a>
-        <a class="btn btn-success mb-3" href="#carouselExampleIndicators2" role="button" data-bs-slide="next">
+        <a class="btn btn-success mb-2" href="#carouselHomes" role="button" data-bs-slide="next">
           <i class="bi bi-chevron-right"></i>
         </a>
       </div>
+    </div>
 
-      <div class="col-12">
-        <div id="carouselExampleIndicators2" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <% @recent_listings.each_slice(3).with_index do |listing_group, index| %>
-              <div class="carousel-item <%= 'active' if index == 0 %>">
-                <div class="row">
-                  <% listing_group.each do |listing| %>
-                    <div class="col-md-4 mb-3">
-                      <div class="card h-100">
-                        <% if listing.listing_photos.attached? %>
-                          <%= image_tag url_for(listing.listing_photos.first), class: "card-img-top", style: "object-fit: cover; height: 300px;" %>
-                        <% else %>
-                          <div class="d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
-                            <span class="text-muted">No photo available</span>
-                          </div>
-                        <% end %>
-
-                        <div class="card-body">
-                          <h4 class="card-title">
-                            <%= link_to number_to_currency(listing.price, unit: "₱", precision: 0, delimiter: ","), listing_path(listing), class: "text-success text-decoration-none" %>
-                          </h4>
-                          <p class="card-text">
-                            <%= listing.beds %> Beds, <%= listing.baths %> Bath | <%= listing.sqft %> sq.ft.
-                          </p>
-                          <p class="card-text">
-                            <%= listing.barangay %>, Naga City
-                          </p>
+    <!-- Carousel -->
+    <div id="carouselHomes" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
+      <div class="carousel-inner">
+        <% @recent_listings.each_slice(3).with_index do |listing_group, index| %>
+          <div class="carousel-item <%= 'active' if index == 0 %>">
+            <div class="row g-3">
+              <% listing_group.each do |listing| %>
+                <div class="col-12 col-sm-6 col-md-4">
+                  <%= link_to listing_path(listing), class: "text-decoration-none text-dark" do %>
+                    <div class="card h-100 border border-light shadow-sm transition-all">
+                      <% if listing.listing_photos.attached? %>
+                        <%= image_tag url_for(listing.listing_photos.first),
+                            class: "card-img-top",
+                            style: "object-fit: cover; height: 250px;" %>
+                      <% else %>
+                        <div class="d-flex align-items-center justify-content-center bg-light" style="height: 250px;">
+                          <span class="text-muted small">No photo available</span>
                         </div>
+                      <% end %>
+
+                      <div class="card-body p-3">
+                        <h5 class="card-title mb-2 text-success fw-semibold">
+                          <%= number_to_currency(listing.price, unit: "₱", precision: 0, delimiter: ",") %>
+                        </h5>
+                        <p class="card-text mb-1 small">
+                          <%= listing.beds %> Beds, <%= listing.baths %> Bath | <%= listing.sqft %> sq.ft.
+                        </p>
+                        <p class="card-text text-muted small mb-0">
+                          <%= listing.barangay %>, Naga City
+                        </p>
                       </div>
                     </div>
                   <% end %>
                 </div>
-              </div>
-            <% end %>
+              <% end %>
+            </div>
           </div>
-        </div>
+        <% end %>
       </div>
     </div>
   </div>
 </section>
+
+<style>
+  /* Subtle hover lift and shadow */
+  .card.transition-all {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card.transition-all:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 767px) {
+    h3, .h3 {
+      font-size: 1.3rem;
+    }
+    .card-title {
+      font-size: 1rem;
+    }
+    .card-text {
+      font-size: 0.9rem;
+    }
+    .btn.btn-success {
+      padding: 4px 10px;
+      font-size: 0.85rem;
+    }
+  }
+</style>

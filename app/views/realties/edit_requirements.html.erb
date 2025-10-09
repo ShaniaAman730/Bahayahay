@@ -1,4 +1,4 @@
-<div class="form-container mt-5">
+<div class="container mt-5">
   <h2>Edit Realty Requirements</h2>
 
   <%= form_with model: @realty, url: update_requirements_realty_path(@realty), local: true do |f| %>
@@ -14,22 +14,22 @@
     <% end %>
 
     <div class="form-row p-2">
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= f.label :business_location %>
         <%= f.text_field :business_location, class: "form-control", required: true %>
       </div>
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= f.label :email %>
         <%= f.email_field :email, class: "form-control", required: true %>
       </div>
     </div>
 
     <div class="form-row p-2">
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= f.label :phone_number %>
         <%= f.telephone_field :phone_number, class: "form-control", required: true %>
       </div>
-      <div class="col col-md-6 mb-3">
+      <div class="col-12 col-md-6 mb-3">
         <%= f.label :business_permit %>
         <%= f.file_field :business_permit, class: "form-control", direct_upload: true, class: "form-control", accept: "image/*", data: { max_size: 400.kilobytes} %>
       </div>

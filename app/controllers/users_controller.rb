@@ -30,11 +30,13 @@ class UsersController < ApplicationController
     end
 
     # Statistics tracker
-    Statistic.create!(
-      trackable: @user,
-      user: current_user,
-      event_type: :view
-    )
+    if user_signed_in? && current_user.id != @user.id
+      Statistic.create!(
+        trackable: @user,
+        user: current_user,
+        event_type: :view
+      )
+    end
   end
 
   # ----------- REVIEWS -----------
