@@ -6,18 +6,28 @@
 	<h2>Realties</h2>
 
 	<div class="mb-4">
-	  <%= form_with url: admin_realties_path, method: :get, local: true, class: "d-flex gap-2" do %>
-	    <%= text_field_tag :q, params[:q], placeholder: "Search realties...", 
-	          class: "form-control flex-grow-1" %> 
+  <%= form_with url: admin_realties_path, method: :get, local: true, 
+                class: "row g-2 align-items-center" do %>
 
-	    <%= select_tag :status, 
-	          options_for_select(Realty.statuses.keys.map { |s| [s.titleize, s] }, params[:status]), 
-	          include_blank: "All Statuses", 
-	          class: "form-select w-auto" %> 
+    <div class="col-12 col-md-10">
+      <%= text_field_tag :q, params[:q], 
+            placeholder: "Search realties...", 
+            class: "form-control w-100" %>
+    </div>
 
-	    <%= submit_tag "Search", class: "btn btn-primary" %>
-	  <% end %>
-	</div>
+    <div class="col-12 col-md-1">
+      <%= select_tag :status, 
+            options_for_select(Realty.statuses.keys.map { |s| [s.titleize, s] }, params[:status]), 
+            include_blank: "All Statuses", 
+            class: "form-select w-100" %>
+    </div>
+
+    <div class="col-12 col-md-1 d-grid">
+      <%= submit_tag "Search", class: "btn btn-primary w-100" %>
+    </div>
+  <% end %>
+</div>
+
 
   <% if @realties.any? %>
 	<table class="table table-bordered">
@@ -30,6 +40,8 @@
 	      <th>Status</th>
 	      <th>Submitted</th>
 	      <th>Actions</th>
+	      <th></th>
+	      <th></th>
 	    </tr>
 	  </thead>
 	  <tbody>
@@ -59,8 +71,12 @@
 	        <td>
 	        	<%= link_to "View Application", admin_realty_path(realty), class: "btn btn-sm btn-light btn-sm" %>
 	        	<% if realty.approved? %>
+	        </td>
+	        <td>
 	        		<%= link_to "Show Realty", realty_path(realty), class: "btn btn-sm btn-secondary btn-sm" %>
 	        	<% end %>
+	        </td>
+	        <td>
 	        	<%= button_to "Delete",
               admin_realty_path(realty),
               method: :delete,
