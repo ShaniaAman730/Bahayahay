@@ -105,7 +105,7 @@ class UsersController < ApplicationController
   def approve
     @user = User.find(params[:id])
     if @user.update(admin_approved: true)
-      UserMailer.realtor_approval_email(@user).deliver_later
+      UserMailer.realtor_approval_email(@user).deliver_now
       @user.update_column(:realtor_approval_email_sent_at, Time.current)
       redirect_to managerealtors_users_path, notice: 'Realtor approved and email sent!'
     else
@@ -116,7 +116,7 @@ class UsersController < ApplicationController
   def reject
     @user = User.find(params[:id])
     if @user.update(admin_approved: false)
-      UserMailer.realtor_rejection_email(@user).deliver_later
+      UserMailer.realtor_rejection_email(@user).deliver_now
       @user.update_column(:realtor_rejection_email_sent_at, Time.current)
       redirect_to managerealtors_users_path, notice: "Realtor rejected and email sent."
     else

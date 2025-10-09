@@ -12,7 +12,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def create
     super do |user|
       if user.persisted?
-        UserMailer.welcome_email(user).deliver_later
+        UserMailer.welcome_email(user).deliver_now
         user.update_column(:welcome_email_sent_at, Time.current)
       end
     end
