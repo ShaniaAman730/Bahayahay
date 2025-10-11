@@ -29,7 +29,7 @@ Rails.application.configure do
 
   # Active Storage
   # Use cloud storage in production; local is temporary
-  config.active_storage.service = :local
+  # config.active_storage.service = :local
 
   # Action Cable
   # config.action_cable.url = "wss://bahayahay.onrender.com/cable"
