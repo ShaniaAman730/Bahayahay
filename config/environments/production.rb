@@ -55,10 +55,8 @@ Rails.application.configure do
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
 
-
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.raise_delivery_errors = true
-
+  # Cloudinary (active storage)
+  config.active_storage.service = :cloudinary
 
   # I18n fallback
   config.i18n.fallbacks = true

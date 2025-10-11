@@ -14,10 +14,9 @@ class RealtorSignupController < ApplicationController
     @user.user_type = 2
     if @user.save 
       redirect_to thank_you_realtor_path, notice: "Realtor account created successfully. Please wait for admin approval."
-    
     else
-      flash[:alert] = "Realtor account could not be created: #{@user.errors.full_messages.join(", ")}"
-      render :new # Render the new user form again
+      flash.now[:alert] = "Realtor account could not be created."
+      render :new, status: :unprocessable_entity
     end
   end
 

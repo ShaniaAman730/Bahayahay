@@ -113,9 +113,9 @@ class UsersController < ApplicationController
   def approve
     @user = User.find(params[:id])
     if @user.update(admin_approved: true)
-      UserMailer.realtor_approval_email(@user).deliver_now
-      @user.update_column(:realtor_approval_email_sent_at, Time.current)
-      redirect_to managerealtors_users_path, notice: 'Realtor approved and email sent!'
+      #UserMailer.realtor_approval_email(@user).deliver_now
+      #@user.update_column(:realtor_approval_email_sent_at, Time.current)
+      redirect_to managerealtors_users_path, notice: 'Realtor approved!'
     else
       redirect_to managerealtors_users_path, alert: "Approval failed: #{@user.errors.full_messages.join(", ")}"
     end
@@ -124,9 +124,9 @@ class UsersController < ApplicationController
   def reject
     @user = User.find(params[:id])
     if @user.update(admin_approved: false)
-      UserMailer.realtor_rejection_email(@user).deliver_now
-      @user.update_column(:realtor_rejection_email_sent_at, Time.current)
-      redirect_to managerealtors_users_path, notice: "Realtor rejected and email sent."
+      #UserMailer.realtor_rejection_email(@user).deliver_now
+      #@user.update_column(:realtor_rejection_email_sent_at, Time.current)
+      redirect_to managerealtors_users_path, notice: "Realtor rejected."
     else
       redirect_to managerealtors_users_path, alert: "Rejection failed: #{@user.errors.full_messages.join(", ")}"
     end

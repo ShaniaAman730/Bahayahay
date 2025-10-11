@@ -5,10 +5,7 @@ class Admin::RebapMembershipsController < ApplicationController
   def index
     @query = params[:query]
 
-    @rebap_users = User.rebap
-                       .left_joins(:rebap_memberships)
-                       .select("users.*, rebap_memberships.chapter AS chapter_name")
-                       .order(:email)
+    @rebap_users = User.rebap.joins(:rebap_memberships).select("users.*, rebap_memberships.chapter AS chapter_name").distinct.order(:email)
 
     if @query.present?
       @rebap_users = @rebap_users.where(
@@ -19,6 +16,7 @@ class Admin::RebapMembershipsController < ApplicationController
 
     @rebap_users = @rebap_users.page(params[:page]).per(10)
   end
+
 
   def new
     @rebap_user = User.find(params[:rebap_id])
