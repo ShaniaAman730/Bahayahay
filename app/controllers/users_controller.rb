@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :ensure_admin!, only: [:all_users, :managerealtors, :approve, :reject, :destroy, :new, :create, :edit, :update]
+  before_action :ensure_admin!, only: [:all_users, :managerealtors, :approve, :reject, :destroy, :new, :create, :edit, :update, :mark_email_sent]
   before_action :ensure_realtor_developer!, only: [:reviews]
 
   skip_before_action :ensure_realtor_developer!, only: [:show, :review_events]
@@ -95,6 +95,16 @@ class UsersController < ApplicationController
   end
 
 
+  def mark_email_sent
+    @user = User.find(params[:id])
+    if @user.update(email_sent: true)  
+      redirect_to all_users_users_path, notice: "Email marked as sent for #{@user.full_name}."
+    else
+      redirect_to all_users_users_path, alert: "Failed to update email status."
+    end
+  end
+
+
   def managerealtors
     @users = User.realtor.where(admin_approved: false)
 
@@ -166,11 +176,11 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :first_name, :last_name, :contact_no, :user_type, :company_name, :address, :admin_approved, :profile_photo)
+    params.require(:user).permit(:email, :password, :password_confirmation, :first_name, :last_name, :contact_no, :user_type, :company_name, :address, :admin_approved, :profile_photo, :email_sent)
   end
 
   def profile_params
-    params.require(:user).permit(:contact_no, :company_name,:address, :about, :website, :profile_photo, :broker_name, :broker_prc_no)
+    params.require(:user).permit(:contact_no, :company_name,:address, :about, :website, :profile_photo, :broker_name, :broker_prc_no, :email_sent)
   end
   
 end

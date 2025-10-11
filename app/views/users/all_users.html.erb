@@ -37,7 +37,7 @@
           <th>Contact No</th>
           <th>Company Name</th>
           <th>Created</th>
-          <!-- <th>Email Sent?</th> -->
+          <th>Email Sent?</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -52,13 +52,17 @@
             <td><%= user.contact_no %></td>
             <td><%= user.company_name %></td>
             <td><%= user.created_at.strftime("%B %d, %Y %I:%M %p") %></td>
-            <!-- <td>
-              <%# if user.any_email_sent? %>
-                ✅
-              <%# else %>
-                ❌
-              <%# end %>
-            </td> -->
+            
+            <%# --- Email Sent Column --- %>
+            <td>
+              <% if user.email_sent? %>
+                <button class="btn btn-success btn-sm" disabled>Sent</button>
+              <% else %>
+                <%= button_to "Not Sent", mark_email_sent_user_path(user), method: :patch, class: "btn btn-light btn-sm" %>
+              <% end %>
+            </td>
+
+
             <td class="d-flex">
               <%= link_to "Show", user_path(user), class: "btn btn-sm btn-secondary mr-1" %>
               <%= button_to "Delete", user_path(user), method: :delete, data: { confirm: "Are you sure you want to delete #{user.full_name}?" }, class: "btn btn-sm btn-danger" %>

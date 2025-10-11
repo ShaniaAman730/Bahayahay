@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       patch :reject
       get :reviews
       get :review_events
+      patch :mark_email_sent
     end
     collection do
       get :all_users
@@ -73,24 +74,24 @@ Rails.application.routes.draw do
   get "notifications/unread_count", to: "notifications#unread_count"
 
   namespace :admin do
-  resources :users, only: [:new, :create]
+  resources :users, only: [:new, :create, :update] 
 
-    resources :listings, only: [:index, :show, :destroy] do
-      member do
-        patch :approve
-        patch :reject
-      end
+  resources :listings, only: [:index, :show, :destroy] do
+    member do
+      patch :approve
+      patch :reject
     end
-
-    resources :realties, only: [:index, :show, :destroy] do
-      member do
-        patch :approve
-        patch :reject 
-      end
-    end
-
-    resources :rebap_memberships, only: [:index, :new, :create]
   end
+
+  resources :realties, only: [:index, :show, :destroy] do
+    member do
+      patch :approve
+      patch :reject 
+    end
+  end
+
+  resources :rebap_memberships, only: [:index, :new, :create]
+end
 
   resources :guides do
     collection do

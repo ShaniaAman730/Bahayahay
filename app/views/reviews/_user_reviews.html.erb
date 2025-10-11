@@ -2,21 +2,37 @@
   <div class="mt-5">
     <h4>Reviews</h4>
 
-    <%# --- Overall Rating --- %>
+    <%# --- Overall Ratings Rating --- %>
     <% total_reviews = user.received_reviews.count %>
-    <% total_knowledge = user.received_reviews.sum(:knowledge_rating) %>
-    <% total_responsiveness = user.received_reviews.sum(:responsiveness_rating) %>
-    <% total_professionalism = user.received_reviews.sum(:professionalism_rating) %>
 
-    <% overall_average = ((total_knowledge + total_responsiveness + total_professionalism) / (3.0 * total_reviews)).round(1) %>
+    <% avg_knowledge = (user.received_reviews.sum(:knowledge_rating) / total_reviews.to_f).round(1) %>
+    <% avg_responsiveness = (user.received_reviews.sum(:responsiveness_rating) / total_reviews.to_f).round(1) %>
+    <% avg_professionalism = (user.received_reviews.sum(:professionalism_rating) / total_reviews.to_f).round(1) %>
 
-    <div class="mb-3">
-      <h5>Overall Rating:</h5>
-      <p class="mb-0">
-        <% stars = overall_average.round %>
-        <%= '★' * stars + '☆' * (5 - stars) %> 
-        (<%= overall_average %>/5)
+    <div class="mb-3 p-3">
+      <h5>Overall Ratings:</h5>
+
+      <p class="mb-1">
+        <strong>Knowledge & Expertise:</strong>
+        <% stars = avg_knowledge.round %>
+        <span class="text-success"><%= '★' * stars + '☆' * (5 - stars) %></span>
+        (<%= avg_knowledge %>/5)
       </p>
+
+      <p class="mb-1">
+        <strong>Responsiveness:</strong>
+        <% stars = avg_responsiveness.round %>
+        <span class="text-success"><%= '★' * stars + '☆' * (5 - stars) %></span>
+        (<%= avg_responsiveness %>/5)
+      </p>
+
+      <p class="mb-1">
+        <strong>Professionalism:</strong>
+        <% stars = avg_professionalism.round %>
+        <span class="text-success"><%= '★' * stars + '☆' * (5 - stars) %></span>
+        (<%= avg_professionalism %>/5)
+      </p>
+
     </div>
 
     <%# --- Individual Reviews --- %>
