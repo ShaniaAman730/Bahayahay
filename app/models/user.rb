@@ -54,32 +54,11 @@ class User < ApplicationRecord
   def head_broker?
     managed_realty.present?
   end
-
-  validates :first_name, presence: true, on: :create, unless: -> { user_type.in?(%w[developer rebap]) }
-  validates :last_name, presence: true, on: :create, unless: -> { user_type.in?(%w[developer rebap]) }
-  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }, on: :create
-  validates :contact_no, presence: true, on: :create
-  validates :privacy_agreement, acceptance: true, if: -> { realtor? }, on: :create
-  validate :broker_must_exist_if_not_broker, if: -> { realtor? && !is_broker }, on: :create
-
-
+  
   has_one_attached :profile_photo
   has_one_attached :prc_id
   has_one_attached :dhsud_cert
   has_one_attached :gov_id
-
-  validates :profile_photo, total_file_size: { less_than: 500.kilobytes }
-  validates :prc_id, total_file_size: { less_than: 400.kilobytes }
-  validates :dhsud_cert, total_file_size: { less_than: 400.kilobytes }
-  validates :gov_id, total_file_size: { less_than: 400.kilobytes }
-
-  # Validation for broker details if not a broker
-  with_options if: -> { user_type == 2 && is_broker == false } do
-      validates :broker_name, presence: true, on: :create
-      validates :broker_prc_no, presence: true, on: :create
-  end
-  
-  validate :about_length_within_limit
 
   paginates_per 10
 

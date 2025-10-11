@@ -54,15 +54,15 @@ end
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
-     devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :contact_no, :user_type, :company_name, :address, :admin_approved, :prc_no, :dhsud_no, :profile_photo])
+     devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :contact_no, :user_type, :company_name, :address, :admin_approved, :prc_no, :dhsud_no, :is_broker, :broker_name, :broker_prc_no, :privacy_agreement, :profile_photo, :prc_id, :dhsud_cert, :gov_id])
   end
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_account_update_params
       if current_user.admin?
-         devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :contact_no, :user_type, :company_name, :address, :admin_approved, :prc_no, :dhsud_no, :about, :website, :profile_photo])
+         devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :contact_no, :user_type, :company_name, :address, :admin_approved, :prc_no, :dhsud_no, :about, :website, :is_broker, :broker_name, :broker_prc_no, :privacy_agreement, :profile_photo, :prc_id, :dhsud_cert, :gov_id])
       else
-         devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :contact_no, :company_name, :address, :admin_approved, :prc_no, :dhsud_no, :about, :website, :profile_photo])
+         devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :contact_no, :company_name, :address, :admin_approved, :prc_no, :dhsud_no, :about, :website, :is_broker, :broker_name, :privacy_agreement, :broker_prc_no, :profile_photo, :prc_id, :dhsud_cert, :gov_id])
       end
   end
 

@@ -84,7 +84,7 @@
       </div>
       <div class="col-12 col-md-6 mb-3">
         <%= form.label :prc_id, "Upload a picture of your PRC ID/Accreditation or your official PRC receipt" %>
-        <%= form.file_field :prc_id, class: "form-control", class: "form-control", accept: "image/*", data: { max_size: 400.kilobytes } %>
+        <%= form.file_field :prc_id, class: "form-control", class: "form-control", accept: "image/*", data: { max_size: 400.kilobytes }, required: true %>
       </div>
     </div>
 
@@ -95,13 +95,13 @@
       </div>
       <div class="col-12 col-md-6 mb-3">
         <%= form.label :dhsud_cert, "Upload a picture of your DHSUD Certificate" %>
-        <%= form.file_field :dhsud_cert, class: "form-control", class: "form-control", accept: "image/*", data: { max_size: 400.kilobytes } %>
+        <%= form.file_field :dhsud_cert, class: "form-control", class: "form-control", accept: "image/*", data: { max_size: 400.kilobytes }, required: true %>
       </div>
     </div>
 
     <div class="field p-2 mb-3">
      <%= form.label :gov_id, "To verify your identity, please upload a picture of your government I.D." %>
-     <%= form.file_field :gov_id, class: "form-control", class: "form-control", accept: "image/*", data: { max_size: 400.kilobytes } %>
+     <%= form.file_field :gov_id, class: "form-control", class: "form-control", accept: "image/*", data: { max_size: 400.kilobytes }, required: true %>
     </div>
 
     <div class="form-check mb-3">
