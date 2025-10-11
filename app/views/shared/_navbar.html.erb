@@ -129,6 +129,13 @@
             </a>
           </li>
         <% end %>
+        <% if !current_user.client? %>
+          <li class="nav-item active mx-2">
+            <a class="btn btn-light" href="/guides/my_guides">
+              <i class="bi bi-pencil"></i>
+            </a>
+          </li>
+        <% end %>
         <% if current_user.client? || current_user.realtor? %>
           <li class="nav-item active mx-2 position-relative">
             <a class="btn btn-light position-relative" href="/conversations">

@@ -93,6 +93,9 @@ Rails.application.routes.draw do
   end
 
   resources :guides do
+    collection do
+      get :my_guides
+    end
     resources :comments, only: [:create]
   end
 

@@ -3,7 +3,7 @@
     <h1>Guides</h1>
     <% if user_signed_in? %>
       <% if current_user.realtor? || current_user.developer? %> 
-        <%= link_to "Post a Guide", new_guide_path, class: "btn btn-success" %>
+        <%= link_to "Post a Guide", new_guide_path, class: "btn btn-outline-success" %>
       <% end %>
     <% end %>
   </div>
@@ -11,7 +11,7 @@
   <%= form_with url: guides_path, method: :get, local: true do %>
     <div class="input-group mb-4">
       <%= text_field_tag :q, params[:q], placeholder: "Search guides...", class: "form-control" %>
-    <button type="submit" class="btn btn-secondary">Search</button>
+    <button type="submit" class="btn btn-primary">Search</button>
     </div>
   <% end %>
 
@@ -21,10 +21,13 @@
         <div class="col-md-4 mb-4">
           <div class="card">
             <% if guide.guide_photo.attached? %>
-              <%= image_tag url_for(guide.guide_photo),  class: "card-img-top", style: "object-fit: cover; height: 300px;" %>
+            <%= image_tag url_for(guide.guide_photo), class: "card-img-top guide-card-img" %>
             <% end %>
             <div class="card-body">
               <h5 class="card-title"><%= guide.title %></h5>
+              <% if guide.user.rebap? %>
+                <span class="badge badge-light text-danger"><%= image_tag("rebap-logo.png", height: "15") %>  From REBAP</span>
+              <% end %>
               <p class="card-text"><%= truncate(guide.body.to_plain_text, length: 100) %></p>
               <%= link_to "Read more", guide_path(guide), class: "btn btn-light" %>
             </div>
@@ -40,3 +43,28 @@
 
   <%= paginate @guides %>
 </div>
+
+<style>
+  .guide-card-img {
+    height: 250px;
+    width: 100%;
+    object-fit: cover;
+    border-top-left-radius: 0.375rem;  // keeps Bootstrap card corner radius
+    border-top-right-radius: 0.375rem;
+  }
+
+.guide-card-img {
+  height: 250px;
+  width: 100%;
+  object-fit: cover;
+
+  @media (max-width: 768px) {
+    height: 180px;
+  }
+
+  @media (max-width: 576px) {
+    height: 150px;
+  }
+}
+
+</style>
