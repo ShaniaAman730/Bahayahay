@@ -34,9 +34,19 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   protected
 
-  def update_resource(resource, params)
-    resource.update_without_password(params)
+def update_resource(resource, params)
+  # Remove current_password (and empty password fields) before updating
+  clean_params = params.except(:current_password)
+  clean_params[:password] = nil if clean_params[:password].blank?
+  clean_params[:password_confirmation] = nil if clean_params[:password_confirmation].blank?
+
+  if params[:current_password].blank?
+    resource.update_without_password(clean_params)
+  else
+    super
   end
+end
+
 
   def after_update_path_for(resource)
     user_path(resource)  

@@ -34,9 +34,17 @@ class RebapsController < ApplicationController
 
   def add_member
     member = User.find(params[:member_id])
+
+    if member.rebap_memberships.exists?
+      redirect_to manage_members_rebaps_path, alert: "#{member.full_name} is already a member of another REBAP chapter."
+      return
+    end
+
     current_user.rebap_memberships.create!(member: member, chapter: "Naga City Chapter")
     redirect_to manage_members_rebaps_path, notice: "#{member.full_name} added as an active member."
   end
+
+
 
   def assign_officer
     membership = RebapMembership.find(params[:membership_id])

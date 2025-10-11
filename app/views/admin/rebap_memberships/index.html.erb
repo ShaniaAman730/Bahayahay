@@ -20,6 +20,7 @@
           <th>Contact No.</th>
           <th>Chapter</th>
           <th>Action</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -31,6 +32,8 @@
             <td>
               <%= link_to "Show", user_path(user), class: "btn btn-sm btn-secondary mr-1" %>
               <% if user.rebap_memberships.present? %>
+            </td>
+            <td>
                 <button class="btn btn-success btn-sm" disabled>Chapter Created</button>
               <% else %>
                 <%= link_to "Create Chapter", new_admin_rebap_membership_path(rebap_id: user.id), class: "btn btn-sm btn-primary" %>

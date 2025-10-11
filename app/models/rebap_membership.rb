@@ -2,6 +2,7 @@ class RebapMembership < ApplicationRecord
   belongs_to :rebap, class_name: "User"
   belongs_to :member, class_name: "User", optional: true
 
+  validates :member_id, uniqueness: { message: "can only belong to one REBAP chapter" }
   validates :chapter, presence: true
   validates :rebap_id, uniqueness: { scope: :member_id }
   validates :order, uniqueness: true, allow_nil: true

@@ -128,14 +128,15 @@
       <!-- Map Goes Here -->
       <div class="p-1 mt-3">
         <h5>Map</h5>
+        <p class="text-muted small"><em>Note: If no location is provided by the realtor, the map will have no location pin.</em></p>
         <div id="map" style="height:500px;"></div>
-        <p class="mt-1"><em>Note: If no location is provided by the realtor, the map will have no location pin.</em></p>
       </div>
 
       <!-- Nearby Places -->
       <% if @listing.latitude.present? && @listing.longitude.present? %>
         <div class="mt-4">
           <h5>Nearby Places</h5>
+          <p class="text-muted small"><em>Note: If loading takes a while, please refresh page.</em></p>
           <ul class="nav nav-tabs" id="amenityTabs" role="tablist">
             <li class="nav-item" role="presentation">
               <button class="nav-link active" id="restaurants-tab" data-bs-toggle="tab" data-bs-target="#restaurants" type="button" role="tab">
