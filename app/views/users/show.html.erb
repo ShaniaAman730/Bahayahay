@@ -364,44 +364,13 @@
           </div>
         <% end %>
         
-        <!-- Reviews -->
-        <% if @user.realtor? && @user.received_reviews.any? %>
-          <div class="mt-5">
-            <h4>Reviews</h4>
-            <% @reviews.each do |review| %>
-              <div class="card mb-3">
-                <div class="card-body">
-                  <div class="card-body d-flex align-items-center">
-                    <div>
-                      <h5><%= review.client.first_name %> <%= review.client.last_name[0] %>.</h5>
-                      <p class="card-text text-muted mb-2">
-                        <% knowledge = review.knowledge_rating.to_i %>
-      									<strong>Knowledge & Expertise:</strong> <%= '★' * knowledge + '☆' * (5 - knowledge) %><br>
-
-      									<% responsiveness = review.responsiveness_rating.to_i %>
-      									<strong>Responsiveness:</strong> <%= '★' * responsiveness + '☆' * (5 - responsiveness) %><br>
-
-      									<% professionalism = review.professionalism_rating.to_i %>
-      									<strong>Professionalism:</strong> <%= '★' * professionalism + '☆' * (5 - professionalism) %><br><br>
-
-      									<em>"<%= review.comment %>"</em>
-                    </p>
-                    </div>
-
-                    <div class="ms-auto">
-                      <% if review.listing.listing_photos.attached? %>
-                        <%= link_to listing_path(review.listing_id), title: "View listing", data: { bs_toggle: "tooltip" } do %>
-                          <%= image_tag review.listing.listing_photos.first, class: "rounded", size: "170x170" %>
-                        <% end %>
-                      <% end %>
-                    </div> 
-                  </div> 
-                </div>
-              </div>
-            <% end %>
-            <%= paginate @reviews, param_name: :reviews_page %>
-          </div>
+      <!-- Reviews -->
+      <% if @user.realtor? && @user.received_reviews.any? %>
+        <div class="mt-5">      
+           <%= render "reviews/user_reviews", user: @user, reviews: @reviews %>
+        </div>
         <% end %>
+        
       </div>
 
       <!-- SPACE -->
