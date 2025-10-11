@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag('style') %>
 
 <!-- Jumbotron with Overlay -->
-<div class="jumbotron jumbotron-fluid position-relative text-white" style="background-image: url(<%= asset_path('naga1.jpg') %>); background-size: cover; background-position: center center;">
+<div class="jumbotron jumbotron-fluid position-relative text-white" style="background-image: url(<%= asset_path('naga5.png') %>); background-size: cover; background-position: 50% 80%;">
   <!-- Black overlay -->
   <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.4); z-index: 1;"></div>
 
@@ -51,13 +51,13 @@
       ] %>
 
       <!-- Min Price -->
-      <div class="col-md-1">
+      <div class="col-6 col-md-1">
         <%= label_tag :min_price, "Min Price", class: "form-label" %>
         <%= select_tag :min_price, options_for_select(price_options, params[:min_price]), class: "form-select" %>
       </div>
 
       <!-- Max Price -->
-      <div class="col-md-1">
+      <div class="col-6 col-md-1">
         <%= label_tag :max_price, "Max Price", class: "form-label" %>
         <%= select_tag :max_price, options_for_select(price_options, params[:max_price]), class: "form-select" %>
       </div>
@@ -81,7 +81,13 @@
 
       <!-- Submit -->
       <div class="col-12 col-md-5 text-md-end text-center">
-        <%= submit_tag "Search", class: "btn btn-success w-50" %>
+        <div class="row">
+            <div class="col-sm-7">
+            </div>
+            <div class="col-sm-5">
+               <%= submit_tag "Search", class: "btn btn-success w-100" %>
+            </div>
+          </div>
       </div>
     <% end %>
   </div>

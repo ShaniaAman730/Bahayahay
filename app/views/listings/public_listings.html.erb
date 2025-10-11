@@ -60,25 +60,25 @@
       </div>
 
       <!-- Financing Options -->
-      <div class="col-md-4 d-flex align-items-center mr-4">
-        <label class="form-label me-2 mb-0 fw-semibold ml-1 mt-4">Financing Options:</label>
-        <div class="form-check me-2 ml-1 mt-4">
+      <div class="col-12 col-md-4 d-flex align-items-center p-1 mt-4 ml-2">
+        <label class="form-label me-2 mb-0 fw-semibold ml-1">Financing Options:</label>
+        <div class="form-check me-2">
           <%= check_box_tag :pagibig_financing, true, params[:pagibig_financing].present?, class: "form-check-input" %>
           <%= label_tag :pagibig_financing, "PAGIBIG", class: "form-check-label" %>
         </div>
-        <div class="form-check me-2 ml-1 mt-4">
+        <div class="form-check me-2">
           <%= check_box_tag :bank_financing, true, params[:bank_financing].present?, class: "form-check-input" %>
           <%= label_tag :bank_financing, "Bank", class: "form-check-label" %>
         </div>
-        <div class="form-check me-2 ml-1 mt-4">
+        <div class="form-check me-2">
           <%= check_box_tag :inhouse_financing, true, params[:inhouse_financing].present?, class: "form-check-input" %>
           <%= label_tag :inhouse_financing, "In-house", class: "form-check-label" %>
         </div>
       </div>
 
       <!-- Submit Button -->
-      <div class="col-12 col-md-3 ml-5 mt-4">
-        <%= submit_tag "Search", class: "btn btn-success w-50" %>
+      <div class="col-12 col-md-2 mt-4">
+        <%= submit_tag "Search", class: "btn btn-success w-100" %>
       </div>
     </div>
   <% end %>

@@ -39,18 +39,24 @@ class User < ApplicationRecord
   # Statistics
   has_many :statistics, as: :trackable, dependent: :destroy
 
+  # REBAP
+  has_many :rebap_memberships, foreign_key: :rebap_id, dependent: :destroy
+  has_many :active_members, through: :rebap_memberships, source: :member
+  has_many :member_rebap_memberships, class_name: "RebapMembership", foreign_key: :member_id, dependent: :destroy
+
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  enum :user_type, { admin: 0, developer: 1, realtor: 2, client: 3 }
+  enum :user_type, { admin: 0, developer: 1, realtor: 2, client: 3, rebap: 4 }
 
   # helper to check if this user is a head broker
   def head_broker?
     managed_realty.present?
   end
 
-  validates :first_name, presence: true, on: :create
-  validates :last_name, presence: true, on: :create
+  validates :first_name, presence: true, on: :create, unless: -> { user_type.in?(%w[developer rebap]) }
+  validates :last_name, presence: true, on: :create, unless: -> { user_type.in?(%w[developer rebap]) }
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }, on: :create
   validates :contact_no, presence: true, on: :create
   validates :privacy_agreement, acceptance: true, if: -> { realtor? }, on: :create

@@ -13,6 +13,10 @@ class HomeController < ApplicationController
       @listings = current_user.listings_posted.order(created_at: :desc).page(params[:listings_page]).per(5)
       @recent_guides = current_user.guides.order(created_at: :desc).limit(9)
 
+    elsif current_user&.rebap?
+      @active_members = current_user.rebap_memberships.joins(:member).page(params[:members_page]).per(20)
+      @recent_guides = current_user.guides.order(created_at: :desc).limit(9)
+
     else
       @recent_listings = Listing.public_listings.order(created_at: :desc).limit(9)
       @recent_guides = Guide.order(created_at: :desc).limit(9)

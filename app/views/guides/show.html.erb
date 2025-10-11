@@ -3,6 +3,9 @@
     <!-- Guide Content -->
     <div class="col-md-8">
       <h1><%= @guide.title %></h1>
+      <% if @guide.user.rebap? %>
+         <h5><span class="badge badge-light text-danger mb-3"><%= image_tag("rebap-logo.png", height: "15") %>  From REBAP</span></h5>
+      <% end %>
       <% if @guide.guide_photo.attached? %>
         <%= image_tag @guide.guide_photo, class: "img-fluid rounded mb-4" %>
       <% end %>
@@ -66,9 +69,16 @@
             <%= image_tag("no-profile.jpg", class: "rounded-circle mb-2", size: "100x100") %>
           <% end %>
           <% if @guide.user.realtor? %>
-            <p class="fw-bold"><%= @guide.user.first_name %> <%= @guide.user.last_name %></p>
-          <% else %>
-            <p class="fw-bold"><%= @guide.user.company_name %></p>
+            <p class="fw-bold mt-1"><%= @guide.user.first_name %> <%= @guide.user.last_name %></p>
+          <% elsif @guide.user.developer? %>
+            <p class="fw-bold mt-1"><%= @guide.user.company_name %></p>
+          <% elsif @guide.user.rebap? %>
+            <p class="fw-bold mt-1">
+              REBAP
+                <% if @guide.user.rebap_memberships.present? %>
+                  <%= @guide.user.rebap_memberships.first&.chapter %>
+                <% end %>
+            </p>
           <% end %>
 
           <p class="fw-light"><small><%= truncate(@guide.user.about, length: 100) %></small></p>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_08_022315) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_11_021833) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -231,6 +231,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_08_022315) do
     t.datetime "updated_at", null: false
     t.index ["realty_id"], name: "index_realty_memberships_on_realty_id"
     t.index ["user_id"], name: "index_realty_memberships_on_user_id"
+  end
+
+  create_table "rebap_memberships", force: :cascade do |t|
+    t.integer "rebap_id"
+    t.integer "member_id"
+    t.string "chapter"
+    t.string "role"
+    t.integer "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "order"
+    t.index ["order"], name: "index_rebap_memberships_on_order", unique: true, where: "(role IS NOT NULL)"
   end
 
   create_table "review_events", force: :cascade do |t|

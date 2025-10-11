@@ -1,10 +1,14 @@
-<h1>Welcome back</h1>
-  <h2><%= current_user.first_name %></h2>
-  
-  <br>
 
-<%= link_to "Manage Users", all_users_users_path, class: "btn btn-light me-1", role: "button" %>
-<%= link_to "Approve Realtors", managerealtors_users_path, class: "btn btn-light me-1", role: "button" %>
-<%= link_to "Approve Listings", admin_listings_path, class: "btn btn-light me-1", role: "button" %>
-<%= link_to "Manage Realties", admin_realties_path, class: "btn btn-light me-1", role: "button" %>
-<%= link_to "Create New User", new_admin_user_path, class: "btn btn-info me-1", role: "button" %>
+<div class="ml-1 mb-3">
+  <h1>Welcome back</h1>
+  <h2><%= current_user.first_name %></h2>
+</div>
+
+<div class="d-flex flex-wrap gap-1">
+  <%= link_to "Manage Users", all_users_users_path, class: "btn btn-light" %>
+  <%= link_to "Approve Realtors", managerealtors_users_path, class: "btn btn-light" %>
+  <%= link_to "Approve Listings", admin_listings_path, class: "btn btn-light" %>
+  <%= link_to "Manage Realties", admin_realties_path, class: "btn btn-light" %>
+  <%= link_to "Manage REBAP", admin_rebap_memberships_path, class: "btn btn-light" %>
+  <%= link_to "Create New User", new_admin_user_path, class: "btn btn-info" %>
+</div>

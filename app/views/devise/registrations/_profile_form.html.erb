@@ -10,7 +10,7 @@
       <%= f.file_field :profile_photo, class: "form-control w-50", accept: "image/*", data: { max_size: 500.kilobytes } %>
     </div>
 
-    <% if current_user.realtor? || current_user.developer? %>
+    <% if current_user.realtor? || current_user.developer? || current_user.rebap? %>
       <div class="field p-2">
         <%= f.label :about, "About" %><br />
         <%= f.text_area :about, placeholder: "Tell us about yourself...", data: { max_length: 500 }, class: "form-control w-100 post-a char-limit", rows: 7 %>
@@ -78,6 +78,16 @@
         <div class="field">
             <%= f.label :address, "Business Address" %><br />
             <%= f.text_field :address, class: "form-control w-100", placeholder: "Business Address" %>
+          </div>
+        </div>
+      </div>
+
+      <% elsif current_user.rebap? %>
+      <div class="form-row p-2">
+      <div class="col-12 col-md-12 mb-3">
+        <div class="field">
+            <%= f.label :address, "Office Address" %><br />
+            <%= f.text_field :address, class: "form-control w-100", placeholder: "Office Address" %>
           </div>
         </div>
       </div>

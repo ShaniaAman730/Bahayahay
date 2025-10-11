@@ -40,6 +40,9 @@
 
                             <div class="card-body">
                               <h5 class="card-title text-success"><%= truncate(guide.title, length: 50) %></h5>
+                              <% if guide.user.rebap? %>
+                                <span class="badge badge-light text-danger"><%= image_tag("rebap-logo.png", height: "15") %>  From REBAP</span>
+                              <% end %>
                               <p class="card-text text-muted"><%= truncate(guide.body.to_plain_text, length: 100) %></p>
                             </div>
                           </div>

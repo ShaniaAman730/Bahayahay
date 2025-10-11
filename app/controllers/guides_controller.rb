@@ -1,8 +1,8 @@
 # app/controllers/guides_controller.rb
 class GuidesController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :authenticate_realtor_developer!, except: [:index, :show]
-  before_action :ensure_realtor_developer!, except: [:index, :show]
+  before_action :authenticate_realtor_developer_rebap!, except: [:index, :show]
+  before_action :ensure_realtor_developer_rebap!, except: [:index, :show]
   before_action :set_guide, only: [:show]
 
   def index
@@ -35,8 +35,8 @@ class GuidesController < ApplicationController
 
   private
 
-  def ensure_realtor_developer!
-    redirect_to root_path unless current_user.realtor? || current_user.developer?
+  def ensure_realtor_developer_rebap!
+    redirect_to root_path unless current_user.realtor? || current_user.developer? || current_user.rebap?
   end
 
   def set_guide

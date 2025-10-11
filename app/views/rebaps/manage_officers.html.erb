@@ -1,0 +1,147 @@
+<div class="container my-5">
+  <h3 class="mb-4">Manage Officers</h3>
+
+  <!-- Search form (only members) -->
+  <div class="mb-4">
+    <%= form_with url: manage_officers_rebaps_path, method: :get, local: true, class: "mb-4 d-flex" do %>
+      <%= text_field_tag :query, params[:query], placeholder: "Search current members...", class: "form-control me-2" %>
+      <%= submit_tag "Search", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <% if @members.present? %>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Full Name</th>
+          <th>PRC No</th>
+          <th>Profile</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @members.each do |member| %>
+          <% membership = current_user.rebap_memberships.find_by(member_id: member.id) %>
+          <tr>
+            <td><%= member.full_name %></td>
+            <td><%= member.prc_no.presence || "N/A" %></td>
+            <td><%= link_to "View Profile", user_path(member), class: "btn btn-sm btn-outline-secondary" %></td>
+            <td>
+              <% if membership.role.present? %>
+                <span class="badge bg-success"><%= membership.role %></span>
+              <% else %>
+                <button class="btn btn-sm btn-outline-primary" 
+                        onclick="openOfficerModal(<%= membership.id %>)">
+                  Assign Officer
+                </button>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="d-flex justify-content-center mt-3">
+      <%= paginate @members %>
+    </div>
+  <% elsif params[:query].present? %>
+    <p class="text-center text-muted">No members found for "<%= params[:query] %>".</p>
+  <% end %>
+
+  <hr class="my-4">
+
+  <!-- Active Officers List -->
+  <div class="bg-light rounded p-4">
+    <h4 class="mb-3">Active Officers</h4>
+
+    <% if @officers.present? %>
+      <div class="row">
+          <% @officers.each do |officer| %>
+      <div class="col-12 col-md-6 col-sm-6 mb-3">
+            <div class="d-flex align-items-center p-3 border rounded">
+              <% if officer.member.profile_photo.attached? %>
+                    <%= image_tag officer.member.profile_photo, class: "rounded-circle me-3", size: "80x80" %>
+                  <% else %>
+                    <%= image_tag "no-profile.jpg", class: "rounded-circle me-3", size: "80x80" %>
+                  <% end %>
+              <div>
+                <%= link_to officer.member.full_name, user_path(officer.member), 
+                    class: "fw-bold text-decoration-none" %>
+                    <p class="card-text text-muted small mb-1">
+                        <%= officer.role %> (<%= officer.year %>)
+                    </p>
+                <div class="mt-2">
+                  <%= button_to "Unassign", unassign_officer_rebaps_path(id: officer.id),
+                      method: :delete,
+                      data: { confirm: "Remove #{officer.member.full_name} as #{officer.role}?" },
+                      class: "btn btn-outline-danger btn-sm" %>
+                </div>
+              </div>
+            </div>
+          </div>
+      <% end %>
+    </div>
+
+      <div class="d-flex justify-content-center mt-3">
+        <%= paginate @officers %>
+      </div>
+
+    <% else %>
+      <p class="text-center text-muted">No officers assigned yet.</p>
+    <% end %>
+  </div>
+</div>
+
+<!-- Officer Assignment Modal -->
+<div class="modal fade" id="officerModal" tabindex="-1" aria-labelledby="officerModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content p-3 position-relative">
+
+      <!-- Header with close button -->
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title" id="officerModalLabel">Assign Officer</h5>
+      </div>
+
+      <!-- Form body -->
+      <div class="modal-body">
+        <%= form_with url: assign_officer_rebaps_path, method: :patch, local: true do |f| %>
+          <%= hidden_field_tag :membership_id, nil, id: "membership_id_field" %>
+
+          <div class="mb-3">
+            <%= label_tag :role, "Role" %>
+            <%= text_field_tag :role, nil, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= label_tag :year, "Year" %>
+            <%= text_field_tag :year, nil, class: "form-control" %>
+          </div>
+
+          <div class="mb-4">
+            <%= label_tag :order, "Order (1 = highest authority)" %>
+            <%= number_field_tag :order, nil, class: "form-control" %>
+          </div>
+
+          <div class="modal-footer border-0 pt-0">
+            <%= submit_tag "Save", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  document.addEventListener("turbo:load", function() {
+    window.openOfficerModal = function(membershipId) {
+      const field = document.getElementById('membership_id_field');
+      if (field) field.value = membershipId;
+      const modalEl = document.getElementById('officerModal');
+      if (modalEl) {
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+      }
+    };
+  });
+</script>

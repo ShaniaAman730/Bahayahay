@@ -9,20 +9,14 @@
 
   <!-- Search Form -->
   <div class="mb-4">
-    <%= form_with url: all_users_users_path, method: :get, local: true, 
-                  class: "row g-2 align-items-center" do %>
+    <%= form_with url: all_users_users_path, method: :get, local: true, class: "row g-2 align-items-center" do %>
 
       <div class="col-12 col-md-10">
-        <%= text_field_tag :q, params[:q], 
-              placeholder: "Search users...", 
-              class: "form-control w-100" %>
+        <%= text_field_tag :q, params[:q], placeholder: "Search users...", class: "form-control w-100" %>
       </div>
 
       <div class="col-12 col-md-1">
-        <%= select_tag :user_type, 
-              options_for_select(User.user_types.keys.map { |t| [t.titleize, t] }, params[:user_type]), 
-              include_blank: "All Types", 
-              class: "form-select w-100" %>
+        <%= select_tag :user_type, options_for_select(User.user_types.keys.map { |t| [t.titleize, t] }, params[:user_type]), include_blank: "All Types", class: "form-select w-100" %>
       </div>
 
       <div class="col-12 col-md-1 d-grid">

@@ -29,6 +29,14 @@ class UsersController < ApplicationController
       redirect_to root_path, notice: "User's profile is not available."
     end
 
+     if @user.user_type == "rebap"
+      # Fetch REBAP memberships related to this chapter
+      @officers = @user.rebap_memberships.where.not(role: [nil, ""]).order(:order).page(params[:officers_page]).per(30)
+      @active_members = @user.rebap_memberships.where(role: [nil, ""]) .joins(:member).page(params[:members_page]).per(20)
+    end
+
+    @recent_guides = @user.guides.order(created_at: :desc).limit(40)
+
     # Statistics tracker
     if user_signed_in? && current_user.id != @user.id
       Statistic.create!(

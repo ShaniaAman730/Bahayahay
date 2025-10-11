@@ -1,0 +1,50 @@
+<br>
+
+ <%= render partial: "/shared/admin_dashboard" %>
+
+ <br>
+
+<div class="p-5">
+  <h2>Manage REBAP Chapters</h2>
+
+  <%= form_with url: admin_rebap_memberships_path, method: :get, local: true, class: "mb-4 d-flex" do %>
+    <%= text_field_tag :query, params[:query], placeholder: "Search REBAP users by email, contact no., or chapter...", class: "form-control me-2" %>
+    <%= submit_tag "Search", class: "btn btn-primary" %>
+  <% end %>
+
+  <% if @rebap_users.any? %>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Contact No.</th>
+          <th>Chapter</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @rebap_users.each do |user| %>
+          <tr>
+            <td><%= user.email %></td>
+            <td><%= user.contact_no.presence || "—" %></td>
+            <td><%= user.rebap_memberships.first&.chapter || "—" %></td>
+            <td>
+              <%= link_to "Show", user_path(user), class: "btn btn-sm btn-secondary mr-1" %>
+              <% if user.rebap_memberships.present? %>
+                <button class="btn btn-success btn-sm" disabled>Chapter Created</button>
+              <% else %>
+                <%= link_to "Create Chapter", new_admin_rebap_membership_path(rebap_id: user.id), class: "btn btn-sm btn-primary" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="d-flex justify-content-center mt-4">
+      <%= paginate @rebap_users %>
+    </div>
+  <% else %>
+     <p>No users found.</p>
+  <% end %>
+</div>

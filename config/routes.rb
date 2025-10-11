@@ -88,6 +88,8 @@ Rails.application.routes.draw do
         patch :reject 
       end
     end
+
+    resources :rebap_memberships, only: [:index, :new, :create]
   end
 
   resources :guides do
@@ -128,6 +130,17 @@ Rails.application.routes.draw do
   resources :accreditations, only: [:update, :destroy] do
     collection do
       get :developer_requests
+    end
+  end
+
+  resources :rebaps, only: [:show, :edit, :update] do
+    collection do
+      get :manage_members
+      post :add_member
+      delete :remove_member
+      get :manage_officers
+      patch :assign_officer
+      delete :unassign_officer
     end
   end
 

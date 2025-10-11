@@ -12,6 +12,9 @@
 <% elsif current_user&.realtor? %>
   <%= render partial: "realtor_homepage" %>
 
+<% elsif current_user&.rebap? %>
+  <%= render partial: "rebap_homepage" %>
+
 <% else %>
   <%= render partial: "user_homepage" %>
 

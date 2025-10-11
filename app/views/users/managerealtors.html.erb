@@ -4,27 +4,13 @@
 
 <br>
 
-  <div class="manager-search-bar p-4">
-    <%= form_with url: managerealtors_users_path, method: :get, local: true, 
-                  class: "row g-2 align-items-center" do %>
-
-      <div class="col-12 col-md-8">
-        <%= text_field_tag :query, params[:query], 
-              placeholder: "Search realtors...", 
-              class: "form-control w-100" %>
-      </div>
-
-      <div class="col-12 col-md-4 d-grid">
-        <%= submit_tag "Search", class: "btn btn-outline-primary w-100" %>
-      </div>
-
-    <% end %>
-  </div>
-  <br>
-
-
-  <div class="mt-5 p-5">
+  <div class="p-5">
     <h2>Unapproved Realtors</h2>
+
+    <%= form_with url: managerealtors_users_path, method: :get, local: true, class: "mb-4 d-flex" do %>
+        <%= text_field_tag :query, params[:query], placeholder: "Search realtors...", class: "form-control me-2" %>
+        <%= submit_tag "Search", class: "btn btn-primary" %>
+    <% end %>
 
     <% if @users.any? %>
     <% @users.each do |user| %>

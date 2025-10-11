@@ -30,6 +30,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def authenticate_realtor_developer_rebap!
+    unless current_user && current_user.realtor? || current_user.developer? || current_user.rebap?
+      redirect_to root_path, alert: "You are not authorized to access this page."
+    end
+  end
+
   def check_realtor_approval
     if current_user.realtor? && !current_user.admin_approved?
       sign_out current_user

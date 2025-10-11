@@ -1,0 +1,94 @@
+<div class="container my-5">
+  <h3 class="mb-4">Manage Members</h3>
+
+  <!-- 🔍 Search form -->
+  <div class="mb-4">
+    <%= form_with url: manage_members_rebaps_path, method: :get, local: true, class: "mb-4 d-flex" do %>
+      <%= text_field_tag :query, params[:query], placeholder: "Search a realtor by name or PRC number...", class: "form-control me-2" %>
+      <%= submit_tag "Search", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <!-- Search results -->
+  <% if @members.present? %>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Full Name</th>
+            <th>PRC No</th>
+            <th>Profile</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @members.each do |member| %>
+            <tr>
+              <td><%= member.full_name %></td>
+              <td><%= member.prc_no.presence || "N/A" %></td>
+              <td>
+                <%= link_to "View Profile", user_path(member), class: "btn btn-sm btn-outline-secondary" %>
+              </td>
+              <td>
+                <% existing_membership = current_user.rebap_memberships.find_by(member_id: member.id) %>
+
+                <% if existing_membership.present? %>
+                  <span class="badge bg-success">Already a member</span>
+                <% else %>
+                  <%= button_to "Add as Member", add_member_rebaps_path(member_id: member.id), method: :post, class: "btn btn-sm btn-outline-primary" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+    <div class="d-flex justify-content-center mt-3">
+      <%= paginate @members %>
+    </div>
+
+  <% elsif params[:query].present? %>
+    <p class="text-center text-muted">No members found for "<%= params[:query] %>".</p>
+  <% end %>
+
+
+  <hr class="my-4">
+
+  <!-- Active members list -->
+  <div class="bg-light rounded p-4 mb-4">
+  <h4 class="mb-3">Active Members</h4>
+  <% if @active_memberships.present? %>
+    <div class="row">
+      <% @active_memberships.each do |membership| %>
+        <div class="col-12 col-md-4 col-sm-6 mb-3">
+            <div class="d-flex align-items-center p-3 border rounded">
+              <% if membership.member.profile_photo.attached? %>
+                    <%= image_tag membership.member.profile_photo, class: "rounded-circle me-3", size: "70x70" %>
+                  <% else %>
+                    <%= image_tag "no-profile.jpg", class: "rounded-circle me-3", size: "70x70" %>
+                  <% end %>
+              <div>
+                <%= link_to membership.member.full_name, user_path(membership.member), 
+                    class: "fw-bold text-decoration-none" %>
+                    <p class="card-text text-muted small mb-1">PRC No:<%= membership.member.prc_no %></p>
+                <div class="mt-2">
+                  <%= button_to "Remove Member",
+                      remove_member_rebaps_path(id: membership.id),
+                      method: :delete,
+                      data: { confirm: "Are you sure you want to remove #{membership.member.full_name}?" },
+                      class: "btn btn-outline-danger btn-sm" %>
+                </div>
+              </div>
+            </div>
+          </div>
+      <% end %>
+    </div>
+
+    <div class="d-flex justify-content-center mt-3">
+      <%= paginate @active_memberships %>
+    </div>
+
+    <% else %>
+      <p class="text-center text-muted">No active members yet.</p>
+    <% end %>
+  </div>
+</div>
