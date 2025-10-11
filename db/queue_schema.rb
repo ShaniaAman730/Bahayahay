@@ -1,129 +1,357 @@
-ActiveRecord::Schema[7.1].define(version: 1) do
-  create_table "solid_queue_blocked_executions", force: :cascade do |t|
-    t.bigint "job_id", null: false
-    t.string "queue_name", null: false
-    t.integer "priority", default: 0, null: false
-    t.string "concurrency_key", null: false
-    t.datetime "expires_at", null: false
-    t.datetime "created_at", null: false
-    t.index [ "concurrency_key", "priority", "job_id" ], name: "index_solid_queue_blocked_executions_for_release"
-    t.index [ "expires_at", "concurrency_key" ], name: "index_solid_queue_blocked_executions_for_maintenance"
-    t.index [ "job_id" ], name: "index_solid_queue_blocked_executions_on_job_id", unique: true
-  end
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
+#
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
+#
+# It's strongly recommended that you check this file into your version control system.
 
-  create_table "solid_queue_claimed_executions", force: :cascade do |t|
-    t.bigint "job_id", null: false
-    t.bigint "process_id"
-    t.datetime "created_at", null: false
-    t.index [ "job_id" ], name: "index_solid_queue_claimed_executions_on_job_id", unique: true
-    t.index [ "process_id", "job_id" ], name: "index_solid_queue_claimed_executions_on_process_id_and_job_id"
-  end
+ActiveRecord::Schema[8.0].define(version: 2025_10_11_054737) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_catalog.plpgsql"
 
-  create_table "solid_queue_failed_executions", force: :cascade do |t|
-    t.bigint "job_id", null: false
-    t.text "error"
-    t.datetime "created_at", null: false
-    t.index [ "job_id" ], name: "index_solid_queue_failed_executions_on_job_id", unique: true
-  end
-
-  create_table "solid_queue_jobs", force: :cascade do |t|
-    t.string "queue_name", null: false
-    t.string "class_name", null: false
-    t.text "arguments"
-    t.integer "priority", default: 0, null: false
-    t.string "active_job_id"
-    t.datetime "scheduled_at"
-    t.datetime "finished_at"
-    t.string "concurrency_key"
+  create_table "accreditations", force: :cascade do |t|
+    t.bigint "realty_id", null: false
+    t.bigint "developer_id", null: false
+    t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index [ "active_job_id" ], name: "index_solid_queue_jobs_on_active_job_id"
-    t.index [ "class_name" ], name: "index_solid_queue_jobs_on_class_name"
-    t.index [ "finished_at" ], name: "index_solid_queue_jobs_on_finished_at"
-    t.index [ "queue_name", "finished_at" ], name: "index_solid_queue_jobs_for_filtering"
-    t.index [ "scheduled_at", "finished_at" ], name: "index_solid_queue_jobs_for_alerting"
+    t.index ["developer_id"], name: "index_accreditations_on_developer_id"
+    t.index ["realty_id"], name: "index_accreditations_on_realty_id"
   end
 
-  create_table "solid_queue_pauses", force: :cascade do |t|
-    t.string "queue_name", null: false
-    t.datetime "created_at", null: false
-    t.index [ "queue_name" ], name: "index_solid_queue_pauses_on_queue_name", unique: true
-  end
-
-  create_table "solid_queue_processes", force: :cascade do |t|
-    t.string "kind", null: false
-    t.datetime "last_heartbeat_at", null: false
-    t.bigint "supervisor_id"
-    t.integer "pid", null: false
-    t.string "hostname"
-    t.text "metadata"
-    t.datetime "created_at", null: false
+  create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
-    t.index [ "last_heartbeat_at" ], name: "index_solid_queue_processes_on_last_heartbeat_at"
-    t.index [ "name", "supervisor_id" ], name: "index_solid_queue_processes_on_name_and_supervisor_id", unique: true
-    t.index [ "supervisor_id" ], name: "index_solid_queue_processes_on_supervisor_id"
-  end
-
-  create_table "solid_queue_ready_executions", force: :cascade do |t|
-    t.bigint "job_id", null: false
-    t.string "queue_name", null: false
-    t.integer "priority", default: 0, null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
     t.datetime "created_at", null: false
-    t.index [ "job_id" ], name: "index_solid_queue_ready_executions_on_job_id", unique: true
-    t.index [ "priority", "job_id" ], name: "index_solid_queue_poll_all"
-    t.index [ "queue_name", "priority", "job_id" ], name: "index_solid_queue_poll_by_queue"
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
-  create_table "solid_queue_recurring_executions", force: :cascade do |t|
-    t.bigint "job_id", null: false
-    t.string "task_key", null: false
-    t.datetime "run_at", null: false
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
-    t.index [ "job_id" ], name: "index_solid_queue_recurring_executions_on_job_id", unique: true
-    t.index [ "task_key", "run_at" ], name: "index_solid_queue_recurring_executions_on_task_key_and_run_at", unique: true
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  create_table "solid_queue_recurring_tasks", force: :cascade do |t|
+  create_table "active_storage_blobs", force: :cascade do |t|
     t.string "key", null: false
-    t.string "schedule", null: false
-    t.string "command", limit: 2048
-    t.string "class_name"
-    t.text "arguments"
-    t.string "queue_name"
-    t.integer "priority", default: 0
-    t.boolean "static", default: true, null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "amenities", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "label"
+    t.string "icon"
+    t.integer "category", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category"], name: "index_amenities_on_category"
+    t.index ["name", "category"], name: "index_amenities_on_name_and_category", unique: true
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.text "body"
+    t.bigint "user_id", null: false
+    t.string "commentable_type", null: false
+    t.bigint "commentable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.bigint "client_id", null: false
+    t.bigint "realtor_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_conversations_on_client_id"
+    t.index ["realtor_id"], name: "index_conversations_on_realtor_id"
+  end
+
+  create_table "dev_projects", force: :cascade do |t|
+    t.string "title"
     t.text "description"
+    t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index [ "key" ], name: "index_solid_queue_recurring_tasks_on_key", unique: true
-    t.index [ "static" ], name: "index_solid_queue_recurring_tasks_on_static"
+    t.bigint "user_id", null: false
+    t.integer "barangay"
+    t.integer "property_type"
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
+    t.index ["user_id"], name: "index_dev_projects_on_user_id"
   end
 
-  create_table "solid_queue_scheduled_executions", force: :cascade do |t|
-    t.bigint "job_id", null: false
-    t.string "queue_name", null: false
-    t.integer "priority", default: 0, null: false
-    t.datetime "scheduled_at", null: false
-    t.datetime "created_at", null: false
-    t.index [ "job_id" ], name: "index_solid_queue_scheduled_executions_on_job_id", unique: true
-    t.index [ "scheduled_at", "priority", "job_id" ], name: "index_solid_queue_dispatch_all"
+  create_table "dev_projects_model_houses", id: false, force: :cascade do |t|
+    t.bigint "dev_project_id", null: false
+    t.bigint "model_house_id", null: false
+    t.index ["dev_project_id"], name: "index_dev_projects_model_houses_on_dev_project_id"
+    t.index ["model_house_id"], name: "index_dev_projects_model_houses_on_model_house_id"
   end
 
-  create_table "solid_queue_semaphores", force: :cascade do |t|
-    t.string "key", null: false
-    t.integer "value", default: 1, null: false
-    t.datetime "expires_at", null: false
+  create_table "guides", force: :cascade do |t|
+    t.string "title"
+    t.text "body"
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index [ "expires_at" ], name: "index_solid_queue_semaphores_on_expires_at"
-    t.index [ "key", "value" ], name: "index_solid_queue_semaphores_on_key_and_value"
-    t.index [ "key" ], name: "index_solid_queue_semaphores_on_key", unique: true
+    t.index ["user_id"], name: "index_guides_on_user_id"
   end
 
-  add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
-  add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
-  add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
-  add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
-  add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
-  add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  create_table "listings", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.decimal "price"
+    t.integer "furnish_type"
+    t.integer "project_type"
+    t.integer "barangay"
+    t.string "address"
+    t.boolean "filipinocitizen"
+    t.string "tin"
+    t.boolean "ownerabroad"
+    t.string "aif"
+    t.boolean "provaircon", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "realtor_id", null: false
+    t.bigint "client_id"
+    t.string "listing_type"
+    t.boolean "owneralive"
+    t.boolean "estatetax"
+    t.boolean "ejsprocessed"
+    t.integer "citizenship"
+    t.integer "listing_type_num"
+    t.boolean "bank_financing", default: false, null: false
+    t.boolean "inhouse_financing", default: false, null: false
+    t.boolean "pagibig_financing", default: false, null: false
+    t.integer "beds"
+    t.integer "baths"
+    t.integer "sqft"
+    t.boolean "approved", default: false
+    t.boolean "confirmed"
+    t.integer "developer_id"
+    t.integer "contact_clicks"
+    t.boolean "active", default: true
+    t.boolean "for_edit", default: false
+    t.string "rejection_reason"
+    t.string "custom_reason"
+    t.integer "approval_requests_count", default: 0, null: false
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
+    t.index ["client_id"], name: "index_listings_on_client_id"
+    t.index ["realtor_id"], name: "index_listings_on_realtor_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.bigint "conversation_id", null: false
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "sender_id"
+    t.boolean "read", default: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
+  end
+
+  create_table "model_houses", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.decimal "price"
+    t.integer "furnish_type"
+    t.boolean "provaircon", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "beds"
+    t.integer "baths"
+    t.integer "sqft"
+    t.boolean "bank_financing", default: false, null: false
+    t.boolean "inhouse_financing", default: false, null: false
+    t.boolean "pagibig_financing", default: false, null: false
+    t.bigint "dev_project_id"
+    t.index ["dev_project_id"], name: "index_model_houses_on_dev_project_id"
+  end
+
+  create_table "property_amenities", force: :cascade do |t|
+    t.bigint "amenity_id", null: false
+    t.string "property_type", null: false
+    t.bigint "property_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["amenity_id"], name: "index_property_amenities_on_amenity_id"
+    t.index ["property_type", "property_id", "amenity_id"], name: "index_property_amenities_on_property_and_amenity", unique: true
+    t.index ["property_type", "property_id"], name: "index_property_amenities_on_property"
+    t.index ["property_type", "property_id"], name: "index_property_amenities_on_property_type_and_property_id"
+  end
+
+  create_table "realties", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "business_location"
+    t.string "email"
+    t.string "phone_number"
+    t.integer "status", default: 0, null: false
+    t.text "rejection_reason"
+    t.bigint "head_broker_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "about"
+    t.string "website"
+    t.index ["head_broker_id"], name: "index_realties_on_head_broker_id"
+  end
+
+  create_table "realty_memberships", force: :cascade do |t|
+    t.bigint "realty_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["realty_id"], name: "index_realty_memberships_on_realty_id"
+    t.index ["user_id"], name: "index_realty_memberships_on_user_id"
+  end
+
+  create_table "rebap_memberships", force: :cascade do |t|
+    t.integer "rebap_id"
+    t.integer "member_id"
+    t.string "chapter"
+    t.string "role"
+    t.integer "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "order"
+    t.index ["member_id"], name: "index_rebap_memberships_on_member_id", unique: true
+    t.index ["order"], name: "index_rebap_memberships_on_order", unique: true, where: "(role IS NOT NULL)"
+  end
+
+  create_table "review_events", force: :cascade do |t|
+    t.bigint "client_id", null: false
+    t.bigint "realtor_id", null: false
+    t.bigint "listing_id", null: false
+    t.string "event_type"
+    t.text "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "read", default: false
+    t.bigint "review_id"
+    t.index ["client_id"], name: "index_review_events_on_client_id"
+    t.index ["listing_id"], name: "index_review_events_on_listing_id"
+    t.index ["realtor_id"], name: "index_review_events_on_realtor_id"
+    t.index ["review_id"], name: "index_review_events_on_review_id"
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.text "comment"
+    t.bigint "listing_id", null: false
+    t.bigint "client_id", null: false
+    t.bigint "realtor_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "knowledge_rating"
+    t.integer "responsiveness_rating"
+    t.integer "professionalism_rating"
+    t.boolean "read", default: false
+    t.index ["client_id"], name: "index_reviews_on_client_id"
+    t.index ["listing_id"], name: "index_reviews_on_listing_id"
+    t.index ["realtor_id"], name: "index_reviews_on_realtor_id"
+  end
+
+  create_table "saved_listings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "listing_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["listing_id"], name: "index_saved_listings_on_listing_id"
+    t.index ["user_id"], name: "index_saved_listings_on_user_id"
+  end
+
+  create_table "statistics", force: :cascade do |t|
+    t.string "trackable_type", null: false
+    t.bigint "trackable_id", null: false
+    t.bigint "user_id"
+    t.integer "event_type", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["trackable_type", "trackable_id"], name: "index_statistics_on_trackable"
+    t.index ["user_id"], name: "index_statistics_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.string "contact_no"
+    t.integer "user_type"
+    t.string "address"
+    t.string "company_name"
+    t.boolean "admin_approved", default: false, null: false
+    t.string "prc_no"
+    t.string "dhsud_no"
+    t.text "about"
+    t.string "website"
+    t.boolean "is_broker", default: false
+    t.string "broker_name"
+    t.string "broker_prc_no"
+    t.boolean "privacy_agreement"
+    t.datetime "welcome_email_sent_at"
+    t.datetime "realtor_approval_email_sent_at"
+    t.datetime "realtor_rejection_email_sent_at"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  add_foreign_key "accreditations", "realties"
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "comments", "users"
+  add_foreign_key "conversations", "users", column: "client_id"
+  add_foreign_key "conversations", "users", column: "realtor_id"
+  add_foreign_key "dev_projects", "users"
+  add_foreign_key "guides", "users"
+  add_foreign_key "listings", "users", column: "client_id"
+  add_foreign_key "listings", "users", column: "realtor_id"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "users", column: "sender_id"
+  add_foreign_key "model_houses", "dev_projects"
+  add_foreign_key "property_amenities", "amenities"
+  add_foreign_key "realty_memberships", "realties"
+  add_foreign_key "realty_memberships", "users"
+  add_foreign_key "review_events", "listings"
+  add_foreign_key "review_events", "reviews"
+  add_foreign_key "review_events", "users", column: "client_id"
+  add_foreign_key "review_events", "users", column: "realtor_id"
+  add_foreign_key "reviews", "listings"
+  add_foreign_key "reviews", "users", column: "client_id"
+  add_foreign_key "reviews", "users", column: "realtor_id"
+  add_foreign_key "saved_listings", "listings"
+  add_foreign_key "saved_listings", "users"
+  add_foreign_key "statistics", "users"
 end

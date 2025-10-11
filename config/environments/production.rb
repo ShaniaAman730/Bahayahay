@@ -24,8 +24,11 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Active Job
-  config.active_job.queue_adapter = :solid_queue
-  config.solid_queue.connects_to = { database: { writing: :queue } }
+  # config.active_job.queue_adapter = :solid_queue
+  # config.solid_queue.connects_to = { database: { writing: :queue } }
+
+  # Use inline jobs to avoid Solid Queue issues
+  config.active_job.queue_adapter = :inline
 
   # Active Storage
   # Use cloud storage in production; local is temporary
