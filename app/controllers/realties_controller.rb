@@ -18,6 +18,8 @@ class RealtiesController < ApplicationController
 
   def create
     @realty = current_user.build_managed_realty(realty_params)
+    @realty.head_broker = current_user
+    
     if @realty.save
       redirect_to @realty, notice: "Realty application submitted. Awaiting admin approval."
     else

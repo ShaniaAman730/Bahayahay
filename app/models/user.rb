@@ -114,7 +114,7 @@ class User < ApplicationRecord
 
     # or by prc_no 
     if broker.nil? && broker_prc_no.present?
-      broker = User.find_by(broker_prc_no: broker_prc_no)
+      broker = User.find_by(prc_no: broker_prc_no)
     end
 
     if broker.nil?

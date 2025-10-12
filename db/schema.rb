@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_11_141632) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_12_172939) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -290,12 +290,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_11_141632) do
   create_table "statistics", force: :cascade do |t|
     t.string "trackable_type", null: false
     t.bigint "trackable_id", null: false
-    t.bigint "user_id"
     t.integer "event_type", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["trackable_type", "trackable_id"], name: "index_statistics_on_trackable"
-    t.index ["user_id"], name: "index_statistics_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -354,5 +352,4 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_11_141632) do
   add_foreign_key "reviews", "users", column: "realtor_id"
   add_foreign_key "saved_listings", "listings"
   add_foreign_key "saved_listings", "users"
-  add_foreign_key "statistics", "users"
 end

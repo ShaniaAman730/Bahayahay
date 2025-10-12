@@ -3,7 +3,6 @@ class Realty < ApplicationRecord
   has_many :realty_memberships, dependent: :destroy
   has_many :users, through: :realty_memberships
   has_many :accreditations, dependent: :destroy
-  has_many :developers, through: :accreditations, source: :developer
 
   has_one_attached :business_permit
   has_one_attached :banner
@@ -28,11 +27,13 @@ class Realty < ApplicationRecord
     end
   end
 
-  def one_realty_per_broker
-	if head_broker.present? && head_broker.managed_realty.present?
-	    errors.add(:head_broker, "can only manage one realty.")
-	 end
+def one_realty_per_broker
+  if head_broker.present? &&
+     head_broker.managed_realty.present? &&
+     head_broker.managed_realty != self
+    errors.add(:head_broker, "can only manage one realty.")
   end
+end
 
   scope :approved, -> { where(status: :approved) }
 

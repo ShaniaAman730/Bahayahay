@@ -18,12 +18,11 @@
 	  <% if @realty.rejected? || @realty.pending? %>
 	  	<h2><%= @realty.name %></h2>
 	  	<p><strong>Location:</strong> <%= @realty.business_location %></p>
-		<p><strong>Email:</strong> <%= @realty.email %></p>
-		<p><strong>Phone:</strong> <%= @realty.phone_number %></p>
-		<p><strong>Status:</strong> <%= @realty.status.capitalize %></p>
+			<p><strong>Email:</strong> <%= @realty.email %></p>
+			<p><strong>Phone:</strong> <%= @realty.phone_number %></p>
+			<p><strong>Status:</strong> <%= @realty.status.capitalize %></p>
 	  <% end %>
-	<% end %>
-
+	
 	<% if @realty.rejected? && current_user == @realty.head_broker %>
   		<%= link_to "Edit Requirements",
               edit_requirements_realty_path(@realty),
@@ -32,6 +31,7 @@
 </div>
 
 
+<% end %>
 
   <% if @realty.approved? %>
 <div class="container mt-5">
@@ -41,22 +41,23 @@
 	    <%= image_tag @realty.banner, 
 	        class: "img-fluid w-100 rounded-3", 
 	        style: "max-height: 350px; object-fit: cover;" %>
-	  <% else %>
-	    <%= image_tag("default-banner.jpg", 
-	        class: "img-fluid w-100 rounded-3", 
-	        style: "max-height: 350px; object-fit: cover;" ) %>
 	  <% end %>
 
 	  <!-- Profile Photo -->
-	  <div class="position-absolute" style="left: 40px; bottom: -80px;">
 	    <% if @realty.logo.attached? %>
-	      <%= image_tag @realty.logo, 
-	          class: "rounded-circle img-thumbnail shadow profile-photo" %>
-	    <% else %>
-	      <%= image_tag("no-profile.jpg", 
-	          class: "rounded-circle img-thumbnail shadow profile-photo") %>
+	    	<% if @realty.banner.attached? %>
+		    	<div class="position-absolute" style="left: 40px; bottom: -80px;">
+			      <%= image_tag @realty.logo, 
+			          class: "rounded-circle img-thumbnail shadow profile-photo" %>
+			     </div>
+		     <% else %>
+		      <div>
+		      	<%= image_tag @realty.logo, 
+		          class: "rounded-circle img-thumbnail profile-photo mt-5" %>
+		       </div>
+		      <% end %>   
 	    <% end %>
-	  </div>
+	  
 	</div>
 
 	<br><br>
@@ -102,7 +103,7 @@
 	      	<h5>About Us</h5>
 	       	<p class="mb-0"><%= @realty.about %></p>
 	       </div>
-	    <% end %>
+	    <% end %>   
 
 	    <%= link_to user_path(@realty.head_broker), class: "text-decoration-none text-dark" do %>
 		  <div class="card my-4">
@@ -123,9 +124,9 @@
 		      </div>
 		    </div>
 		  </div>
-		<% end %>
 
-	  	<% if current_user == @realty.head_broker %>
+
+	  	<% if current_user.id == @realty.head_broker_id %>
 	  		<%= link_to edit_realty_path(@realty), class: "btn btn-light d-inline-flex align-items-center btn-sm" do %>
 			  <i class="bi bi-pencil me-2"></i> Edit Realty Info
 			<% end %>
@@ -234,5 +235,6 @@
 	</div>
 
   </div>
+  <% end %>
 
 </div>

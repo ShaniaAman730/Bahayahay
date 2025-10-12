@@ -78,11 +78,13 @@
           </li>
           </li>
           <li class="nav-item active">
-            <% if current_user&.is_broker? && current_user.managed_realty.blank? %>
-              <%= link_to "Apply to Create a Realty", new_realty_path, class: "nav-link" %>
-            <% elsif current_user&.is_broker? && current_user.managed_realty.present? %>  
-              <%= link_to "Your Realty", realty_path(current_user.managed_realty), class: "nav-link" %>
-            <% end %>  
+            <% if current_user&.is_broker? %>
+              <% if current_user.managed_realty&.persisted? %>
+                <%= link_to "Your Realty", realty_path(current_user.managed_realty), class: "nav-link" %>
+              <% else %>
+                <%= link_to "Apply to Create a Realty", new_realty_path, class: "nav-link" %>
+              <% end %>
+            <% end %>
           </li>
           <% if current_user.realtor? && (current_user.is_broker || current_user.realty.present?) %>
             <li class="nav-item active mt-1">
