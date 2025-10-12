@@ -41,7 +41,7 @@ class UsersController < ApplicationController
     if user_signed_in? && current_user.id != @user.id
       Statistic.create!(
         trackable: @user,
-        user: current_user,
+        visitor: current_user,
         event_type: :view
       )
     end

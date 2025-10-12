@@ -154,7 +154,7 @@ class Listing < ApplicationRecord
   end
 
   def unique_visitors
-    statistics.view.distinct.count(:user_id)
+    statistics.view.distinct.count(:visitor_id)
   end
 
   def days_since_posted

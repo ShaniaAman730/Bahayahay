@@ -156,7 +156,7 @@ class ListingsController < ApplicationController
     if user_signed_in? && current_user.id != @listing.realtor_id
       Statistic.create!(
         trackable: @listing,
-        user: current_user,
+        visitor: current_user,
         event_type: :view
       )
     end

@@ -1,6 +1,6 @@
 class Statistic < ApplicationRecord
   belongs_to :trackable, polymorphic: true
-  belongs_to :user, optional: true
+  belongs_to :visitor, class_name: "User"
 
   enum :event_type, { view: 0, contact_click: 1 }
   
