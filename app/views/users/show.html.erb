@@ -8,9 +8,9 @@
         <div class="row g-4 align-items-center">
           <div class="col-auto">
             <% if @user.persisted? && @user.profile_photo.attached? %>
-              <%= image_tag @user.profile_photo, class: "rounded-circle", size: "200x200" %>
+              <%= image_tag @user.profile_photo, class: "rounded-circle profile-photo" %>
             <% else %>
-              <%= image_tag("no-profile.jpg", class: "rounded-circle img-thumbnail", size: "200x200") %>
+              <%= image_tag("no-profile.jpg", class: "rounded-circle img-thumbnail profile-photo") %>
             <% end %>
           </div>
           <div class="col">
@@ -33,7 +33,7 @@
             <% elsif @user.client? %>
               <h2 class="fw-bold mb-1"><%= @user.first_name %> <%= @user.last_name %></h2>
             <% elsif @user.rebap? %>
-                <h2 class="fw-bold mb-1 text-danger">REBAP
+                <h2 class="fw-bold mb-1 text-danger">REBAP <br>
                 <% if @user.rebap_memberships.present? %>
                   <%= @user.rebap_memberships.first&.chapter %>
                 <% end %>

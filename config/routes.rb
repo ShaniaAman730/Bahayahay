@@ -42,6 +42,7 @@ Rails.application.routes.draw do
     collection do
       get :search_brokers
       get :search_realties
+      get :search_broker_prc_no
     end
   end
 

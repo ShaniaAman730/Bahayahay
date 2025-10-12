@@ -291,3 +291,23 @@ trix-toolbar .trix-button-group--file-tools {
   margin-top: 4px;
   transition: color 0.2s ease;
 }
+
+
+.profile-photo {
+    width: 200px;
+    height: 200px;
+  }
+
+  @media (max-width: 768px) {
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .profile-photo {
+      width: 100px;
+      height: 100px;
+    }
+  }

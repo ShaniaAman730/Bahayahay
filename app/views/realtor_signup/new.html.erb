@@ -1,9 +1,43 @@
 <br>
-<div class="container">
-  <div class="mt-5"></div>
-  <div class="form-container">
+<div class="container mt-3">
 
     <h2>Realtor Sign-up</h2>
+
+    <div class="alert alert-light small my-4" role="alert">
+      <h6>Registration Guidelines</h6>
+      <ul>
+        <li><strong>Fill out all required fields</strong> before submitting the form.</li>
+
+        <li>
+          <strong>Upload the following documents</strong> for verification:
+          <ul>
+            <li>PRC I.D. or Accreditation</li>
+            <li>DHSUD Certificate</li>
+            <li>Government-issued I.D.</li>
+          </ul>
+        </li>
+
+        <li>All submitted documents will be <strong>reviewed by the admin</strong> before granting you access to the system.</li>
+
+        <li>
+          <strong>If you are a salesperson:</strong>
+          <ul>
+            <li>Leave the <strong>“Are you a Licensed Real Estate Broker?”</strong> field <strong>unchecked</strong>.</li>
+            <li>Your broker must have an <strong>existing account AND realty</strong> within the system before you can sign up.</li>
+            <li>Enter your <strong>Broker’s Name</strong>, <strong>Broker’s PRC ID No.</strong>, or <strong>Realty Name</strong>. The system will automatically fill in related broker and realty details.</li>
+          </ul>
+        </li>
+
+        <li>
+          <strong>If you are a licensed broker:</strong>
+          <ul>
+            <li>You may enter <strong>“None”</strong> under <strong>Realty</strong> and <strong>Realty Address</strong> if these are not applicable.</li>
+          </ul>
+        </li>
+   
+        <li>You will receive an email from <strong><em>bahayahay.ph@gmail.com</em></strong> when your account is approved.</li>
+      </ul>
+    </div>
 
     <%= form_with model: @user, url: realtor_signup_index_path, local: true, html: { multipart: true } do |form| %>
 
@@ -44,42 +78,7 @@
 
     <div class="form-row p-2">
       <div class="col-12 col-md-6 mb-3">
-        <%= form.label :is_broker, "Are you a Licensed Real Estate Broker?" %><br>
-        <%= form.check_box :is_broker, {}, true, false %> Yes
-      </div>
-    </div>
-
-    <div id="broker-fields" style="display:none;">
-      <div class="form-row p-2">
-        <div class="col-12 col-md-6 mb-3">
-           <%= form.label :broker_name, "Broker's Name" %>
-          <%= form.text_field :broker_name, id: "broker-name", class: "form-control", placeholder: "Search broker..." %>
-          <ul id="broker-suggestions" class="list-group position-absolute w-100" style="z-index:1000;"></ul>
-        </div>
-
-        <div class="col-12 col-md-6 mb-3">
-          <%= form.label :broker_prc_no, "Broker's PRC ID No." %>
-          <%= form.text_field :broker_prc_no, class: "form-control", placeholder: "Broker's PRC ID No." %>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-row p-2">
-      <div class="col-12 col-md-6 mb-3">
-        <%= form.label :company_name, "Realty" %>
-          <%= form.text_field :company_name, id: "realty-name", class: "form-control", placeholder: "Search realty..." %>
-          <ul id="realty-suggestions" class="list-group position-absolute w-100" style="z-index:1000;"></ul>
-      </div>
-      <div class="col-12 col-md-6 mb-3">
-        <%= form.label :address, "Realty Address" %>
-        <%= form.text_field :address, required: true, class: "form-control", placeholder: "Realty Address" %>
-      </div>
-    </div>
-
-    <div class="form-row p-2">
-      <div class="col-12 col-md-6 mb-3">
         <%= form.label :prc_no, "PRC ID or Accreditation number" %>
-        <div class="mb-4"></div>
         <%= form.text_field :prc_no, required: true, class: "form-control", placeholder: "PRC ID or Accreditation number" %>
       </div>
       <div class="col-12 col-md-6 mb-3">
@@ -102,6 +101,41 @@
     <div class="field p-2 mb-3">
      <%= form.label :gov_id, "To verify your identity, please upload a picture of your government I.D." %>
      <%= form.file_field :gov_id, class: "form-control", class: "form-control", accept: "image/*", data: { max_size: 400.kilobytes }, required: true %>
+    </div>
+
+    <div class="form-row p-2">
+      <div class="col-12 col-md-6 mb-3">
+        <%= form.label :is_broker, "Are you a Licensed Real Estate Broker?" %><br>
+        <%= form.check_box :is_broker, {}, true, false %> Yes
+      </div>
+    </div>
+
+    <div id="broker-fields" style="display:none;">
+      <div class="form-row p-2">
+        <div class="col-12 col-md-6 mb-3 position-relative">
+           <%= form.label :broker_name, "Broker's Name" %>
+          <%= form.text_field :broker_name, id: "broker-name", class: "form-control", placeholder: "Search broker..." %>
+          <ul id="broker-suggestions" class="list-group position-absolute w-100" style="z-index:1000;"></ul>
+        </div>
+
+        <div class="col-12 col-md-6 mb-3 position-relative">
+          <%= form.label :broker_prc_no, "Broker's PRC ID No." %>
+          <%= form.text_field :broker_prc_no, id: "broker-prc-no", class: "form-control", placeholder: "Broker's PRC ID No." %>
+          <ul id="broker-prc-no-suggestions" class="list-group position-absolute"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row p-2">
+      <div class="col-12 col-md-6 mb-3 position-relative">
+        <%= form.label :company_name, "Realty" %>
+          <%= form.text_field :company_name, id: "realty-name", class: "form-control", placeholder: "Search realty..." %>
+          <ul id="realty-suggestions" class="list-group position-absolute w-100" style="z-index:1000;"></ul>
+      </div>
+      <div class="col-12 col-md-6 mb-3">
+        <%= form.label :address, "Realty Address" %>
+        <%= form.text_field :address, required: true, class: "form-control", placeholder: "Realty Address" %>
+      </div>
     </div>
 
     <div class="form-check mb-3">
@@ -134,7 +168,6 @@
 
   <% end %>
   <br>
- </div>
 </div>
 
 <script>
@@ -161,58 +194,142 @@ Do you agree to these terms?`;
 
 
 <script>
-  document.addEventListener("turbo:load", function() {
-    // prevent double-binding if Turbo caches
+(function() {
+  function initRealtorAutocomplete() {
+    // Prevent double initialization
     if (window.realtorSignupAutocompleteInitialized) return;
     window.realtorSignupAutocompleteInitialized = true;
 
-    function setupAutocomplete(inputId, suggestionId, url, fillCallback) {
+    // Debounce helper
+    function debounce(fn, delay) {
+      let timer;
+      return function(...args) {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), delay);
+      };
+    }
+
+    function setupAutocomplete({inputId, suggestionId, url, displayField, fillCallback}) {
       const input = document.getElementById(inputId);
       const suggestions = document.getElementById(suggestionId);
+      if (!input || !suggestions) return;
 
-      if (!input || !suggestions) return; // safety
-
-      input.addEventListener("input", function() {
+      input.addEventListener("input", debounce(function() {
         const query = this.value.trim();
-        if (query.length < 2) {
-          suggestions.innerHTML = "";
-          return;
-        }
+        suggestions.innerHTML = "";
+
+        if (query.length < 2) return;
+
+        const loadingItem = document.createElement("li");
+        loadingItem.textContent = "Loading...";
+        loadingItem.className = "list-group-item";
+        suggestions.appendChild(loadingItem);
 
         fetch(`${url}?q=${encodeURIComponent(query)}`)
           .then(res => res.json())
           .then(data => {
             suggestions.innerHTML = "";
-            data.forEach(item => {
+            if (!data.length) {
               const li = document.createElement("li");
-              li.className = "list-group-item list-group-item-action";
-              li.textContent = item.name || item.company_name;
-
-              li.addEventListener("click", () => {
-                fillCallback(item);
-                suggestions.innerHTML = "";
-              });
-
+              li.textContent = "No results found";
+              li.className = "list-group-item disabled";
               suggestions.appendChild(li);
-            });
-          });
+            } else {
+              data.forEach(item => {
+                const li = document.createElement("li");
+                li.className = "list-group-item list-group-item-action autocomplete-item";
+                li.textContent = item[displayField] || "";
+                li.addEventListener("click", () => {
+                  fillCallback(item);
+                  suggestions.innerHTML = "";
+                });
+                suggestions.appendChild(li);
+              });
+            }
+          })
+          .catch(() => { suggestions.innerHTML = ""; });
+      }, 100));
+
+      // Hide suggestions when clicking outside
+      document.addEventListener("click", (e) => {
+        if (!input.contains(e.target) && !suggestions.contains(e.target)) {
+          suggestions.innerHTML = "";
+        }
       });
     }
 
-    // Broker autocomplete
-    setupAutocomplete("broker-name", "broker-suggestions", "/realtor_signup/search_brokers", function(broker) {
-      document.getElementById("broker-name").value = broker.name;
-      document.getElementById("user_broker_prc_no").value = broker.prc_no;
-      document.getElementById("realty-name").value = broker.company_name || "";
-      document.getElementById("user_address").value = broker.address || "";
+    // --- Broker Name ---
+    setupAutocomplete({
+      inputId: "broker-name",
+      suggestionId: "broker-suggestions",
+      url: "/realtor_signup/search_brokers",
+      displayField: "name",
+      fillCallback: (broker) => {
+        document.getElementById("broker-name").value = broker.name;
+        document.getElementById("broker-prc-no").value = broker.prc_no;
+        document.getElementById("realty-name").value = broker.company_name || "";
+        document.getElementById("user_address").value = broker.address || "";
+      }
     });
 
-    // Realty autocomplete
-    setupAutocomplete("realty-name", "realty-suggestions", "/realtor_signup/search_realties", function(realty) {
-      document.getElementById("realty-name").value = realty.company_name;
-      document.getElementById("user_address").value = realty.address || "";
-      document.getElementById("broker-name").value = realty.broker_name || "";
-      document.getElementById("user_broker_prc_no").value = realty.broker_prc_no || "";
+    // --- Broker PRC No ---
+    setupAutocomplete({
+      inputId: "broker-prc-no",
+      suggestionId: "broker-prc-no-suggestions",
+      url: "/realtor_signup/search_broker_prc_no",
+      displayField: "prc_no",
+      fillCallback: (broker) => {
+        document.getElementById("broker-prc-no").value = broker.prc_no;
+        document.getElementById("broker-name").value = broker.name;
+        document.getElementById("realty-name").value = broker.company_name || "";
+        document.getElementById("user_address").value = broker.address || "";
+      }
     });
-  });
-  </script>
+
+    // --- Realty Name ---
+    setupAutocomplete({
+      inputId: "realty-name",
+      suggestionId: "realty-suggestions",
+      url: "/realtor_signup/search_realties",
+      displayField: "company_name",
+      fillCallback: (realty) => {
+        document.getElementById("realty-name").value = realty.company_name;
+        document.getElementById("user_address").value = realty.address || "";
+        document.getElementById("broker-name").value = realty.broker_name || "";
+        document.getElementById("broker-prc-no").value = realty.broker_prc_no || "";
+      }
+    });
+  }
+
+  // Run once DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initRealtorAutocomplete);
+  } else {
+    initRealtorAutocomplete();
+  }
+
+  // Also re-run on Turbo visits
+  document.addEventListener("turbo:load", initRealtorAutocomplete);
+})();
+</script>
+
+
+<style>
+    /* Autocomplete items */
+    .autocomplete-item {
+      cursor: pointer;
+    }
+
+    .autocomplete-item:hover {
+      background-color: #e9ecef;
+    }
+
+  .position-relative .list-group {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+  }
+
+</style>

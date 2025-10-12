@@ -5,7 +5,7 @@ class User < ApplicationRecord
   has_many :dev_projects, foreign_key: :user_id, dependent: :destroy
   has_many :model_houses, through: :dev_projects
 
-  has_many :listings_posted, class_name: "Listing", foreign_key: "realtor_id", dependent: :nullify
+  has_many :listings_posted, class_name: "Listing", foreign_key: "realtor_id", dependent: :destroy
   has_many :listings_bought, class_name: "Listing", foreign_key: "client_id", dependent: :nullify
   has_many :listings_as_developer, class_name: "Listing", foreign_key: "developer_id", dependent: :nullify
 
@@ -14,8 +14,8 @@ class User < ApplicationRecord
 
   has_many :sent_messages, class_name: "Message", foreign_key: "sender_id", dependent: :destroy
 
-  has_many :received_reviews, class_name: "Review", foreign_key: "realtor_id", dependent: :nullify
-  has_many :written_reviews, class_name: "Review", foreign_key: "client_id", dependent: :nullify
+  has_many :received_reviews, class_name: "Review", foreign_key: "realtor_id", dependent: :destroy
+  has_many :written_reviews, class_name: "Review", foreign_key: "client_id", dependent: :destroy
   has_many :realtor_review_events, class_name: "ReviewEvent", foreign_key: "realtor_id", dependent: :destroy
   has_many :client_review_events,  class_name: "ReviewEvent", foreign_key: "client_id", dependent: :destroy
 
@@ -111,6 +111,11 @@ class User < ApplicationRecord
   def broker_must_exist_if_not_broker
     # Find broker by name 
     broker = User.find_by("LOWER(CONCAT(first_name, ' ', last_name)) = ?", broker_name.to_s.downcase)
+
+    # or by prc_no 
+    if broker.nil? && broker_prc_no.present?
+      broker = User.find_by(broker_prc_no: broker_prc_no)
+    end
 
     if broker.nil?
       errors.add(:broker_name, "must match an existing broker in the system")

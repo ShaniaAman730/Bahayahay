@@ -422,7 +422,7 @@
           });
         }
 
-        // 🧹 Badge reset when inbox is opened
+        // Badge reset when inbox is opened
         if (message.type === "badge_reset") {
           updateBadge(badge => {
             badge.textContent = "0";
@@ -473,6 +473,7 @@
  <#% end %>
   -->
 
+  <!-- Textarea Character Limits -->
   <script>
     function initCharLimits() {
       // Regular textareas

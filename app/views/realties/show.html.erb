@@ -47,16 +47,14 @@
 	        style: "max-height: 350px; object-fit: cover;" ) %>
 	  <% end %>
 
-	  <!-- Profile Logo (40% overlap, left-aligned) -->
+	  <!-- Profile Photo -->
 	  <div class="position-absolute" style="left: 40px; bottom: -80px;">
 	    <% if @realty.logo.attached? %>
 	      <%= image_tag @realty.logo, 
-	          class: "rounded-circle img-thumbnail shadow", 
-	          size: "200x200" %>
+	          class: "rounded-circle img-thumbnail shadow profile-photo" %>
 	    <% else %>
 	      <%= image_tag("no-profile.jpg", 
-	          class: "rounded-circle img-thumbnail shadow", 
-	          size: "200x200") %>
+	          class: "rounded-circle img-thumbnail shadow profile-photo") %>
 	    <% end %>
 	  </div>
 	</div>

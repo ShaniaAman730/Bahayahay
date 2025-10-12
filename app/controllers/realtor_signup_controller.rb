@@ -28,6 +28,7 @@ class RealtorSignupController < ApplicationController
     brokers = User.where(is_broker: true)
                   .includes(:managed_realty)
                   .where("first_name ILIKE :q OR last_name ILIKE :q", q: "%#{params[:q]}%")
+                  .limit(10) # limit results for faster response
 
     render json: brokers.map { |b|
       {
@@ -42,6 +43,7 @@ class RealtorSignupController < ApplicationController
 
   def search_realties
     realties = Realty.where("name ILIKE ?", "%#{params[:q]}%")
+                     .limit(10) 
 
     render json: realties.map { |r|
       {
@@ -54,6 +56,21 @@ class RealtorSignupController < ApplicationController
     }
   end
 
+  def search_broker_prc_no
+    brokers = User.where(is_broker: true)
+                  .where("prc_no ILIKE :q ", q: "%#{params[:q]}%")
+                  .limit(10)
+
+    render json: brokers.map { |b|
+      {
+        id: b.id,
+        name: b.full_name,
+        prc_no: b.prc_no,
+        company_name: b.managed_realty&.name,
+        address: b.managed_realty&.business_location
+      }
+    }
+  end
 
 private 
 
