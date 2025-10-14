@@ -108,7 +108,7 @@ class ListingsController < ApplicationController
         @map_center = [13.6236, 123.1948]
       end
       
-      @listings = @listings.page(params[:page]).per(8)
+      @listings = @listings.page(params[:page]).per(4)
   end
 
   def select_type

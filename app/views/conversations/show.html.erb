@@ -8,11 +8,14 @@
 
   <%= turbo_stream_from "conversation_#{@conversation.id}_messages" %>
   
-  <div id="messages" class="border rounded p-3 mb-4 bg-light overflow-auto" style="max-height: 400px;">
+  <div id="messages"
+       class="border rounded p-3 mb-4 bg-light overflow-auto"
+       style="height: 400px; min-height: 400px; max-height: 400px;">
     <% if request.format.html? %>
       <%= render partial: "messages/message", collection: @messages, as: :message, locals: { local_user: current_user } %>
     <% end %>
   </div>
+
 
   <hr class="my-4">
 
