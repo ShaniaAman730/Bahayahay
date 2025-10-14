@@ -12,19 +12,6 @@ class RealtorSignupController < ApplicationController
  def create
     @user = User.new(user_params) # Use strong parameters for security
     if @user.save 
-
-      broker = User.find_by(prc_no: @user.broker_prc_no, is_broker: true)
-
-      if broker&.managed_realty.present?
-        realty = broker.managed_realty
-
-        # Create pending membership for the new realtor
-        RealtyMembership.create!(
-          realty: realty,
-          user: @user,
-          status: :pending
-        )
-
       redirect_to thank_you_realtor_path, notice: "Realtor account created successfully. Please wait for admin approval."
     else
       flash.now[:alert] = "Realtor account could not be created."
@@ -93,7 +80,7 @@ private
     end
 
     def user_params
-      params.require(:user).permit(:email, :password, :password_confirmation, :first_name, :last_name, :contact_no, :address, :company_name, :prc_no, :dhsud_no, :prc_id, :dhsud_cert, :gov_id, :is_broker, :broker_name, :broker_prc_no, :privacy_agreement) 
+      params.require(:user).permit(:email, :password, :password_confirmation, :first_name, :last_name, :contact_no, :address, :company_name, :prc_no, :dhsud_no, :prc_id, :dhsud_cert, :gov_id, :is_broker, :broker_name, :broker_prc_no, :privacy_agreement, :user_type) 
     end
    
 

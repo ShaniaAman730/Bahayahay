@@ -123,9 +123,29 @@ class UsersController < ApplicationController
   def approve
     @user = User.find(params[:id])
     if @user.update(admin_approved: true)
+
+
+      # --- Send realty request for realtor ---
+      if @user.broker_prc_no.present?
+        broker = User.find_by(prc_no: @user.broker_prc_no, is_broker: true)
+
+        if broker&.managed_realty.present?
+          realty = broker.managed_realty
+
+          unless RealtyMembership.exists?(realty: realty, user: @user)
+            RealtyMembership.create!(
+              realty: realty,
+              user: @user,
+              status: :pending
+            )
+          end
+        end
+      end
+      # ---------------------------
+
       #UserMailer.realtor_approval_email(@user).deliver_now
       #@user.update_column(:realtor_approval_email_sent_at, Time.current)
-      redirect_to managerealtors_users_path, notice: 'Realtor approved!'
+      redirect_to managerealtors_users_path, notice: 'Realtor approved and pending membership created under their broker’s realty.'
     else
       redirect_to managerealtors_users_path, alert: "Approval failed: #{@user.errors.full_messages.join(", ")}"
     end
