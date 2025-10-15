@@ -126,7 +126,7 @@
 		  </div>
 
 
-	  	<% if current_user.id == @realty.head_broker_id %>
+	  	<% if user_signed_in? && current_user.id == @realty.head_broker_id %>
 	  		<%= link_to edit_realty_path(@realty), class: "btn btn-light d-inline-flex align-items-center btn-sm" do %>
 			  <i class="bi bi-pencil me-2"></i> Edit Realty Info
 			<% end %>
