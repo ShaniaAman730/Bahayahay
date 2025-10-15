@@ -146,6 +146,13 @@ class User < ApplicationRecord
     end
   end
 
+  def approved_realty
+    if realty_membership&.approved?
+      return realty_membership.realty
+    end
+
+    RealtyMembership.find_by(user_id: id, status: :approved)&.realty
+  end
 
 
 end

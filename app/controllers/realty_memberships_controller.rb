@@ -29,6 +29,7 @@ class RealtyMembershipsController < ApplicationController
         redirect_to @realty, alert: "Unable to resubmit application."
       end
     elsif membership.new_record?
+      membership.status = :pending
       if membership.save
         redirect_to @realty, notice: "Application submitted."
       else

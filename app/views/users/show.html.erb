@@ -258,27 +258,30 @@
         <% end %>
         </div>
 
-
-      <% if @user.realty.present? %>
-      <%= link_to realty_path(@user.realty), class: "text-decoration-none text-dark" do %>
-      <div class="card my-4">
-        <div class="card-body d-flex align-items-center">
-            <% if @user.realty.logo.attached? %>
-            <%= image_tag @user.realty.logo, class: "rounded-circle me-4", size: "80x80" %>
-          <% else %>
-            <%= image_tag("no-profile.jpg", class: "rounded-circle me-4", size: "80x80") %>
-          <% end %>
-          <div>
-            <p class="card-title small mb-1">
-              <em><%= @user.first_name %> is a part of the realty:</em>
-            </h5>
-            <h5 class="card-text mb-2">
-              <%= @user.realty.name %>
-            </h5>
-          </div>
+        
+        <% if @user.approved_realty.present? %>
+  <%= link_to realty_path(@user.approved_realty), class: "text-decoration-none text-dark" do %>
+    <div class="card my-4">
+      <div class="card-body d-flex align-items-center">
+        <% if @user.approved_realty.logo.attached? %>
+          <%= image_tag @user.approved_realty.logo, class: "rounded-circle me-4", size: "80x80" %>
+        <% else %>
+          <%= image_tag("no-profile.jpg", class: "rounded-circle me-4", size: "80x80") %>
+        <% end %>
+        <div>
+          <p class="card-title small mb-1">
+            <em><%= @user.first_name %> is a part of the realty:</em>
+          </p>
+          <h5 class="card-text mb-2">
+            <%= @user.approved_realty.name %>
+          </h5>
         </div>
       </div>
-    <% end %>
+    </div>
+  <% end %>
+
+
+
 
     <% elsif @user.managed_realty.present? %>
     <%= link_to realty_path(@user.managed_realty), class: "text-decoration-none text-dark" do %>
