@@ -20,6 +20,15 @@ class GuidesController < ApplicationController
   def show
     @comment = Comment.new
     @comments = @guide.comments.order(created_at: :desc).page(params[:page]).per(5)
+
+    # Statistics tracker
+    if user_signed_in? && current_user.id != @guide.user_id
+      Statistic.create!(
+        trackable: @guide,
+        visitor: current_user,
+        event_type: :view
+      )
+    end
   end
 
   def new

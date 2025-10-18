@@ -1,6 +1,7 @@
 class Guide < ApplicationRecord
   belongs_to :user
   has_many :comments, as: :commentable, dependent: :destroy
+  has_many :statistics, as: :trackable, dependent: :destroy
 
   has_one_attached :guide_photo
 
@@ -19,4 +20,14 @@ class Guide < ApplicationRecord
       errors.add(:body, "must be #{max_chars} characters or fewer")
     end
   end
+
+
+  def total_views
+    statistics.view.count
+  end
+
+  def unique_visitors
+    statistics.view.distinct.count(:visitor_id)
+  end
+
 end

@@ -2,72 +2,79 @@
   <div class="mt-5">
     <h4>Reviews</h4>
 
-    <%# --- Overall Ratings Rating --- %>
     <% total_reviews = user.received_reviews.count %>
 
     <% avg_knowledge = (user.received_reviews.sum(:knowledge_rating) / total_reviews.to_f).round(1) %>
     <% avg_responsiveness = (user.received_reviews.sum(:responsiveness_rating) / total_reviews.to_f).round(1) %>
     <% avg_professionalism = (user.received_reviews.sum(:professionalism_rating) / total_reviews.to_f).round(1) %>
 
-    <div class="mb-3 p-3">
-      <h5>Overall Ratings:</h5>
-
-      <p class="mb-1">
-        <strong>Knowledge & Expertise:</strong>
-        <% stars = avg_knowledge.round %>
-        <span class="text-success"><%= '★' * stars + '☆' * (5 - stars) %></span>
-        (<%= avg_knowledge %>/5)
-      </p>
-
-      <p class="mb-1">
-        <strong>Responsiveness:</strong>
-        <% stars = avg_responsiveness.round %>
-        <span class="text-success"><%= '★' * stars + '☆' * (5 - stars) %></span>
-        (<%= avg_responsiveness %>/5)
-      </p>
-
-      <p class="mb-1">
-        <strong>Professionalism:</strong>
-        <% stars = avg_professionalism.round %>
-        <span class="text-success"><%= '★' * stars + '☆' * (5 - stars) %></span>
-        (<%= avg_professionalism %>/5)
-      </p>
-
+    <!-- Overall Ratings -->
+    <div class="mb-4 p-3 bg-light rounded shadow-sm">
+      <h5 class="mb-3">Overall Ratings</h5>
+      <div class="row g-3">
+        <div class="col-12 col-md-4">
+          <strong>Knowledge & Expertise:</strong><br>
+          <% stars = avg_knowledge.round %>
+          <span class="text-success"><%= '★' * stars + '☆' * (5 - stars) %></span>
+          (<%= avg_knowledge %>/5)
+        </div>
+        <div class="col-12 col-md-4">
+          <strong>Responsiveness:</strong><br>
+          <% stars = avg_responsiveness.round %>
+          <span class="text-success"><%= '★' * stars + '☆' * (5 - stars) %></span>
+          (<%= avg_responsiveness %>/5)
+        </div>
+        <div class="col-12 col-md-4">
+          <strong>Professionalism:</strong><br>
+          <% stars = avg_professionalism.round %>
+          <span class="text-success"><%= '★' * stars + '☆' * (5 - stars) %></span>
+          (<%= avg_professionalism %>/5)
+        </div>
+      </div>
     </div>
 
-    <%# --- Individual Reviews --- %>
+    <!-- Individual Reviews -->
     <% reviews.each do |review| %>
-      <div class="card mb-3">
-        <div class="card-body">
-          <div class="card-body d-flex align-items-center">
-            <div>
-              <h5><%= review.client.first_name %> <%= review.client.last_name[0] %>.</h5>
-              <p class="card-text text-muted mb-2">
-                <% knowledge = review.knowledge_rating.to_i %>
-                <strong>Knowledge & Expertise:</strong> <%= '★' * knowledge + '☆' * (5 - knowledge) %><br>
+      <div class="card mb-4 shadow-sm border-0 overflow-hidden">
+        <div class="row g-0 align-items-stretch">
+          <!-- Review Content -->
+          <div class="col-12 col-md-8 d-flex flex-column p-3">
+            <h5 class="fw-semibold mb-2"><%= review.client.first_name %> <%= review.client.last_name[0] %>.</h5>
+            <div class="text-muted small flex-grow-1">
+              <% knowledge = review.knowledge_rating.to_i %>
+              <strong>Knowledge & Expertise:</strong>
+              <%= '★' * knowledge + '☆' * (5 - knowledge) %><br>
 
-                <% responsiveness = review.responsiveness_rating.to_i %>
-                <strong>Responsiveness:</strong> <%= '★' * responsiveness + '☆' * (5 - responsiveness) %><br>
+              <% responsiveness = review.responsiveness_rating.to_i %>
+              <strong>Responsiveness:</strong>
+              <%= '★' * responsiveness + '☆' * (5 - responsiveness) %><br>
 
-                <% professionalism = review.professionalism_rating.to_i %>
-                <strong>Professionalism:</strong> <%= '★' * professionalism + '☆' * (5 - professionalism) %><br><br>
+              <% professionalism = review.professionalism_rating.to_i %>
+              <strong>Professionalism:</strong>
+              <%= '★' * professionalism + '☆' * (5 - professionalism) %><br>
 
-                <em>"<%= review.comment %>"</em>
-              </p>
-            </div>
-
-            <div class="ms-auto">
-              <% if review.listing.listing_photos.attached? %>
-                <%= link_to listing_path(review.listing_id), title: "View listing", data: { bs_toggle: "tooltip" } do %>
-                  <%= image_tag review.listing.listing_photos.first, class: "rounded", size: "170x170" %>
-                <% end %>
+              <% if review.comment.present? %>
+                <p class="mt-2 mb-0 fst-italic text-dark">"<%= review.comment %>"</p>
               <% end %>
             </div>
           </div>
+
+          <!-- Listing Photo -->
+          <% if review.listing.listing_photos.attached? %>
+            <div class="col-12 col-md-4 position-relative">
+              <%= link_to listing_path(review.listing_id), title: "View listing", class: "d-block h-100" do %>
+                <%= image_tag review.listing.listing_photos.first,
+                    class: "w-100 h-100",
+                    style: "object-fit: cover; min-height: 220px; max-height: 100px;" %>
+              <% end %>
+            </div>
+          <% end %>
         </div>
       </div>
     <% end %>
 
-    <%= paginate reviews, param_name: :reviews_page %>
+    <div class="mt-3">
+      <%= paginate reviews, param_name: :reviews_page %>
+    </div>
   </div>
 <% end %>
