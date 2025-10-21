@@ -1,0 +1,65 @@
+<div class="container mt-5">
+  <h2>Search Results</h2>
+
+  <!-- Search Form -->
+  <div class="mb-4">
+    <%= form_with url: search_path, method: :get, local: true, class: "row g-2 align-items-center" do %>
+      <div class="col-12 col-md-9">
+        <%= text_field_tag :q, params[:q], placeholder: "Search site-wide", class: "form-control" %>
+      </div>
+
+      <div class="col-12 col-md-2">
+        <%= select_tag :filter, options_for_select([
+          ["All", ""],
+          ["Realtors", "realtor"],
+          ["Developers", "developer"],
+          ["REBAP Chapters", "rebap"],
+          ["Realties", "realty"]
+        ], params[:filter]), class: "form-select" %>
+      </div>
+
+      <div class="col-12 col-md-1 d-grid">
+        <button class="btn btn-primary" type="submit">Search</button>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @results.present? %>
+    <div class="mt-4">
+      <% @results.each do |result| %>
+        <% if result.is_a?(User) %>
+          <div class="card mb-2 p-3">
+            <%= link_to user_path(result), class: "text-decoration-none text-dark" do %>
+              <% if result.realtor? %>
+                <strong><%= result.full_name %></strong>
+                <% if result.approved_realty.present? || result.managed_realty.present? %>
+                  <p><%= result&.company_name %></p>
+                <% else %>
+                   <p>Realtor</p> 
+                <% end %>
+              <% elsif result.developer? %>
+                <strong><%= result.company_name.presence || "Unnamed Developer" %></strong>
+                <p><%= result.address %></p>
+              <% elsif result.rebap? %>
+                <% chapter = result.rebap_memberships.first&.chapter %>
+                <strong><%= chapter.present? ? chapter : "REBAP Chapter" %></strong>
+                <p>REBAP</p>
+              <% end %>
+            <% end %>
+          </div>
+        <% elsif result.is_a?(Realty) %>
+          <div class="card mb-2 p-3">
+            <%= link_to realty_path(result), class: "text-decoration-none text-dark" do %>
+              <strong><%= result.name %></strong>
+              <p><%= result.business_location %></p>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <%= paginate @results %>
+    </div>
+  <% else %>
+    <p>No results found.</p>
+  <% end %>
+</div>

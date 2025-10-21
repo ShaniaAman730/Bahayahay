@@ -28,7 +28,8 @@
 
     <div class="form-group">
       <%= form.label :comment %>
-      <%= form.text_area :comment, rows: 4, class: "form-control" %>
+      <%= form.text_area :comment, placeholder: "Write your review...", data: { max_length: 500 }, rows: 4, class: "form-control w-100 post-a char-limit" %>
+      <small class="char-counter text-muted">0/500 characters</small>
     </div>
 
     <%= form.submit "Submit Review", class: "btn btn-primary" %>

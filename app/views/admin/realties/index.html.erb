@@ -5,6 +5,12 @@
 <div class="p-5">
 	<h2>Realties</h2>
 
+	<!-- Total Realties -->
+  <p class="text-muted mb-3">
+    Total Realties: <strong><%= @realties.total_count rescue @realties.size %></strong>
+  </p>
+
+  <!-- Search Form -->
 	<div class="mb-4">
   <%= form_with url: admin_realties_path, method: :get, local: true, 
                 class: "row g-2 align-items-center" do %>
@@ -33,6 +39,8 @@
 	<table class="table table-bordered">
 	  <thead>
 	    <tr>
+	    	<th>#</th>
+        <th>ID</th>
 	      <th>Name</th>
 	      <th>Broker</th>
 	      <th>Email</th>
@@ -45,16 +53,18 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <% @realties.each do |realty| %>
+	    <% @realties.each_with_index do |realty, index| %>
 	      <tr>
-	        <td>
-			  <%= case realty.status
-			      when "pending", "rejected"
-			        link_to realty.name, admin_realty_path(realty)
-			      when "approved"
-			        link_to realty.name, realty_path(realty)
-			      end %>
-			</td>
+					<td><%= (@realties.offset_value || 0) + index + 1 %></td>
+          <td><%= realty.id %></td>
+          <td>
+					  <%= case realty.status
+					      when "pending", "rejected"
+					        link_to realty.name, admin_realty_path(realty)
+					      when "approved"
+					        link_to realty.name, realty_path(realty)
+					      end %>
+					</td>
 	        <td><%= realty.head_broker.full_name %></td>
 	        <td><%= realty.email %></td>
 	        <td><%= realty.business_location %></td>

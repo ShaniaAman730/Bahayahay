@@ -21,7 +21,13 @@
             <a class="nav-link" href="/public_listings">Live Listings</a>
           </li>
         </ul>
+
         <ul class="navbar-nav ml-auto">
+          <%= form_with url: search_path, method: :get, local: true, class: "d-flex my-3 my-lg-0" do %>
+            <%= text_field_tag :q, params[:q], placeholder: "Search site-wide", class: "form-control me-2" %>
+            <button class="btn btn-outline-success btn-sm me-2" type="submit">Search</button>
+          <% end %>
+
           <li class="nav-item active">
             <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class:"nav-link" %>
           </li>
@@ -117,13 +123,20 @@
           <%= link_to "Log In", new_user_session_path, class:"nav-link" %>
         </li>
         <li class="nav-item active">
-          <a href="/users/sign_up" class="btn btn-success me-2" role="button">Sign up</a>
+          <a href="/users/sign_up" class="btn btn-success me-2 my-2 my-lg-0" role="button">Sign up</a>
         </li>
       </ul>
     <% end %>
 
+    <!-- Right side if signed-in -->
     <% if user_signed_in? && !current_user.admin? %>
       <ul class="navbar-nav ml-lg-auto d-flex flex-column flex-lg-row justify-content-start justify-content-lg-end align-items-start align-items-lg-center">
+
+        <%= form_with url: search_path, method: :get, local: true, class: "d-flex my-3 my-lg-0" do %>
+          <%= text_field_tag :q, params[:q], placeholder: "Search site-wide", class: "form-control me-2" %>
+          <button class="btn btn-outline-success btn-sm me-2" type="submit">Search</button>
+        <% end %>
+
         <% if current_user.realtor? %>
           <li class="nav-item active mx-2 position-relative">
             <a class="btn btn-light position-relative" href="<%= reviews_user_path(current_user) %>">
@@ -164,9 +177,11 @@
           </li>
         <% end %>
         <% if current_user.developer? %>
-        <li class="nav-item active">
-          <%= link_to "Accreditation Requests", developer_requests_accreditations_path, class: "nav-link" %>
-        </li>
+          <li class="nav-item active mx-2 position-relative">
+            <a class="btn btn-light position-relative" href="<%= developer_requests_accreditations_path %>">
+              <i class="bi bi-arrow-bar-down"></i>
+            </a>
+          </li>
         <% end %>
         <li class="nav-item mx-2 dropdown">
           <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_12_193712) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_21_084539) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -196,6 +196,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_12_193712) do
     t.index ["dev_project_id"], name: "index_model_houses_on_dev_project_id"
   end
 
+  create_table "password_reset_logs", force: :cascade do |t|
+    t.bigint "admin_id", null: false
+    t.bigint "user_id", null: false
+    t.string "new_password", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_id"], name: "index_password_reset_logs_on_admin_id"
+    t.index ["user_id"], name: "index_password_reset_logs_on_user_id"
+  end
+
   create_table "property_amenities", force: :cascade do |t|
     t.bigint "amenity_id", null: false
     t.string "property_type", null: false
@@ -342,6 +352,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_12_193712) do
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users", column: "sender_id"
   add_foreign_key "model_houses", "dev_projects"
+  add_foreign_key "password_reset_logs", "users"
+  add_foreign_key "password_reset_logs", "users", column: "admin_id"
   add_foreign_key "property_amenities", "amenities"
   add_foreign_key "realty_memberships", "realties"
   add_foreign_key "realty_memberships", "users"
@@ -354,5 +366,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_12_193712) do
   add_foreign_key "reviews", "users", column: "realtor_id"
   add_foreign_key "saved_listings", "listings"
   add_foreign_key "saved_listings", "users"
-  add_foreign_key "statistics", "users", column: "visitor_id"
+  add_foreign_key "statistics", "users", column: "visitor_id", on_delete: :nullify
 end

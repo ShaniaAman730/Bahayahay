@@ -7,10 +7,14 @@
 <div class="p-5">
   <h2>All Users</h2>
 
+  <!-- Total Users -->
+  <p class="text-muted mb-3">
+    Total Users: <strong><%= @users.total_count rescue @users.size %></strong>
+  </p>
+
   <!-- Search Form -->
   <div class="mb-4">
     <%= form_with url: all_users_users_path, method: :get, local: true, class: "row g-2 align-items-center" do %>
-
       <div class="col-12 col-md-10">
         <%= text_field_tag :q, params[:q], placeholder: "Search users...", class: "form-control w-100" %>
       </div>
@@ -26,9 +30,10 @@
   </div>
 
   <% if @users.any? %>
-    <table class="table table-bordered">
+    <table class="table table-bordered align-middle">
       <thead>
         <tr>
+          <th>#</th>
           <th>ID</th>
           <th>User Type</th> 
           <th>First Name</th>
@@ -39,21 +44,33 @@
           <th>Created</th>
           <th>Email Sent?</th>
           <th>Actions</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        <% @users.each do |user| %>
+        <% @users.each_with_index do |user, index| %>
           <tr>
+            <td><%= (@users.offset_value || 0) + index + 1 %></td>
             <td><%= user.id %></td>
-            <td><%= user.user_type.titleize %></td>
+            <td>
+              <%= user.user_type.titleize %>
+              <% if user.user_type == "realtor" %>
+                <% if user.admin_approved? %>
+                  <span class="badge bg-success ms-2">A</span>
+                <% else %>
+                  <span class="badge bg-warning text-dark ms-2">P</span>
+                <% end %>
+              <% end %>
+            </td>
             <td><%= user.first_name %></td>
             <td><%= user.last_name %></td>
             <td><%= user.email %></td>
             <td><%= user.contact_no %></td>
             <td><%= user.company_name %></td>
             <td><%= user.created_at.strftime("%B %d, %Y %I:%M %p") %></td>
-            
-            <%# --- Email Sent Column --- %>
+
+            <!-- Email Sent Column -->
             <td>
               <% if user.email_sent? %>
                 <button class="btn btn-success btn-sm" disabled>Sent</button>
@@ -62,15 +79,28 @@
               <% end %>
             </td>
 
-
-            <td class="d-flex">
-              <%= link_to "Show", user_path(user), class: "btn btn-sm btn-secondary mr-1" %>
+            <td>
+              <%= link_to "Show", user_path(user), class: "btn btn-sm btn-secondary me-1" %>
+            </td>
+            <td>
+              <%= button_to "Reset Password", reset_password_admin_user_path(user),
+      method: :patch,
+      data: { confirm: "Are you sure you want to reset #{user.email}'s password?" },
+      class: "btn btn-sm btn-warning me-1" %>
+            </td>
+            <td>
               <%= button_to "Delete", user_path(user), method: :delete, data: { confirm: "Are you sure you want to delete #{user.full_name}?" }, class: "btn btn-sm btn-danger" %>
             </td>
           </tr>
         <% end %>
       </tbody>
     </table>
+
+<div class="text-center mt-4">
+  <%= link_to "View Password Reset Logs", admin_password_reset_logs_path, class: "btn btn-outline-dark" %>
+</div>
+
+
 
     <div class="mt-3">
       <%= paginate @users %>

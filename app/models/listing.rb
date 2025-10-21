@@ -11,8 +11,6 @@ class Listing < ApplicationRecord
 	has_many :property_amenities, as: :property, dependent: :destroy
 	has_many :amenities, through: :property_amenities
 
-
-
 	has_many_attached :listing_photos
 	has_one_attached :valid_id
 	has_one_attached :birthcert

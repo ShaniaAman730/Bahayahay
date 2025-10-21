@@ -75,8 +75,12 @@ Rails.application.routes.draw do
   get "notifications/unread_count", to: "notifications#unread_count"
 
   namespace :admin do
-  resources :users, only: [:new, :create, :update] 
-
+  resources :users, only: [:new, :create, :update] do
+    member do
+        patch :reset_password
+    end
+  end
+      
   resources :listings, only: [:index, :show, :destroy] do
     member do
       patch :approve
@@ -92,6 +96,8 @@ Rails.application.routes.draw do
   end
 
   resources :rebap_memberships, only: [:index, :new, :create]
+
+  resources :password_reset_logs, only: [:index]
 end
 
   resources :guides do
@@ -149,6 +155,7 @@ end
     end
   end
 
+  get "search", to: "search#index"
 
   mount Importmap::Engine => "/rails/importmap"
   # mount ActionCable.server => '/cable'

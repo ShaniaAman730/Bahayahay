@@ -38,6 +38,7 @@ class User < ApplicationRecord
 
   # Statistics
   has_many :statistics, as: :trackable, dependent: :destroy
+  has_many :visited_statistics, class_name: "Statistic", foreign_key: "visitor_id", dependent: :nullify
 
   # REBAP
   has_many :rebap_memberships, foreign_key: :rebap_id, dependent: :destroy
@@ -154,5 +155,21 @@ class User < ApplicationRecord
     RealtyMembership.find_by(user_id: id, status: :approved)&.realty
   end
 
+  scope :searchable, ->(query) {
+    search_condition = arel_table[:first_name].matches("%#{query}%")
+      .or(arel_table[:last_name].matches("%#{query}%"))
+      .or(arel_table[:email].matches("%#{query}%"))
+      .or(arel_table[:contact_no].matches("%#{query}%"))
+      .or(arel_table[:company_name].matches("%#{query}%"))
+
+    where.not(user_type: [:admin, :client])
+      .where(search_condition)
+      .where(
+        arel_table[:user_type].not_eq("realtor")
+        .or(
+          arel_table[:user_type].eq("realtor").and(arel_table[:admin_approved].eq(true))
+        )
+      )
+  }
 
 end

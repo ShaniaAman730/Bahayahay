@@ -49,8 +49,8 @@
               </div>
 
               <!-- Actions Column -->
-              <div class="col-12 col-sm-3 text-end mt-3 mt-sm-0 small text-muted">
-                <p class="mb-1"><em>Posted on <%= guide.created_at.strftime("%b %d, %Y") %></em></p>
+              <div class="col-12 col-sm-3 text-end mt-3 mt-sm-0 text-muted">
+                <p class="small mb-1"><em>Posted on <%= guide.created_at.strftime("%b %d, %Y") %></em></p>
 
                 <%= link_to edit_guide_path(guide), class: "text-secondary me-2" do %>
                   <i class="bi bi-pencil-square"></i>

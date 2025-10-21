@@ -7,6 +7,12 @@
 <div class="p-5">
   <h2>Manage REBAP Chapters</h2>
 
+  <!-- Total REBAPs -->
+  <p class="text-muted mb-3">
+    Total REBAP Chapters: <strong><%= @rebap_users.total_count rescue @rebap_users.size %></strong>
+  </p>
+
+  <!-- Search Form -->
   <%= form_with url: admin_rebap_memberships_path, method: :get, local: true, class: "mb-4 d-flex" do %>
     <%= text_field_tag :query, params[:query], placeholder: "Search REBAP users by email, contact no., or chapter...", class: "form-control me-2" %>
     <%= submit_tag "Search", class: "btn btn-primary" %>
@@ -16,6 +22,8 @@
     <table class="table table-bordered">
       <thead>
         <tr>
+          <th>#</th>
+          <th>ID</th>
           <th>Email</th>
           <th>Contact No.</th>
           <th>Chapter</th>
@@ -24,8 +32,10 @@
         </tr>
       </thead>
       <tbody>
-        <% @rebap_users.each do |user| %>
+        <% @rebap_users.each_with_index do |user, index| %>
           <tr>
+            <td><%= (@rebap_users.offset_value || 0) + index + 1 %></td>
+            <td><%= user.id %></td>
             <td><%= user.email %></td>
             <td><%= user.contact_no.presence || "—" %></td>
             <td><%= user.rebap_memberships.first&.chapter || "—" %></td>
