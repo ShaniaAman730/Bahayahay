@@ -193,7 +193,7 @@ class ListingsController < ApplicationController
     puts params[:listing][:listing_photos].inspect if params[:listing][:listing_photos].present?
 
     saved = @listing.save
-
+ 
     respond_to do |format|
       if saved && @listing.listing_type_num == 0 
         format.html { redirect_to @listing, notice: "Listing was successfully created." }

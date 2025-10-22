@@ -311,3 +311,40 @@ trix-toolbar .trix-button-group--file-tools {
       height: 100px;
     }
   }
+
+
+.thumbnail-row {
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+.thumbnail-row::-webkit-scrollbar {
+  height: 6px;
+}
+
+.thumbnail-row::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.thumbnail-row::before,
+.thumbnail-row::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 40px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.thumbnail-row::before {
+  left: 0;
+  background: linear-gradient(to right, white, transparent);
+}
+
+.thumbnail-row::after {
+  right: 0;
+  background: linear-gradient(to left, white, transparent);
+}

@@ -1,5 +1,6 @@
 <div class="container mt-5">
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true }, local: true) do |f| %>
+
     <%= render "devise/shared/error_messages", resource: resource %>
 
     <% if !current_user.developer? && !current_user.rebap? %>
@@ -47,9 +48,11 @@
     <div class="form-row p-2">
       <div class="col-12 col-md-12 mb-3">
           <p>Chapter Name</p>
-          <p><strong><%= current_user.rebap_memberships.first&.chapter || "No Chapter Assigned" %></strong></p>
           <% if current_user.rebap_memberships.present? %>
+            <p><strong><%= current_user.rebap_memberships.first&.chapter || "No Chapter Assigned" %></strong></p>
             <%= link_to "Edit Chapter Name", edit_rebap_path(current_user), class: "btn btn-outline-primary btn-sm" %>
+          <% else %>
+            <p><strong>No Chapter Assigned</strong></p>
           <% end  %> 
       </div>
     </div>

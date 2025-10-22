@@ -61,7 +61,7 @@ class ModelHousesController < ApplicationController
   # PATCH/PUT /model_houses/1 or /model_houses/1.json
   def update
     respond_to do |format|
-      # Re-check if user is trying to assign someone else's project
+
       validate_dev_project_owner!
 
       photo_params = params[:model_house].delete(:model_photos)
@@ -110,6 +110,7 @@ class ModelHousesController < ApplicationController
       redirect_back fallback_location: root_path
     end
   end
+
 
     def model_house_params
       params.require(:model_house).permit(

@@ -10,7 +10,7 @@ class RealtorSignupController < ApplicationController
   end
 
  def create
-    @user = User.new(user_params) # Use strong parameters for security
+    @user = User.new(user_params) 
     if @user.save 
       redirect_to thank_you_realtor_path, notice: "Realtor account created successfully. Please wait for admin approval."
     else

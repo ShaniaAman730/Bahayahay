@@ -14,7 +14,7 @@
       <hr>
       <h4>Comments</h4>
       <% if user_signed_in? %>
-        <%= form_with model: [@guide, @comment], local: true do |f| %>
+        <%= form_with model: [@guide, @comment], local: true, data: { turbo: false } do |f| %>
           <div class="mb-3">
             <%= f.label :body, "Leave a comment" %>
             <%= f.text_area :body, rows: 3, class: "form-control" %>

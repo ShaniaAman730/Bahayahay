@@ -12,7 +12,7 @@ class RebapsController < ApplicationController
 
   def update
     if @rebap_membership.update(rebap_membership_params)
-      redirect_to edit_rebap_path(@rebap_membership), notice: "Chapter name updated successfully."
+      redirect_to edit_rebap_path(current_user), notice: "Chapter name updated successfully."
     else
       flash.now[:alert] = "Failed to update chapter name."
       render :edit, status: :unprocessable_entity

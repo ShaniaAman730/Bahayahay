@@ -4,12 +4,7 @@ class Admin::ListingsController < ApplicationController
   before_action :set_listing, only: [:approve, :reject]
 
   def index
-    @pending_listings = Listing.pending_approval
-                               .where(for_edit: false)
-                               .with_attached_listing_photos
-                               .order(created_at: :desc)
-                               .page(params[:page])
-                               .per(5)
+    @pending_listings = Listing.pending_approval.where(for_edit: false).with_attached_listing_photos.order(created_at: :desc).page(params[:page]).per(5)
   end
 
   def show
