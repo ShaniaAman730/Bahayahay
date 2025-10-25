@@ -79,7 +79,7 @@ class ListingsController < ApplicationController
         matching_barangays = Listing.barangays.keys.select { |brgy| brgy.downcase.include?(keyword) }
 
         @listings = @listings.where(
-          "LOWER(title) LIKE :q OR project_type IN (:project_types) OR furnish_type IN (:furnish_types)",
+          "LOWER(title) LIKE :q OR project_type IN (:project_types) OR furnish_type IN (:furnish_types) OR barangay IN (:barangays)",
           q: "%#{keyword}%",
           project_types: matching_project_types.map { |pt| Listing.project_types[pt] },
           furnish_types: matching_furnish_types.map { |ft| Listing.furnish_types[ft] },
