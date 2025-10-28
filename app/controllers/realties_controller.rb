@@ -2,6 +2,7 @@ class RealtiesController < ApplicationController
   before_action :set_realty, only: [:show, :edit_requirements, :update_requirements, :edit, :update, :manage_members]
   before_action :require_broker, only: [:new, :create, :edit, :update]
   before_action :check_existing_realty, only: [:new, :create]
+  before_action :check_realty_approved, only: [:show]
 
   def index
     @query = params[:query]
@@ -100,6 +101,12 @@ class RealtiesController < ApplicationController
   def authorize_broker!
     unless current_user == @realty.head_broker
       redirect_to @realty, alert: "You are not authorized to manage members."
+    end
+  end
+
+  def check_realty_approved
+    if current_user != @realty.head_broker && !@realty.approved?
+      redirect_to root_path, alert: "This page is not available."
     end
   end
 
