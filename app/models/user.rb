@@ -55,6 +55,15 @@ class User < ApplicationRecord
   def head_broker?
     managed_realty.present?
   end
+
+  def approved_realty
+    if realty_membership&.approved?
+      return realty_membership.realty
+    end
+
+    RealtyMembership.find_by(user_id: id, status: :approved)&.realty
+  end
+  
   
   has_one_attached :profile_photo
   has_one_attached :prc_id
@@ -147,13 +156,6 @@ class User < ApplicationRecord
     end
   end
 
-  def approved_realty
-    if realty_membership&.approved?
-      return realty_membership.realty
-    end
-
-    RealtyMembership.find_by(user_id: id, status: :approved)&.realty
-  end
 
   scope :searchable, ->(query) {
     search_condition = arel_table[:first_name].matches("%#{query}%")

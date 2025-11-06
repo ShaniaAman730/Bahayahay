@@ -339,12 +339,3 @@ trix-toolbar .trix-button-group--file-tools {
   z-index: 2;
 }
 
-.thumbnail-row::before {
-  left: 0;
-  background: linear-gradient(to right, white, transparent);
-}
-
-.thumbnail-row::after {
-  right: 0;
-  background: linear-gradient(to left, white, transparent);
-}

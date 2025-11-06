@@ -8,7 +8,10 @@ class SearchController < ApplicationController
 
     # REALTY FILTER
     if @filter == "realty"
-      @results = Realty.where("name ILIKE :q OR business_location ILIKE :q", q: "%#{@query}%")
+      @results = Realty
+                .where(status: "approved")
+                .where("name ILIKE :q OR business_location ILIKE :q", q: "%#{@query}%")
+
 
     # REBAP FILTER 
     elsif @filter == "rebap"
@@ -33,7 +36,10 @@ class SearchController < ApplicationController
 
       # Add realties only when no specific filter is applied (All)
       if @filter.blank?
-        realties = Realty.where("name ILIKE :q OR business_location ILIKE :q", q: "%#{@query}%")
+        realties = Realty
+                  .where(status: "approved")
+                  .where("name ILIKE :q OR business_location ILIKE :q", q: "%#{@query}%")
+
         @results += realties
       end
 
