@@ -74,7 +74,7 @@
       <%= render "layouts/flash" %>
     </div>
 
-    <% if current_user&.realtor? && !current_user.is_broker && current_user.realty.blank? %>
+    <% if current_user&.realtor? && !current_user.is_broker && !current_user.approved_realty.present? %>
       <div class="alert alert-warning">
         You need to be part of a Realty before you can post listings. Please ask your broker to approve your application or submit another Realty application.
       </div>

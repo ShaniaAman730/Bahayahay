@@ -8,7 +8,7 @@ class RealtiesController < ApplicationController
     @query = params[:query]
     @realties = Realty.approved.search(@query).includes(:head_broker).order(created_at: :desc).page(params[:page]).per(8)
   end
-
+ 
 
   def show
   end

@@ -156,7 +156,7 @@ class User < ApplicationRecord
     end
   end
 
-
+ 
   scope :searchable, ->(query) {
     search_condition = arel_table[:first_name].matches("%#{query}%")
       .or(arel_table[:last_name].matches("%#{query}%"))

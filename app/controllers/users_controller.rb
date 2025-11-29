@@ -122,7 +122,13 @@ class UsersController < ApplicationController
 
   def approve
     @user = User.find(params[:id])
-    if @user.update(admin_approved: true)
+
+    # Update with approval + gov ID metadata
+    if @user.update(
+      admin_approved: true,
+      gov_id_type: params[:user][:gov_id_type],
+      gov_id_last_digits: params[:user][:gov_id_last_digits]
+    )
 
 
       # --- Send realty request for realtor ---
@@ -141,6 +147,12 @@ class UsersController < ApplicationController
           end
         end
       end
+
+       # Delete uploaded ID files
+      @user.prc_id.purge if @user.prc_id.attached?
+      @user.dhsud_cert.purge if @user.dhsud_cert.attached?
+      @user.gov_id.purge if @user.gov_id.attached?
+
       # ---------------------------
 
       #UserMailer.realtor_approval_email(@user).deliver_now
@@ -196,11 +208,11 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :first_name, :last_name, :contact_no, :user_type, :company_name, :address, :admin_approved, :profile_photo, :email_sent)
+    params.require(:user).permit(:email, :password, :password_confirmation, :first_name, :last_name, :contact_no, :user_type, :company_name, :address, :admin_approved, :profile_photo, :email_sent, :broker_name, :broker_prc_no, :gov_id_type, :gov_id_last_digits)
   end
 
   def profile_params
-    params.require(:user).permit(:contact_no, :company_name,:address, :about, :website, :profile_photo, :broker_name, :broker_prc_no, :email_sent)
+    params.require(:user).permit(:contact_no, :company_name,:address, :about, :website, :profile_photo)
   end
   
 end

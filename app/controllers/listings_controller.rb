@@ -68,7 +68,51 @@ class ListingsController < ApplicationController
     end
   end
 
-  def public_listings
+  def reverse_confirm
+    @listing = Listing.find(params[:id])
+
+    unless @listing.realtor == current_user
+      redirect_to root_path, alert: "Unauthorized."
+      return
+    end
+
+    unless @listing.confirmed?
+      redirect_to @listing, alert: "This listing is not confirmed."
+      return
+    end
+
+    # Find and delete any review for this listing + client
+    review = Review.find_by(
+      realtor: @listing.realtor,
+      client: @listing.client,
+      listing: @listing
+    )
+
+      ActiveRecord::Base.transaction do
+        review&.destroy!  # deletes the client's previous review
+
+        @listing.update!(
+          client: nil,
+          confirmed: false,
+          active: true
+        )
+
+        ReviewEvent.create!(
+          realtor: @listing.realtor,
+          client: current_user, # or @listing.client before clearing
+          listing: @listing,
+          event_type: "reversed",
+          message: "The transaction has been reversed. The listing is now active again."
+        )
+      end
+
+      redirect_to @listing, notice: "The sale has been reversed and the listing is active again."
+    rescue => e
+      redirect_to @listing, alert: "Unable to reverse the transaction: #{e.message}"
+  end
+
+
+  def public_listings 
 
     @listings = Listing.public_listings
 

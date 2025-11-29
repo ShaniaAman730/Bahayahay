@@ -19,7 +19,7 @@
       <%= text_field_tag :q, params[:q], 
             placeholder: "Search realties...", 
             class: "form-control w-100" %>
-    </div>
+    </div> 
 
     <div class="col-12 col-md-1">
       <%= select_tag :status, 
@@ -57,13 +57,14 @@
 	      <tr>
 					<td><%= (@realties.offset_value || 0) + index + 1 %></td>
           <td><%= realty.id %></td>
-          <td>
-					  <%= case realty.status
-					      when "pending", "rejected"
-					        link_to realty.name, admin_realty_path(realty)
-					      when "approved"
-					        link_to realty.name, realty_path(realty)
-					      end %>
+					<td>
+					  <a href="#"
+					     class="text-primary realty-info-link"
+					     data-bs-toggle="modal"
+					     data-bs-target="#realtyInfoModal"
+					     data-realty='<%= realty.to_json(only: [:id, :name, :email, :business_location, :permit_type, :permit_last_digits], methods: [:head_broker_name]) %>'>
+					     <%= realty.name %>
+					  </a>
 					</td>
 	        <td><%= realty.head_broker.full_name %></td>
 	        <td><%= realty.email %></td>
@@ -83,7 +84,7 @@
 	        	<% if realty.approved? %>
 	        </td>
 	        <td>
-	        		<%= link_to "Show Realty", realty_path(realty), class: "btn btn-sm btn-secondary btn-sm" %>
+	        		<%= link_to "Show", realty_path(realty), class: "btn btn-sm btn-secondary btn-sm" %>
 	        	<% end %>
 	        </td>
 	        <td>
@@ -99,6 +100,22 @@
 	  </tbody>
 	</table>
 
+	 <!-- Realty Info Modal -->
+	<div class="modal fade" id="realtyInfoModal" tabindex="-1" aria-labelledby="realtyInfoModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-lg modal-dialog-centered">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="realtyInfoModalLabel">Realty Information</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body" id="realtyInfoContent">
+	        <!-- Dynamic content goes here -->
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	   
+
     <div class="mt-3">
       <%= paginate @realties %>
     </div>
@@ -106,3 +123,30 @@
     <p>No realties found.</p>
   <% end %>
 </div>
+
+<script>
+	document.addEventListener("turbo:load", () => {
+	  const content = document.getElementById("realtyInfoContent");
+
+	  document.querySelectorAll(".realty-info-link").forEach(link => {
+	    link.addEventListener("click", (e) => {
+	      const realty = JSON.parse(e.currentTarget.dataset.realty);
+
+	      content.innerHTML = `
+	        <div class="row mt-2">
+	          <div class="col-12><strong>Realty ID:</strong> ${realty.id}</div>
+	          <div class="col-12"><strong>Name:</strong> ${realty.name}</div>
+	          <div class="col-12><strong>Email:</strong> ${realty.email || ''}</div>
+	          <div class="col-12"><strong>Business Location:</strong> ${realty.business_location || ''}</div>
+	          <div class="col-12"><strong>Head Broker:</strong> ${realty.head_broker_name || 'N/A'}</div>
+	        </div>
+
+	        <div class="row mt-2">
+	          <div class="col-12"><strong>Permit type:</strong> ${realty.permit_type || ''}</div>
+	      	<div class="col-12"><strong>Last 4 Digits of Permit:</strong> ${realty.permit_last_digits || ''}</div>
+	        </div>
+	      `;
+	    });
+	  });
+	});
+</script>

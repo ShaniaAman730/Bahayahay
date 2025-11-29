@@ -15,7 +15,8 @@
 
   <div class="field p-2">
     <%= f.label :about, "About" %><br />
-    <%= f.text_area :about, data: { placeholder: "Tell us about your realty..." }, class: "form-control w-100 post-a", rows: "7" %>
+    <%= f.text_area :about, data: { placeholder: "Tell us about your realty..." }, data: { max_length: 500 }, class: "form-control w-100 post-a char-limit", rows: 7 %>
+    <small class="char-counter text-muted">0/500 characters</small>
   </div>
 
   <div class="mb-3">

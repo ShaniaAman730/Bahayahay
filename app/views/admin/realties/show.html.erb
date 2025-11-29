@@ -71,8 +71,19 @@
 	  <a class="next" onclick="changeImage(1)">&#10095;</a>
 	</div>
 
+	
+	<%= form_with model: @realty, url: approve_admin_realty_path(@realty), method: :patch, local: true do |f| %>
+	<div class="mt-2">
+      <%= f.label :permit_type, "Permit Type", class: "form-label" %>
+      <%= f.select :permit_type, ["Mayor's Permit", "DTI"], { prompt: "Select Permit Type" }, class: "form-select" %>
+    </div>
+    <div class="mt-2">
+      <%= f.label :permit_last_digits, "Last 4 Digits of Permit", class: "form-label" %>
+      <%= f.text_field :permit_last_digits, maxlength: 4, class: "form-control" %>
+    </div>
 
-	<%= button_to "Approve", approve_admin_realty_path(@realty), method: :patch, class: "btn btn-success" %> 
+	<%= f.submit "Approve", class: "btn btn-success mt-2", data: { confirm: "Are you sure you want to approve this realty?" } %>
+	<% end %>
 	<br>
 
 	<%= form_with url: reject_admin_realty_path(@realty), method: :patch, local: true do |f| %>

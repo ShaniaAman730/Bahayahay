@@ -75,6 +75,18 @@
 
                 on <%= event.created_at.strftime("%B %d, %Y %I:%M %p") %>
               </p>
+
+            <% elsif event.reversed? %>
+              <p>
+                The transaction for 
+                <a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                   href="<%= listing_path(event.listing_id) %>">
+                   <strong><%= event.listing.title %></strong>
+                </a>
+                was <strong>reversed</strong> on 
+                <%= event.created_at.strftime("%B %d, %Y %I:%M %p") %>.
+              </p>
+              <p>This listing is now active again.</p>
             <% end %>
           </div>
         </div>

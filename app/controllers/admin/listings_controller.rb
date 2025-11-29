@@ -13,7 +13,13 @@ class Admin::ListingsController < ApplicationController
 
   def approve
     @listing = Listing.find(params[:id])
-    if @listing.update(approved: true, for_edit: false, rejection_reason: nil)
+    if @listing.update(listing_metadata_params.merge(approved: true, for_edit: false, rejection_reason: nil))
+
+      # Purge sensitive files 
+      @listing.valid_id.purge if @listing.valid_id.attached?
+      @listing.birthcert.purge if @listing.birthcert.attached?
+      @listing.tct.purge if @listing.tct.attached?
+
       redirect_to admin_listings_path, notice: "Listing approved."
     else
       Rails.logger.error("Listing approval failed: #{@listing.errors.full_messages.join(", ")}")
@@ -39,11 +45,26 @@ class Admin::ListingsController < ApplicationController
     redirect_to admin_listings_path, alert: "Listing has been deleted."
   end
 
+  def metadata_search
+    if params[:q].present?
+      q = "%#{params[:q].downcase}%"
+
+      @results = Listing.where(
+        "LOWER(title) LIKE ? OR CAST(id AS TEXT) LIKE ?", q, q
+      )
+    end
+  end
+
+
 
   private
 
   def listing_params
     params.require(:listing).permit(:rejection_reason, :custom_reason)
+  end
+
+  def listing_metadata_params
+    params.require(:listing).permit(:valid_id_last4, :tin_last4, :birthcert_matches_id, :tct_last4, :tct_remarks)
   end
 
   def set_listing

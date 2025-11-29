@@ -150,6 +150,46 @@
       </tbody>
     </table>
 
+     <br>
+
+    <h4 class="mt-2">Admin Metadata</h4>
+
+    <%= form_with model: [:admin, @listing], url: approve_admin_listing_path(@listing), method: :patch, local: true do |f| %>
+
+      <div class="row">
+        <div class="col-md-4">
+          <%= f.label :valid_id_last4, "Valid ID: Last 4 digits" %>
+          <%= f.text_field :valid_id_last4, maxlength: 4, class: "form-control" %>
+        </div>
+
+        <div class="col-md-4">
+          <%= f.label :tin_last4, "TIN: Last 4 digits" %>
+          <%= f.text_field :tin_last4, maxlength: 4, class: "form-control" %>
+        </div>
+
+        <div class="col-md-4">
+          <%= f.label :birthcert_matches_id, "Birth Cert matches ID?" %><br>
+          <%= f.select :birthcert_matches_id, [["Yes", true], ["No", false]], {}, class: "form-select" %>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col-md-4">
+          <%= f.label :tct_last4, "TCT: Last 4 digits" %>
+          <%= f.text_field :tct_last4, maxlength: 4, class: "form-control" %>
+        </div>
+
+        <div class="col-md-8">
+          <%= f.label :tct_remarks, "TCT Remarks" %>
+          <%= f.text_area :tct_remarks, rows: 2, class: "form-control" %>
+        </div>
+      </div>
+
+      <%= f.submit "Approve", class: "btn btn-success mt-3" %>
+
+    <% end %>
+
+     <br>
 
     <%= form_with model: [:admin, @listing], url: reject_admin_listing_path(@listing), method: :patch, local: true do |f| %>
       <div class="mb-3">
@@ -180,8 +220,6 @@
       </div>
       <%= f.submit "Reject", class: "btn btn-danger" %>
     <% end %>
-
-    <%= button_to "Approve", approve_admin_listing_path(@listing), method: :patch, class: "btn btn-success mt-2" %>
 
     <br>
 

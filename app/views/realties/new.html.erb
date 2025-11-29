@@ -38,6 +38,7 @@
 	  <div class="form-row p-2">
 	    <%= f.label :business_permit %>
 	    <%= f.file_field :business_permit, direct_upload: true, class: "form-control", accept: "image/*", data: { max_size: 400.kilobytes} %>
+	    <p class="text-muted small mt-1"><em>We only accept updated Mayor's Permit or DTI Certificate.</em></p>
 	  </div>
 
 	  <%= f.submit "Submit Application", class: "btn btn-primary mt-4" %>

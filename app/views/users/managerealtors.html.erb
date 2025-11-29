@@ -15,22 +15,9 @@
     <% if @users.any? %>
     <% @users.each do |user| %>
       <div class="p-4 border rounded my-3">
-        <div class="d-flex">
-          <h4>Application from <%= user.first_name %> <%= user.last_name %></h4>
-          <div class="ms-auto d-flex">
-            <%= button_to "Approve", approve_user_path(user),
-              method: :patch,
-              class: "btn btn-success btn-sm mr-1",
-              data: { confirm: "Are you sure you want to approve this user?" } %>
-
-            <%= button_to "Reject", reject_user_path(user),
-              method: :patch,
-              class: "btn btn-danger btn-sm",
-              data: { confirm: "Are you sure you want to reject this user? Their account will be deleted in 24 hours." } %>
-          </div>
-        </div>
-
-        <!-- Gallery -->
+        <h4>Application from <%= user.first_name %> <%= user.last_name %></h4>
+      
+        <!-- Gallery --> 
         <div class="d-flex flex-wrap gap-2 mb-4 mt-4">
           <div class="image-gallery d-flex flex-wrap gap-2">
             <% attachments = [
@@ -71,6 +58,11 @@
         <div class="row mt-2">
           <div class="col-12 col-md-3"><strong>Email:</strong> <%= user.email %></div>
           <div class="col-12 col-md-3"><strong>Contact no.:</strong> <%= user.contact_no %></div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-12 col-md-3"><strong>PRC ID or Accreditation number:</strong> <%= user.prc_no %></div>
+          <div class="col-12 col-md-3"><strong>DHSUD Certificate number</strong> <%= user.dhsud_no %></div>
         </div>
 
         <div class="row mt-2">
@@ -123,6 +115,33 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+        <div class="container bg-light rounded p-4 mt-5 mb-3">
+          <div class="ms-auto d-flex flex-column">
+            <%= form_with model: user, url: approve_user_path(user), method: :patch, local: true do |f| %>
+              <div class="row mb-2">
+                <div class="col-md-5">
+                  <%= f.label :gov_id_type, "Government ID Type", class: "form-label" %>
+                  <%= f.select :gov_id_type,
+                        ["National ID", "Driver's License", "Passport", "UMID", "PhilHealth ID", "Voter's ID", "Postal ID", "Other"],
+                        { prompt: "Select ID Type" },
+                        class: "form-select form-select-sm" %>
+                </div>
+                <div class="col-md-5">
+                  <%= f.label :gov_id_last_digits, "Last 4 Digits of ID Number", class: "form-label" %>
+                  <%= f.text_field :gov_id_last_digits, maxlength: 4, class: "form-control form-control-sm" %>
+                </div>
+              </div>
+
+              <div class="d-flex mt-2">
+                <%= f.submit "Approve", class: "btn btn-success btn-sm me-2", data: { confirm: "Are you sure you want to approve this user?" } %>
+                <%= button_to "Reject", reject_user_path(user),
+                      method: :patch,
+                      class: "btn btn-danger btn-sm",
+                      data: { confirm: "Are you sure you want to reject this user? Their account will be deleted in 24 hours." } %>
+              </div>
+            <% end %>
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_21_084539) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_16_213622) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -163,6 +163,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_21_084539) do
     t.integer "approval_requests_count", default: 0, null: false
     t.decimal "latitude", precision: 10, scale: 6
     t.decimal "longitude", precision: 10, scale: 6
+    t.string "valid_id_last4"
+    t.string "tin_last4"
+    t.boolean "birthcert_matches_id"
+    t.string "tct_last4"
+    t.text "tct_remarks"
     t.index ["client_id"], name: "index_listings_on_client_id"
     t.index ["realtor_id"], name: "index_listings_on_realtor_id"
   end
@@ -230,6 +235,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_21_084539) do
     t.datetime "updated_at", null: false
     t.text "about"
     t.string "website"
+    t.string "permit_type"
+    t.string "permit_last_digits"
     t.index ["head_broker_id"], name: "index_realties_on_head_broker_id"
   end
 
@@ -335,6 +342,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_21_084539) do
     t.datetime "realtor_approval_email_sent_at"
     t.datetime "realtor_rejection_email_sent_at"
     t.boolean "email_sent"
+    t.string "gov_id_type"
+    t.string "gov_id_last_digits"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

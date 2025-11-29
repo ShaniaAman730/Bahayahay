@@ -7,7 +7,7 @@ class ReviewEvent < ApplicationRecord
 
   validates :event_type, presence: true
 
-  enum :event_type, { assigned: 'assigned', review: 'review' }
+  enum :event_type, { assigned: 'assigned', review: 'review', reversed: 'reversed' }
   scope :unread, -> { where(read: false) }
 end
 

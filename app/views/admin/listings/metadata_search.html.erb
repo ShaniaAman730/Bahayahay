@@ -1,0 +1,205 @@
+<div class="container mt-5">
+    <h2>Search Listing Metadata</h2>
+
+    <div class="mb-4">
+      <%= form_with url: metadata_search_admin_listings_path, method: :get, local: true, class: "row g-2 align-items-center" do %>
+      <div class="col-12 col-md-11">
+        <%= text_field_tag :q, params[:q], placeholder: "Enter Listing ID or Title", class: "form-control w-100" %>
+      </div> 
+      <div class="col-12 col-md-1">
+        <%= submit_tag "Search", class: "btn btn-primary" %>
+      </div> 
+      <% end %>
+    </div> 
+
+      <% if @results.present? %>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Date posted </th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @results.each do |listing| %>
+              <tr>
+                <td><%= listing.id %></td>
+                <td><%= listing.title %></td>
+                <td><%= listing.created_at.to_date %></td>
+                <td>
+                  <a href="#"
+                     class="btn btn-sm btn-info listing-info-link"
+                     data-bs-toggle="modal"
+                     data-bs-target="#listingInfoModal"
+                     data-listing='<%= {
+                       title: listing.title,
+                       owneralive: listing.owneralive,
+                       estatetax: listing.estatetax,
+                       ejsprocessed: listing.ejsprocessed,
+                       filipinocitizen: listing.filipinocitizen,
+                       citizenship: listing.citizenship,
+                       ownerabroad: listing.ownerabroad,
+                       aif: listing.aif,
+                       valid_id_last4: listing.valid_id_last4,
+                       tin_last4: listing.tin_last4,
+                       birthcert_matches_id: listing.birthcert_matches_id,
+                       tct_last4: listing.tct_last4,
+                       tct_remarks: listing.tct_remarks,
+                       listing_type_num: listing.listing_type_num,
+
+                       # Add SPA doc
+                       spa_attachments: listing.spa.map { |file|
+                         {
+                           filename: file.filename.to_s,
+                           url: url_for(file)
+                         }
+                       }
+                     }.to_json %>'>
+                    View data
+                  </a>
+                </td>
+                <td>
+                  <%= link_to "Show Listing", listing_path(listing), class: "btn btn-sm btn-secondary", target: "_blank" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+
+       <!-- Listing Info Modal -->
+       <div class="modal fade" id="listingInfoModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Listing Information</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" id="listingInfoContent"></div>
+          </div>
+        </div>
+      </div>
+
+
+    <div class="mb-5"></div>
+    <div class="mb-5"></div>
+</div>      
+
+<script>
+  document.addEventListener("turbo:load", () => {
+    const content = document.getElementById("listingInfoContent");
+
+    document.querySelectorAll(".listing-info-link").forEach(link => {
+      link.addEventListener("click", (e) => {
+        const data = JSON.parse(e.currentTarget.dataset.listing);
+
+        // Convert listing_type_num to text
+        let listingTypeText =
+          data.listing_type_num === 0 ? "Project Selling" :
+          data.listing_type_num === 1 ? "Independent Listing" :
+          "Unknown";
+
+        const isIndependent = data.listing_type_num === 1;
+
+        // SPA links
+        let spaLinksHTML = "";
+        if (data.ownerabroad && data.spa_attachments && data.spa_attachments.length > 0) {
+          spaLinksHTML = `
+            <div class="row mt-2">
+              <div class="col-12"><strong>SPA Documents:</strong></div>
+              <div class="col-12">
+                <ul>
+                  ${data.spa_attachments.map(doc =>
+                    `<li><a href="${doc.url}" target="_blank">${doc.filename}</a></li>`
+                  ).join("")}
+                </ul>
+              </div>
+            </div>
+          `;
+        }
+
+        // EXTRA REQUIREMENTS HTML (Independent Listing only)
+        let extraRequirementsHTML = "";
+        if (isIndependent) {
+          extraRequirementsHTML = `
+            <hr>
+            <h6 class="text-success"><strong>Extra Requirements</strong></h6>
+
+            <div class="row mt-2">
+              <div class="col-12"><strong>Owner Alive:</strong> ${data.owneralive ? "Yes" : "No"}</div>
+              <div class="col-12"><strong>Estate Tax Paid:</strong> ${data.estatetax ? "Yes" : "No"}</div>
+              <div class="col-12"><strong>EJS Processed:</strong> ${data.ejsprocessed ? "Yes" : "No"}</div>
+              <div class="col-12"><strong>Filipino Citizen:</strong> ${data.filipinocitizen ? "Yes" : "No"}</div>
+            </div>
+
+            ${data.filipinocitizen ? "" : `
+              <div class="row mt-2">
+                <div class="col-12"><strong>Citizenship:</strong> ${data.citizenship || "N/A"}</div>
+              </div>
+            `}
+
+            <div class="row mt-2">
+              <div class="col-12"><strong>Owner Abroad:</strong> ${data.ownerabroad ? "Yes" : "No"}</div>
+            </div>
+
+            ${data.ownerabroad ? `
+              <div class="row mt-2">
+                <div class="col-12"><strong>Attorney-in-fact:</strong> ${data.aif || "N/A"}</div>
+              </div>
+            ` : ""}
+
+            ${spaLinksHTML}
+          `;
+        }
+
+        // ADMIN METADATA HTML (Independent Listing only)
+        let adminMetadataHTML = "";
+        if (isIndependent) {
+          adminMetadataHTML = `
+            <hr>
+            <h6 class="text-success"><strong>Admin Metadata</strong></h6>
+
+            <div class="row mt-2">
+              <div class="col-12"><strong>Valid ID Last 4 digits:</strong> ${data.valid_id_last4 || "N/A"}</div>
+              <div class="col-12"><strong>TIN Last 4 digits:</strong> ${data.tin_last4 || "N/A"}</div>
+              <div class="col-12"><strong>Birth Cert matches ID:</strong> 
+                ${data.birthcert_matches_id === true ? "Yes" : data.birthcert_matches_id === false ? "No" : "N/A"}
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-12"><strong>TCT Last 4 digits:</strong> ${data.tct_last4 || "N/A"}</div>
+              <div class="col-12"><strong>TCT Remarks:</strong> ${data.tct_remarks || "N/A"}</div>
+            </div>
+          `;
+        }
+
+        // PROJECT SELLING NOTES
+        let projectSellingNote = "";
+        if (!isIndependent) {
+          projectSellingNote = `
+            <hr>
+            <p class="text-muted"><em>No extra requirements or admin metadata for Project Selling listings.</em></p>
+          `;
+        }
+
+        // FINAL OUTPUT
+        content.innerHTML = `
+          <div class="row mt-2">
+            <div class="col-12"><strong>Title:</strong> ${data.title || ''}</div>
+            <div class="col-12"><strong>Listing Type:</strong> ${listingTypeText}</div>
+          </div>
+
+          ${extraRequirementsHTML}
+          ${adminMetadataHTML}
+          ${projectSellingNote}
+        `;
+      });
+    });
+  });
+</script>

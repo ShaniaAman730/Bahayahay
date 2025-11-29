@@ -18,8 +18,17 @@ class Realty < ApplicationRecord
   validates :business_permit, total_file_size: { less_than: 400.kilobytes }
   validates :banner, total_file_size: { less_than: 800.kilobytes }
   validates :logo, total_file_size: { less_than: 500.kilobytes }
+  
+  validate :about_length_within_limit
 
   enum :status, { pending: 0, approved: 1, rejected: 2 }
+
+  def about_length_within_limit
+    max_chars = 500
+    if about.present? && about.length > max_chars
+      errors.add(:about, "must be #{max_chars} characters or fewer")
+    end
+  end
 
   def head_broker_must_be_broker
     if head_broker.present? && !head_broker.is_broker?
@@ -45,4 +54,9 @@ end
       q: "%#{query.downcase}%"
     )
   end
+
+  def head_broker_name
+    head_broker&.full_name
+  end
+
 end

@@ -24,7 +24,7 @@ class Listing < ApplicationRecord
 	validates :valid_id, total_file_size: { less_than: 200.kilobytes }
 	validates :birthcert, total_file_size: { less_than: 200.kilobytes }
 	validates :spa, total_file_size: { less_than: 500.kilobytes }
-	validates :tct, total_file_size: { less_than: 1000.kilobytes }
+	validates :tct, total_file_size: { less_than: 1800.kilobytes }
 
 	validate :listing_photos_limit
 	validate :validate_spa_attachment_limit

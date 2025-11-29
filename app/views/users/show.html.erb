@@ -55,7 +55,7 @@
         </div>
 
         <!-- About Section -->
-        <% if @user.realtor? || @user.developer? || @user.realtor? || @user.about.present? %>
+        <% if (@user.realtor? || @user.developer? || @user.realtor?) && @user.about.present? %>
         <div class="mt-4 p-4 border rounded">
           <% if @user.realtor? %>
             <h4>About <%= @user.first_name %></h4>

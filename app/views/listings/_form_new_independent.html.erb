@@ -186,7 +186,7 @@
       </div>
     </div>
 
-    <div class="container border border-secondary p-3 mb-3">
+    <div id="nonFilipinoSection" class="container border border-secondary p-3 mb-3" style="display:none;">
       <h6>If not, please provide the following:</h6>
       <div class="field">
         <%= form.label :citizenship, "Citizenship", class: "form-label" %>
@@ -223,7 +223,7 @@
       </div>
     </div>
 
-    <div class="container border border-secondary p-3 mb-3">
+    <div id="ownerAbroadSection" class="container border border-secondary p-3 mb-3" style="display:none;">
       <h6>If yes, please provide the following:</h6>
 
       <% if @listing.errors[:spa].present? %>
@@ -248,7 +248,7 @@
 
     <div class="field">
      <%= form.label :tct, "Lastly, please upload at least 4 pages of the certified true copy of the Transfer Certificate of Title (TCT) recently acquired in the last 6 months:"  %><br>
-     <%= form.file_field :tct,  multiple: true, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 4, max_size: 1000.kilobytes  }, accept: "image/*" %>
+     <%= form.file_field :tct,  multiple: true, class: "form-control w-100", multiple: true, direct_upload: true, data: { max_files: 4, max_size: 1800.kilobytes  }, accept: "image/*" %>
    </div>
  </div>
 
@@ -319,9 +319,36 @@
   </div>
 <% end %>
 
-
-
 </div>
 
 
-  
+<script>
+document.addEventListener("turbo:load", () => {
+  const nonFilipinoSection = document.getElementById("nonFilipinoSection");
+  const ownerAbroadSection = document.getElementById("ownerAbroadSection");
+
+  function toggleNonFilipino() {
+    const val = document.querySelector("input[name='listing[filipinocitizen]']:checked")?.value;
+    nonFilipinoSection.style.display = (val === "false") ? "block" : "none";
+  }
+
+  function toggleOwnerAbroad() {
+    const val = document.querySelector("input[name='listing[ownerabroad]']:checked")?.value;
+    ownerAbroadSection.style.display = (val === "true") ? "block" : "none";
+  }
+
+  // Attach listeners
+  document.querySelectorAll("input[name='listing[filipinocitizen]']").forEach(r => {
+    r.addEventListener("change", toggleNonFilipino);
+  });
+
+  document.querySelectorAll("input[name='listing[ownerabroad]']").forEach(r => {
+    r.addEventListener("change", toggleOwnerAbroad);
+  });
+
+  // Run on initial load (edit form / validation errors)
+  toggleNonFilipino();
+  toggleOwnerAbroad();
+});
+</script>
+

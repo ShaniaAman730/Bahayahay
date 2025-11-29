@@ -57,6 +57,7 @@ Rails.application.routes.draw do
     member do
       get :statistics_data
       post :confirm
+      patch :reverse_confirm
       get 'public'
       delete :remove_attachment
     end
@@ -85,6 +86,9 @@ Rails.application.routes.draw do
     member do
       patch :approve
       patch :reject
+    end
+    collection do
+      get :metadata_search
     end
   end
 

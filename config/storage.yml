@@ -6,8 +6,12 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
-cloudinary:
-  service: Cloudinary
+imagekit:
+  service: ImageKit
+  public_key: <%= ENV["IMAGEKIT_PUBLIC_KEY"] %>
+  private_key: <%= ENV["IMAGEKIT_PRIVATE_KEY"] %>
+  url_endpoint: <%= ENV["IMAGEKIT_URL_ENDPOINT"] %>
+
 
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:

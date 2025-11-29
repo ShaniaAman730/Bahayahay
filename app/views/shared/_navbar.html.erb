@@ -90,9 +90,9 @@
               <% else %>
                 <%= link_to "Apply to Create a Realty", new_realty_path, class: "nav-link" %>
               <% end %>
-            <% end %>
+            <% end %> 
           </li>
-          <% if current_user.realtor? && (current_user.is_broker || current_user.realty.present?) %>
+          <% if current_user.realtor? && (current_user.is_broker || current_user.approved_realty.present?) %>
             <li class="nav-item active mt-1">
               <a href="/select_type" class="btn btn-secondary btn-sm" role="button">New Listing</a>
             </li>

@@ -1,3 +1,9 @@
+<% if @listing.listing_type_num == 1 && !@listing.approved? %>
+  <div class="alert alert-warning">
+      Listing is pending for approval and not available publicly yet.
+  </div>
+<% end %>
+
 <div class="container mt-5">
   <div class="listing-container container">
 
@@ -388,6 +394,15 @@
     <br>
     <h5>This property has been sold to: <%= @listing.client.first_name %>  <%= @listing.client.last_name %></h5>
   <% end %>
+
+  <% if @listing.confirmed? && @listing.realtor == current_user %>
+    <%= button_to "Reverse Transaction",
+        reverse_confirm_listing_path(@listing),
+        method: :patch,
+        data: { confirm: "Are you sure? This will delete the client's review and make the listing active again." },
+        class: "btn btn-warning" %>
+  <% end %>
+
 
   <% if current_user == @listing.client && @listing.confirmed_transaction? && @listing.review.nil? %>
     <%= link_to "Leave a Review", new_listing_review_path(@listing), class: "btn btn-success" %>

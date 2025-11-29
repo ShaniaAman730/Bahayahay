@@ -63,7 +63,19 @@
                 <% end %>
               <% end %>
             </td>
-            <td><%= user.first_name %></td>
+            <td>
+              <% if user.user_type == "realtor" %>
+                <a href="#" 
+                   class="text-primary realtor-info-link" 
+                   data-bs-toggle="modal" 
+                   data-bs-target="#realtorInfoModal"
+                   data-user='<%= user.to_json(only: [:id, :first_name, :last_name, :email, :contact_no, :prc_no, :dhsud_no, :company_name, :address, :is_broker, :broker_name, :broker_prc_no, :gov_id_type, :gov_id_last_digits]) %>'>
+                   <%= user.first_name %>
+                </a>
+              <% else %>
+                <%= user.first_name %>
+              <% end %>
+          </td>
             <td><%= user.last_name %></td>
             <td><%= user.email %></td>
             <td><%= user.contact_no %></td>
@@ -96,6 +108,22 @@
       </tbody>
     </table>
 
+ <!-- Realtor Info Modal -->
+<div class="modal fade" id="realtorInfoModal" tabindex="-1" aria-labelledby="realtorInfoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="realtorInfoModalLabel">Realtor Information</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="realtorInfoContent">
+        <!-- Dynamic content goes here -->
+      </div>
+    </div>
+  </div>
+</div>
+   
+
 <div class="text-center mt-4">
   <%= link_to "View Password Reset Logs", admin_password_reset_logs_path, class: "btn btn-outline-dark" %>
 </div>
@@ -109,3 +137,47 @@
     <p>No users found.</p>
   <% end %>
 </div>
+
+
+<script>
+  document.addEventListener("turbo:load", () => {
+    const modal = document.getElementById("realtorInfoModal");
+    const content = document.getElementById("realtorInfoContent");
+
+    document.querySelectorAll(".realtor-info-link").forEach(link => {
+      link.addEventListener("click", (e) => {
+        const user = JSON.parse(e.currentTarget.dataset.user);
+
+        content.innerHTML = `
+          <div class="row mt-2">
+            <div class="col-12 col-md-4"><strong>First Name:</strong> ${user.first_name}</div>
+            <div class="col-12 col-md-4"><strong>Last Name:</strong> ${user.last_name}</div>
+            <div class="col-12 col-md-4"><p class="bg-warning text-black d-inline-block p-1 rounded"><strong>User ID:</strong> ${user.id}</p></div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-12"><strong>Email:</strong> ${user.email}</div>
+            <div class="col-12"><strong>Contact no.:</strong> ${user.contact_no}</div>
+            <div class="col-12"><strong>PRC ID or Accreditation number:</strong> ${user.prc_no || ''}</div>
+            <div class="col-12"><strong>DHSUD Certificate number:</strong> ${user.dhsud_no || ''}</div>
+            <div class="col-12"><strong>Realty:</strong> ${user.company_name || ''}</div>
+            <div class="col-12"><strong>Realty/Company Address:</strong> ${user.address || ''}</div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-12"><strong>Is user a broker?</strong> ${user.is_broker ? 'Yes' : 'No'}</div>
+            ${!user.is_broker ? `
+              <div class="col-12"><strong>Broker Name:</strong> ${user.broker_name || ''}</div>
+              <div class="col-12"><strong>Broker PRC ID No.:</strong> ${user.broker_prc_no || ''}</div>
+            ` : ''}
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-12"><strong>Government ID Type:</strong> ${user.gov_id_type || ''}</div>
+            <div class="col-12"><strong>Last Digits of Gov ID:</strong> ${user.gov_id_last_digits || ''}</div>
+          </div>
+        `;
+      });
+    });
+  });
+</script>
