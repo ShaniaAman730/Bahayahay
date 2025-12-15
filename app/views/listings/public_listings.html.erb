@@ -117,24 +117,39 @@
               <img src="https://via.placeholder.com/400x300" class="card-img-top" alt="No image available">
             <% end %>
 
-            <div class="card-body">
-              <h5 class="card-title h-color mb-0">
-                <%= link_to listing.title, listing_path(listing), class: "text-decoration-none text-dark" %>
-              </h5>
-              <p class="card-text">
-                <i class="bi bi-geo-alt-fill"></i>
-                <%= listing.address %>, <%= listing.barangay %>, Naga City
-              </p>
-              <h6 class="text-success"><strong><%= number_to_currency(listing.price, unit: "₱", precision: 2, delimiter: ",") %></strong></h6>
+            <%= link_to listing_path(listing),
+  class: "text-decoration-none text-dark card-body-link" do %>
 
-              <div class="d-flex flex-wrap mb-2">
-                <span class="badge bg-light text-dark border me-2"><%= listing.beds %> Beds</span>
-                <span class="badge bg-light text-dark border me-2"><%= listing.baths %> Baths</span>
-                <span class="badge bg-light text-dark border"><%= listing.sqft %> Sq. ft.</span>
-              </div>
+  <div class="card-body">
+    <h5 class="card-title h-color mb-0">
+      <%= listing.title %>
+    </h5>
 
-              <p class="card-text"><%= truncate(listing.description&.to_plain_text || "", length: 80) %></p>
-            </div>
+    <p class="card-text">
+      <i class="bi bi-geo-alt-fill"></i>
+      <%= listing.address %>, <%= listing.barangay %>, Naga City
+    </p>
+
+    <h6 class="text-success">
+      <strong>
+        <%= number_to_currency(listing.price, unit: "₱", precision: 2, delimiter: ",") %>
+      </strong>
+    </h6>
+
+    <div class="d-flex flex-wrap mb-2">
+      <span class="badge bg-light text-dark border me-2"><%= listing.beds %> Beds</span>
+      <span class="badge bg-light text-dark border me-2"><%= listing.baths %> Baths</span>
+      <span class="badge bg-light text-dark border"><%= listing.sqft %> Sq. ft.</span>
+    </div>
+
+    <p class="card-text">
+      <%= truncate(listing.description&.to_plain_text || "", length: 80) %>
+    </p>
+  </div>
+
+<% end %>
+
+
           </div>
       </div>
     <% end %>
@@ -152,6 +167,7 @@
   <div class="col-12 col-md-7">
     <div id="public-map" class="map-container"></div>
   </div>
+
 </div>
 
 
@@ -170,6 +186,15 @@
   #public-map {
     pointer-events: auto;
     z-index: 1; 
+  }
+
+  .card-body-link {
+    display: block;
+    height: 100%;
+  }
+
+  .card-body-link:hover {
+    background-color: rgba(0, 0, 0, 0.02);
   }
 
 </style>

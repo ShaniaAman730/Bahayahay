@@ -81,7 +81,7 @@ class ListingsController < ApplicationController
       return
     end
 
-    # Find and delete any review for this listing + client
+    # Find and delete the review for this listing and assigned client
     review = Review.find_by(
       realtor: @listing.realtor,
       client: @listing.client,
@@ -99,7 +99,7 @@ class ListingsController < ApplicationController
 
         ReviewEvent.create!(
           realtor: @listing.realtor,
-          client: current_user, # or @listing.client before clearing
+          client: current_user,
           listing: @listing,
           event_type: "reversed",
           message: "The transaction has been reversed. The listing is now active again."

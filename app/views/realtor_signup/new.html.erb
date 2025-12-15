@@ -39,7 +39,7 @@
       </ul>
     </div>
 
-    <%= form_with model: @user, url: realtor_signup_index_path, local: true, html: { multipart: true } do |form| %>
+    <%= form_with model: @user, url: realtor_signup_index_path, local: true, html: { multipart: true }, data: { turbo: false } do |form| %>
 
     <div>
       <% if @user.errors.any? %>
@@ -115,6 +115,8 @@
       </div>
     </div>
 
+
+<div id="realtor-lockable">
     <div id="broker-fields" style="display:none;">
       <div class="form-row p-2">
         <div class="col-12 col-md-6 mb-3 position-relative">
@@ -142,6 +144,12 @@
         <%= form.text_field :address, required: true, class: "form-control", placeholder: "Realty Address" %>
       </div>
     </div>
+</div>
+
+  <div class="mt-1 mb-4">
+    <button type="button" id="edit-realtor" class="btn btn-outline-secondary btn-sm d-none">Edit</button>
+    <button type="button" id="done-realtor" class="btn btn-primary btn-sm d-none">Done</button>
+  </div>
 
     <div class="form-check mb-3">
       <%= form.check_box :privacy_agreement, class: "form-check-input" %>
@@ -196,6 +204,66 @@ Do you agree to these terms?`;
     }
   });
 </script>
+
+<script>
+(function () {
+  function setRealtorLocked(locked) {
+    const container = document.getElementById("realtor-lockable");
+    if (!container) return;
+
+    const inputs = container.querySelectorAll("input");
+
+    inputs.forEach(input => {
+      input.readOnly = locked;
+      input.classList.toggle("locked", locked);
+    });
+
+    const editBtn = document.getElementById("edit-realtor");
+    const doneBtn = document.getElementById("done-realtor");
+
+    if (editBtn && doneBtn) {
+      editBtn.classList.toggle("d-none", !locked);
+      doneBtn.classList.toggle("d-none", locked);
+    }
+  }
+
+  function initRealtorLocking() {
+    // Prevent double-binding on Turbo visits
+    if (window.realtorLockingInitialized) return;
+    window.realtorLockingInitialized = true;
+
+    const editBtn = document.getElementById("edit-realtor");
+    const doneBtn = document.getElementById("done-realtor");
+
+    if (!editBtn || !doneBtn) return;
+
+    editBtn.addEventListener("click", () => {
+      setRealtorLocked(false);
+    });
+
+    doneBtn.addEventListener("click", () => {
+      setRealtorLocked(true);
+    });
+  }
+
+  // Initial page load
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initRealtorLocking);
+  } else {
+    initRealtorLocking();
+  }
+
+  // Turbo navigation
+  document.addEventListener("turbo:load", () => {
+    window.realtorLockingInitialized = false;
+    initRealtorLocking();
+  });
+
+  // Expose for autocomplete callback
+  window.setRealtorLocked = setRealtorLocked;
+})();
+</script>
+
 
 
 <script>
@@ -274,6 +342,9 @@ Do you agree to these terms?`;
         document.getElementById("broker-prc-no").value = broker.prc_no;
         document.getElementById("realty-name").value = broker.company_name || "";
         document.getElementById("user_address").value = broker.address || "";
+
+        // LOCK AFTER SELECTION
+        setRealtorLocked(true);
       }
     });
 
@@ -288,6 +359,9 @@ Do you agree to these terms?`;
         document.getElementById("broker-name").value = broker.name;
         document.getElementById("realty-name").value = broker.company_name || "";
         document.getElementById("user_address").value = broker.address || "";
+
+        // LOCK AFTER SELECTION
+        setRealtorLocked(true);
       }
     });
 
@@ -302,6 +376,9 @@ Do you agree to these terms?`;
         document.getElementById("user_address").value = realty.address || "";
         document.getElementById("broker-name").value = realty.broker_name || "";
         document.getElementById("broker-prc-no").value = realty.broker_prc_no || "";
+
+        // LOCK AFTER SELECTION
+        setRealtorLocked(true);
       }
     });
   }
@@ -336,5 +413,11 @@ Do you agree to these terms?`;
     right: 0;
     z-index: 1050;
   }
+
+  input.locked {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+  }
+
 
 </style>

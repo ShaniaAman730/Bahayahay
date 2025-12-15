@@ -155,8 +155,8 @@ class UsersController < ApplicationController
 
       # ---------------------------
 
-      #UserMailer.realtor_approval_email(@user).deliver_now
-      #@user.update_column(:realtor_approval_email_sent_at, Time.current)
+      UserMailer.realtor_approval_email(@user).deliver_now
+      @user.update_column(:realtor_approval_email_sent_at, Time.current)
       redirect_to managerealtors_users_path, notice: 'Realtor approved and pending membership created under their broker’s realty.'
     else
       redirect_to managerealtors_users_path, alert: "Approval failed: #{@user.errors.full_messages.join(", ")}"
@@ -166,8 +166,8 @@ class UsersController < ApplicationController
   def reject
     @user = User.find(params[:id])
     if @user.update(admin_approved: false)
-      #UserMailer.realtor_rejection_email(@user).deliver_now
-      #@user.update_column(:realtor_rejection_email_sent_at, Time.current)
+      UserMailer.realtor_rejection_email(@user).deliver_now
+      @user.update_column(:realtor_rejection_email_sent_at, Time.current)
       redirect_to managerealtors_users_path, notice: "Realtor rejected."
     else
       redirect_to managerealtors_users_path, alert: "Rejection failed: #{@user.errors.full_messages.join(", ")}"
