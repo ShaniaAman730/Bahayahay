@@ -42,9 +42,7 @@
           <th>Contact No</th>
           <th>Company Name</th>
           <th>Created</th>
-          <th>Email Sent?</th>
           <th>Actions</th>
-          <th></th>
           <th></th>
         </tr>
       </thead>
@@ -81,24 +79,8 @@
             <td><%= user.contact_no %></td>
             <td><%= user.company_name %></td>
             <td><%= user.created_at.strftime("%B %d, %Y %I:%M %p") %></td>
-
-            <!-- Email Sent Column -->
-            <td>
-              <% if user.email_sent? %>
-                <button class="btn btn-success btn-sm" disabled>Sent</button>
-              <% else %>
-                <%= button_to "Not Sent", mark_email_sent_user_path(user), method: :patch, class: "btn btn-light btn-sm" %>
-              <% end %>
-            </td>
-
             <td>
               <%= link_to "Show", user_path(user), class: "btn btn-sm btn-secondary me-1" %>
-            </td>
-            <td>
-              <%= button_to "Reset Password", reset_password_admin_user_path(user),
-      method: :patch,
-      data: { confirm: "Are you sure you want to reset #{user.email}'s password?" },
-      class: "btn btn-sm btn-warning me-1" %>
             </td>
             <td>
               <%= button_to "Delete", user_path(user), method: :delete, data: { confirm: "Are you sure you want to delete #{user.full_name}?" }, class: "btn btn-sm btn-danger" %>
@@ -123,10 +105,6 @@
   </div>
 </div>
    
-
-<div class="text-center mt-4">
-  <%= link_to "View Password Reset Logs", admin_password_reset_logs_path, class: "btn btn-outline-dark" %>
-</div>
 
 
 
