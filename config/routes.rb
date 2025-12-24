@@ -6,20 +6,23 @@ Rails.application.routes.draw do
   get '/home' => 'home#default_homepage'
   
 
-  devise_for :users, controllers: { registrations: 'users/registrations' }
-  resources :users do
-    member do
-      get :statistics_data
-      patch :approve
-      patch :reject
-      get :reviews
-      get :review_events
-      patch :mark_email_sent
-    end
-    collection do
-      get :all_users
-      get :managerealtors
-    end
+  devise_for :users, controllers: {
+    registrations: 'users/registrations',
+    omniauth_callbacks: 'users/omniauth_callbacks'
+  }
+    resources :users do
+      member do
+        get :statistics_data
+        patch :approve
+        patch :reject
+        get :reviews
+        get :review_events
+        patch :mark_email_sent
+      end
+      collection do
+        get :all_users
+        get :managerealtors
+      end
   end
 
   get "agents", to: "agents#index", as: :agents
@@ -160,6 +163,9 @@ end
   end
 
   get "search", to: "search#index"
+
+  resources :transactions, only: [:index]
+
 
   mount Importmap::Engine => "/rails/importmap"
   # mount ActionCable.server => '/cable'

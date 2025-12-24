@@ -1,0 +1,27 @@
+<div class="card mb-4 shadow-sm">
+  <div class="card-body">
+    <h5 class="card-title">Platform Transaction Summary</h5>
+
+    <div class="row text-center mt-3">
+      <div class="col">
+        <p class="mb-1 text-muted small">This Month</p>
+        <h4><%= Transaction.this_month.count %></h4>
+      </div>
+
+      <div class="col">
+        <p class="mb-1 text-muted small">This Year</p>
+        <h4><%= Transaction.this_year.count %></h4>
+      </div>
+
+      <div class="col">
+        <p class="mb-1 text-muted small">All Time</p>
+        <h4><%= Transaction.completed.count %></h4>
+      </div>
+
+      <div class="col">
+        <p class="mb-1 text-muted small">Reversed</p>
+        <h4 class="text-danger"><%= Transaction.reversed.count %></h4>
+      </div>
+    </div>
+  </div>
+</div>

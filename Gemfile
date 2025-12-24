@@ -52,6 +52,11 @@ gem "groupdate"
 gem "chartkick"
 gem "redis", "~> 5.0"
 gem 'imagekitio-rails'
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
+gem 'dotenv-rails', groups: [:development, :test]
+gem 'omniauth-rails_csrf_protection'
+
 
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]

@@ -45,9 +45,65 @@ class User < ApplicationRecord
   has_many :active_members, through: :rebap_memberships, source: :member
   has_many :member_rebap_memberships, class_name: "RebapMembership", foreign_key: :member_id, dependent: :destroy
 
+  # Transaction
+  has_many :sales, class_name: "Transaction", foreign_key: :seller_id
+  has_many :purchases, class_name: "Transaction", foreign_key: :buyer_id
+
 
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
+         :omniauthable, omniauth_providers: [:google_oauth2]
+
+  require "open-uri"
+
+  def self.from_google(auth)
+    # User already linked with Google
+    user = find_by(provider: auth.provider, uid: auth.uid)
+    return user if user
+
+    user = find_by(email: auth.info.email)
+
+    if user
+      user.update(
+        provider: auth.provider,
+        uid: auth.uid
+      )
+
+      attach_google_avatar(user, auth)
+      return user
+    end
+
+    # New user
+    user = create!(
+      email: auth.info.email,
+      password: Devise.friendly_token[0, 20],
+      first_name: auth.info.first_name || "First",
+      last_name: auth.info.last_name || "Last",
+      contact_no: "0000000000", # placeholder
+      user_type: "client", 
+      provider: auth.provider,
+      uid: auth.uid
+    )
+
+
+    attach_google_avatar(user, auth)
+    user
+  end
+
+  def self.attach_google_avatar(user, auth)
+    return unless auth.info.image.present?
+    return if user.profile_photo.attached?
+
+    file = URI.open(auth.info.image)
+    user.profile_photo.attach(
+      io: file,
+      filename: "google-avatar-#{user.id}.jpg",
+      content_type: "image/jpeg"
+    )
+  rescue => e
+    Rails.logger.warn "Avatar attach failed: #{e.message}"
+  end
+
 
   enum :user_type, { admin: 0, developer: 1, realtor: 2, client: 3, rebap: 4 }
 

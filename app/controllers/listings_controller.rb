@@ -62,6 +62,15 @@ class ListingsController < ApplicationController
         event_type: "assigned",
         message: "#{@client.first_name} has been assigned to your listing #{@listing.title}. They can now leave a review."
       )
+
+      # This is to record a transaction
+      Transaction.create!(
+        listing: @listing,
+        buyer: @client,
+        seller: @listing.realtor,
+        price: @listing.price,
+        sold_at: Time.current
+      )
       redirect_to @listing, notice: "Sale confirmed with #{@client.first_name}."
     else
       redirect_to @listing, alert: "Could not confirm the transaction."
@@ -81,34 +90,45 @@ class ListingsController < ApplicationController
       return
     end
 
-    # Find and delete the review for this listing and assigned client
+    transaction = Transaction.find_by(listing: @listing, reversed_at: nil)
+
     review = Review.find_by(
       realtor: @listing.realtor,
       client: @listing.client,
       listing: @listing
     )
 
-      ActiveRecord::Base.transaction do
-        review&.destroy!  # deletes the client's previous review
+    ActiveRecord::Base.transaction do
+      # Reverse transaction
+      transaction&.update!(
+        reversed_at: Time.current,
+        reversal_reason: "Sale reversed by realtor"
+      )
 
-        @listing.update!(
-          client: nil,
-          confirmed: false,
-          active: true
-        )
+      # Remove review
+      review&.destroy!
 
-        ReviewEvent.create!(
-          realtor: @listing.realtor,
-          client: current_user,
-          listing: @listing,
-          event_type: "reversed",
-          message: "The transaction has been reversed. The listing is now active again."
-        )
-      end
+      # Reset listing
+      @listing.update!(
+        client: nil,
+        confirmed: false,
+        active: true
+      )
 
-      redirect_to @listing, notice: "The sale has been reversed and the listing is active again."
-    rescue => e
-      redirect_to @listing, alert: "Unable to reverse the transaction: #{e.message}"
+      # Log event
+      ReviewEvent.create!(
+        realtor: @listing.realtor,
+        client: current_user,
+        listing: @listing,
+        event_type: "reversed",
+        message: "The transaction has been reversed. The listing is now active again."
+      )
+    end
+
+    redirect_to @listing, notice: "The sale has been reversed and the listing is active again."
+
+  rescue => e
+    redirect_to @listing, alert: "Unable to reverse the transaction: #{e.message}"
   end
 
 

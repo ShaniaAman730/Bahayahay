@@ -52,7 +52,7 @@
             <td><%= (@users.offset_value || 0) + index + 1 %></td>
             <td><%= user.id %></td>
             <td>
-              <%= user.user_type.titleize %>
+              <%= user.user_type.to_s.titleize %>
               <% if user.user_type == "realtor" %>
                 <% if user.admin_approved? %>
                   <span class="badge bg-success ms-2">A</span>

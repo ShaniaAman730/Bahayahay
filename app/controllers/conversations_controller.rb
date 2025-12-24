@@ -23,7 +23,6 @@ class ConversationsController < ApplicationController
     #    "notifications_#{current_user.id}",
     #    { type: "badge_reset" }
     #  )
-    #end
   end
 
   def create
@@ -46,3 +45,4 @@ class ConversationsController < ApplicationController
     @conversation = Conversation.find(params[:id])
   end
 end
+

@@ -1,0 +1,75 @@
+<div class="container mt-5">
+  <% if current_user.admin? %>
+    <%= render "transactions/admin_stats_card" %>
+  <% end %>
+
+  <% unless current_user.admin? %>
+    <%= render "transactions/realtor_stats_card" %>
+  <% end %>
+
+  <div class="card shadow-sm">
+    <div class="card-header">
+      <h5 class="mb-0">Your Transactions</h5>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>Listing</th>
+            <% if current_user.admin? %>
+              <th>Seller</th>
+            <% end %>
+            <th>Buyer</th>
+            <th>Price</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @transactions.each do |transaction| %>
+            <tr>
+              <td>
+                <%= link_to transaction.listing.title, transaction.listing %>
+              </td>
+
+              <% if current_user.admin? %>
+                <td><%= transaction.seller.full_name %></td>
+              <% end %>
+
+
+              <td>
+                <%= transaction.buyer.full_name %>
+              </td>
+
+              <td>
+                <%= number_to_currency(transaction.price, unit: "₱", precision: 2, delimiter: ",") %>
+              </td>
+
+              <td>
+                <%= transaction.sold_at.strftime("%b %d, %Y") %>
+              </td>
+
+              <td>
+                <% if transaction.reversed_at.present? %>
+                  <span class="badge bg-danger">Reversed</span>
+                <% else %>
+                  <span class="badge bg-success">Completed</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+
+          <% if @transactions.empty? %>
+            <tr>
+              <td colspan="5" class="text-center text-muted py-4">
+                No transactions yet.
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

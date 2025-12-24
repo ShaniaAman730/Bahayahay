@@ -10,6 +10,11 @@
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
 
+  config.omniauth :google_oauth2,
+  Rails.application.credentials.dig(:google, :client_id),
+  Rails.application.credentials.dig(:google, :client_secret),
+  prompt: 'select_account'
+
   config.navigational_formats = ['*/*', :html, :turbo_stream]
 
   # The secret key used by Devise. Devise uses this key to generate

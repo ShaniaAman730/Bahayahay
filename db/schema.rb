@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_16_213622) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_24_133148) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -315,6 +315,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_16_213622) do
     t.index ["visitor_id"], name: "index_statistics_on_visitor_id"
   end
 
+  create_table "transactions", force: :cascade do |t|
+    t.bigint "listing_id", null: false
+    t.bigint "buyer_id", null: false
+    t.bigint "seller_id", null: false
+    t.decimal "price", precision: 15, scale: 2
+    t.datetime "sold_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "reversed_at"
+    t.string "reversal_reason"
+    t.index ["buyer_id"], name: "index_transactions_on_buyer_id"
+    t.index ["listing_id"], name: "index_transactions_on_listing_id"
+    t.index ["seller_id"], name: "index_transactions_on_seller_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -344,6 +359,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_16_213622) do
     t.boolean "email_sent"
     t.string "gov_id_type"
     t.string "gov_id_last_digits"
+    t.string "provider"
+    t.string "uid"
+    t.string "avatar_url"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -376,4 +394,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_16_213622) do
   add_foreign_key "saved_listings", "listings"
   add_foreign_key "saved_listings", "users"
   add_foreign_key "statistics", "users", column: "visitor_id", on_delete: :nullify
+  add_foreign_key "transactions", "listings"
+  add_foreign_key "transactions", "users", column: "buyer_id"
+  add_foreign_key "transactions", "users", column: "seller_id"
 end
